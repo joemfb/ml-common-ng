@@ -1,9 +1,15 @@
 {
   "name": "ml-common-ng",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "An angular module that encapsulates the MarkLogic REST API builtins and normalizes the responses.",
   "dependencies": {},
   "devDependencies": {
+    "gulp": "3.8.x",
+    "gulp-concat": "^2.2.0",
+    "gulp-jshint": "^1.5.5",
+    "gulp-karma": "0.0.4",
+    "gulp-rename": "^1.2.0",
+    "gulp-uglify": "^0.2.1",
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
     "phantomjs": "^1.9.7-4"
@@ -14,5 +20,22 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "license": "Apache v2"
+  "license": "Apache v2",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joemfb/ml-common-ng.git"
+  },
+  "keywords": [
+    "angular",
+    "angularjs",
+    "marklogic"
+  ],
+  "author": "joemfb",
+  "bugs": {
+    "url": "https://github.com/joemfb/ml-common-ng/issues"
+  },
+  "homepage": "https://github.com/joemfb/ml-common-ng"
 }
