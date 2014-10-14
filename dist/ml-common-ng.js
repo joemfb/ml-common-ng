@@ -14,11 +14,8 @@
    */
 
   function MLRest($q, $http) {
-    var defaults = {
-          apiVersion: 'v1'
-        },
+    var defaults = { apiVersion: 'v1' },
         service = {};
-
 
     service = {
       search: search,
@@ -27,11 +24,14 @@
       updateDocument: updateDocument,
       patchDocument: patchDocument,
       sparql: sparql,
+      suggest: suggest,
+      values: values,
       extension: extension,
-      getSearchOptions: getSearchOptions,
+      queryConfig: queryConfig,
       request: request,
 
       // DEPRECATED: TODO: remove
+      getSearchOptions: queryConfig,
       callExtension: request,
       patch: patchDocument
     };
@@ -76,25 +76,13 @@
     }
 
     function search(options) {
-      var d = $q.defer();
-
       options = options || {};
 
       if (!options.format){
         options.format = 'json';
       }
 
-      request('/search', {
-        params: options
-      }).then(
-        function(response) {
-          d.resolve(response.data);
-        },
-        function(reason) {
-          d.reject(reason);
-        });
-
-      return d.promise;
+      return request('/search', { params: options });
     }
 
     function getDocument(uri, options) {
@@ -109,11 +97,21 @@
     }
 
     function createDocument(doc, options) {
-      return request('/documents', {
+      var d = $q.defer();
+
+      request('/documents', {
         method: 'POST',
         params: options,
         data: doc
-      });
+      }).then(
+        function(response) {
+          d.resolve(response.headers('location'));
+        },
+        function(reason) {
+          d.reject(reason);
+        });
+
+      return d.promise;
     }
 
     //TODO: uri param?
@@ -125,8 +123,8 @@
         params: options,
         data: doc
       }).then(
-        function(data, status, headers) {
-          d.resolve(headers('location'));
+        function(response) {
+          d.resolve(response.headers('location'));
         },
         function(reason) {
           d.reject(reason);
@@ -140,7 +138,7 @@
           headers = {};
 
       // TODO: support XML patches
-      // if (_.isObject(patch)) {
+      // if (isObject(patch)) {
       //   headers = { 'Content-Type': 'application/json' }
       // } else {
       //   headers = { 'Content-Type': 'application/xml' }
@@ -153,8 +151,8 @@
         headers: headers
       })
       .then(
-        function(data, status, headers) {
-          d.resolve(headers('location'));
+        function(response) {
+          d.resolve(response.headers('location'));
         },
         function(reason) {
           d.reject(reason);
@@ -163,19 +161,50 @@
       return d.promise;
     }
 
-    function sparql(query, format) {
-      if (format !== 'application/rdf+json') {
-        format = 'application/sparql-results+json';
-      }
+    function sparql(query, params) {
+      var accept = [
+        'application/sparql-results+json',
+        'application/rdf+json'
+      ];
+
+      //TODO: POST?
+      params.query = query;
 
       return request('/graphs/sparql', {
-        params: { query: query },
-        headers: { 'Accept': format }
+        params: params,
+        headers: { 'Accept': accept.join(',') }
       });
     }
 
-    function getSearchOptions(name) {
-      return request('/config/query/' + name, {
+    function suggest(params, combined) {
+      var settings = { params: params };
+
+      if (combined) {
+        settings.method = 'POST';
+        settings.data = combined;
+      }
+
+      return request('/suggest', settings);
+    }
+
+    function values(name, params, combined) {
+      var settings = { params: params };
+
+      if (combined) {
+        settings.method = 'POST';
+        settings.data = combined;
+      }
+
+      return request('/values/' + name, settings);
+    }
+
+    function queryConfig(name, section) {
+      var url = '/config/query/' + name;
+
+      if (section && section.length) {
+        url += '/' + section;
+      }
+      return request(url, {
         params: { format: 'json' }
       });
     }
