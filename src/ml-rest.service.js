@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('ml.common', [])
+  angular.module('ml.common')
     .provider('MLRest', function() {
         this.$get = ['$q', '$http', MLRest];
     });
@@ -32,7 +32,7 @@
 
       // DEPRECATED: TODO: remove
       getSearchOptions: queryConfig,
-      callExtension: request,
+      callExtension: extension,
       patch: patchDocument
     };
 
@@ -201,7 +201,7 @@
     function queryConfig(name, section) {
       var url = '/config/query/' + name;
 
-      if (section && section.length) {
+      if (section) {
         url += '/' + section;
       }
       return request(url, {

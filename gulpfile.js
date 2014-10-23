@@ -20,7 +20,10 @@ gulp.task('jshint', function() {
 });
 
 gulp.task('scripts', function() {
-  return gulp.src([ './src/**/*.js' ])
+  return gulp.src([
+      './src/ml-common.js',
+      './src/**/*.js'
+    ])
     .pipe(concat('ml-common-ng.js'))
     .pipe(gulp.dest('dist'))
     .pipe(rename('ml-common-ng.min.js'))
