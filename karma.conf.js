@@ -18,7 +18,7 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
 
       // App under test
-      'src/ml-rest.service.js',
+      'src/**/*.js',
 
       // Mocks
       'bower_components/angular-mocks/angular-mocks.js',
@@ -28,6 +28,16 @@ module.exports = function(config) {
       'test/helpers.js',
       'test/spec/**/*.js',
     ],
+
+   reporters: ['progress', 'coverage'],
+
+   preprocessors: {
+      'src/*.js': ['coverage']
+    },
+
+    coverageReporter: {
+      type : 'text-summary'
+    },
 
     // list of files / patterns to exclude
     exclude: [],

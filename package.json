@@ -10,6 +10,7 @@
     "gulp-karma": "0.0.4",
     "gulp-rename": "^1.2.0",
     "gulp-uglify": "^0.2.1",
+    "karma-coverage": "^0.2.6",
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
     "phantomjs": "^1.9.7-4"
