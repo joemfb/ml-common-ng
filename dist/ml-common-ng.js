@@ -315,16 +315,19 @@
 
     function sparql(query, params) {
       var accept = [
-        'application/sparql-results+json',
-        'application/rdf+json'
+        'application/sparql-results+json'
+        // TODO: file bug against REST API for not supporting multiple Accept mime-types
+        // 'application/rdf+json'
       ];
 
-      //TODO: POST?
+      params = params || {};
+
+      //TODO: POST query?
       params.query = query;
 
       return request('/graphs/sparql', {
         params: params,
-        headers: { 'Accept': accept.join(',') }
+        headers: { 'Accept': accept.join(', ') }
       });
     }
 
