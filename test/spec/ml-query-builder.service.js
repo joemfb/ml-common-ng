@@ -11,18 +11,23 @@ describe('MLQueryBuilder', function () {
     qb = $injector.get('MLQueryBuilder');
   }));
 
+  it('exists', function() {
+    for (var x in qb) {
+      console.log(x)
+    }
+    console.log(JSON.stringify(qb.query( qb.and() ) ))
+  });
+
   it('builds a query', function() {
     var query = qb.query();
     expect(query.query).toBeDefined;
-    expect(query.query.queries.length).toEqual(0);
-    query = qb.query(qb.and())
     expect(query.query.queries.length).toEqual(1);
   });
 
   it('builds a text query', function() {
     var query = qb.text('blah');
-    expect(query.qtext).toBeDefined;
-    expect(query.qtext).toEqual('blah');
+    expect(query.parsedQuery.qtext).toBeDefined;
+    expect(query.parsedQuery.qtext).toEqual('blah');
   });
 
   it('builds an and-query with one sub-query', function() {

@@ -10,10 +10,12 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     uglify = require('gulp-uglify'),
     rm = require('gulp-rm'),
-    cp = require('child_process');
+    cp = require('child_process'),
+    browserify = require('gulp-browserify');
+    // eventStream = require('event-stream');
 
 gulp.task('jshint', function() {
-  gulp.src([
+  return gulp.src([
       './gulpfile.js',
       './src/**/*.js'
     ])
@@ -21,10 +23,30 @@ gulp.task('jshint', function() {
     .pipe(jshint.reporter('default'));
 });
 
-gulp.task('scripts', function() {
+gulp.task('browserify', function() {
+  // Single entry point to browserify
+  return gulp.src('./src/browserify/*.js')
+    .pipe(browserify({
+      insertGlobals : true,
+      debug : false
+    }))
+    .pipe(gulp.dest('browserified'));
+});
+
+gulp.task('scripts', ['browserify'], function() {
+  // TODO: fix this
+  // var src = gulp.src('./src/*.js');
+  // var browserifiedSrc = gulp.src('./src/browserify/*.js')
+  //   .pipe(browserify({
+  //     insertGlobals : true,
+  //     debug : false
+  //   }));
+  // var browserifiedSrc = gulp.src('./browserified/*.js')
+  // return eventStream.merge(src, browserifiedSrc)
+
   return gulp.src([
-      './src/ml-common.js',
-      './src/**/*.js'
+      './src/*.js',
+      './browserified/*.js'
     ])
     .pipe(concat('ml-common-ng.js'))
     .pipe(gulp.dest('dist'))
@@ -33,7 +55,7 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('test', function() {
+gulp.task('test', ['scripts'], function() {
   karma.start({
     configFile: path.join(__dirname, './karma.conf.js'),
     singleRun: true,
@@ -71,4 +93,4 @@ gulp.task('clean-docs', function() {
   .pipe(rm({async: false}));
 });
 
-gulp.task('default', ['test', 'jshint', 'scripts']);
+gulp.task('default', ['jshint', 'scripts', 'test']);
