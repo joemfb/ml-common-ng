@@ -11,7 +11,19 @@
 
     function queryWrapper() {
       var args = mlutil.asArray.apply(null, arguments);
-      return qb.where.apply(null, args).whereClause;
+      var query = qb.where.apply(null, args).whereClause;
+
+      var parsedQueries = _.filter(query.queries, function(q) {
+        return !!q.parsedQuery;
+      });
+
+      if ( parsedQueries.length > 1 ) throw new Error('multiple parsedQuery objects; only one is allowed')
+
+      if ( parsedQueries.length ) {
+        query.qtext = parsedQueries[0].qtext
+      }
+
+      return query;
     }
 
     function textWrapper(qtext) {
