@@ -3,7 +3,7 @@
 describe('MLRest', function () {
   'use strict';
 
-  var mlRest, $httpBackend, $q, mockResults, mockOptions, mockSparqlResults, mockSuggestions, mockValues;
+  var mlRest, $httpBackend, mockResults, mockOptions, mockSparqlResults, mockSuggestions, mockValues;
 
   //fixtures
   beforeEach(module('search-results.json'));
@@ -15,16 +15,14 @@ describe('MLRest', function () {
   beforeEach(module('ml.common'));
 
   beforeEach(inject(function ($injector) {
-    $q = $injector.get('$q');
     $httpBackend = $injector.get('$httpBackend');
+    mlRest = $injector.get('MLRest', $httpBackend);
 
     mockResults = $injector.get('searchResults');
     mockOptions = $injector.get('optionsWithGrammer');
     mockSparqlResults = $injector.get('sparqlResults');
     mockSuggestions = $injector.get('suggestions');
     mockValues = $injector.get('valuesResponse');
-
-    mlRest = $injector.get('MLRest', $q, $httpBackend);
   }));
 
   afterEach(function() {

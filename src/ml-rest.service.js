@@ -3,7 +3,7 @@
 
   angular.module('ml.common')
     .provider('MLRest', function() {
-        this.$get = ['$q', '$http', MLRest];
+        this.$get = ['$http', MLRest];
     });
 
   /**
@@ -13,7 +13,7 @@
    *
    */
 
-  function MLRest($q, $http) {
+  function MLRest($http) {
     var defaults = { apiVersion: 'v1' },
         service = {};
 
@@ -51,6 +51,7 @@
         url = '/' + defaults.apiVersion + endpoint;
       }
 
+      settings = settings || {};
       settings.method = settings.method || 'GET';
 
       if (!isSupportedMethod(settings.method)) {
@@ -97,68 +98,46 @@
     }
 
     function createDocument(doc, options) {
-      var d = $q.defer();
-
-      request('/documents', {
+      return request('/documents', {
         method: 'POST',
         params: options,
         data: doc
-      }).then(
-        function(response) {
-          d.resolve(response.headers('location'));
-        },
-        function(reason) {
-          d.reject(reason);
-        });
-
-      return d.promise;
+      }).then(function(response) {
+        return response.headers('location');
+      });
     }
 
     //TODO: uri param?
     function updateDocument(doc, options) {
-      var d = $q.defer();
-
-      request('/documents', {
+      return request('/documents', {
         method: 'PUT',
         params: options,
         data: doc
-      }).then(
-        function(response) {
-          d.resolve(response.headers('location'));
-        },
-        function(reason) {
-          d.reject(reason);
-        });
-
-      return d.promise;
+      }).then(function(response) {
+        return response.headers('location');
+      });
     }
 
     function patchDocument(uri, patch) {
-      var d = $q.defer(),
-          headers = {};
-
       // TODO: support XML patches
+
+      // var headers = {};
+      //
       // if (isObject(patch)) {
       //   headers = { 'Content-Type': 'application/json' }
       // } else {
       //   headers = { 'Content-Type': 'application/xml' }
       // }
 
-      request('/documents', {
+      return request('/documents', {
         method: 'PATCH',
         params: { uri: uri },
-        data: patch,
-        headers: headers
+        // headers: headers,
+        data: patch
       })
-      .then(
-        function(response) {
-          d.resolve(response.headers('location'));
-        },
-        function(reason) {
-          d.reject(reason);
-        });
-
-      return d.promise;
+      .then(function(response) {
+        return response.headers('location');
+      });
     }
 
     function sparql(query, params) {
