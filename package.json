@@ -14,6 +14,7 @@
     "karma": "^0.12.36",
     "karma-coverage": "^0.4.2",
     "karma-jasmine": "^0.3.5",
+    "karma-ng-json2js-preprocessor": "^1.0.0",
     "karma-phantomjs-launcher": "^0.2.0",
     "phantomjs": "^1.9.17"
   },

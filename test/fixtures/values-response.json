@@ -1,0 +1,9 @@
+{
+  "values-response": {
+    "name": "MyFacetName",
+    "type": "xs:string",
+    "distinct-value": [
+      { "frequency": 10, "_value": "First"}
+    ]
+  }
+}
