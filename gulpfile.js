@@ -11,8 +11,8 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     rm = require('gulp-rm'),
     cp = require('child_process'),
+    // eventStream = require('event-stream'),
     browserify = require('gulp-browserify');
-    // eventStream = require('event-stream');
 
 gulp.task('jshint', function() {
   return gulp.src([
@@ -27,7 +27,7 @@ gulp.task('browserify', function() {
   // Single entry point to browserify
   return gulp.src('./src/browserify/*.js')
     .pipe(browserify({
-      insertGlobals : true,
+      detectGlobals : true,
       debug : false
     }))
     .pipe(gulp.dest('browserified'));

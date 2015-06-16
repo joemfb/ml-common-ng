@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var qb = require('marklogic').queryBuilder,
+  var qb = require('marklogic/lib/query-builder.js'),
       mlutil = require('marklogic/lib/mlutil.js');
 
   angular.module('ml.common')
