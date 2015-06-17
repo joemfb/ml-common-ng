@@ -1,8 +1,7 @@
 (function() {
   'use strict';
 
-  var qb = require('marklogic/lib/query-builder.js'),
-      mlutil = require('marklogic/lib/mlutil.js');
+  var qb = require('marklogic/lib/query-builder.js').builder;
 
   angular.module('ml.common')
     .factory('MLQueryBuilder', MLQueryBuilder);
@@ -10,20 +9,20 @@
   function MLQueryBuilder() {
 
     function queryWrapper() {
-      var args = mlutil.asArray.apply(null, arguments);
-      var query = qb.where.apply(null, args).whereClause;
-
-      var parsedQueries = _.filter(query.queries, function(q) {
+      var whereClause = qb.where.apply(null, arguments).whereClause;
+      var parsedQueries = whereClause.query.queries.filter(function(q) {
         return !!q.parsedQuery;
       });
 
-      if ( parsedQueries.length > 1 ) throw new Error('multiple parsedQuery objects; only one is allowed')
-
-      if ( parsedQueries.length ) {
-        query.qtext = parsedQueries[0].qtext
+      if ( parsedQueries.length > 1 ) {
+        throw new Error('where clause includes multiple parsedQueries; only one is allowed');
       }
 
-      return query;
+      if ( parsedQueries.length ) {
+        whereClause.qtext = parsedQueries[0].qtext;
+      }
+
+      return whereClause;
     }
 
     function textWrapper(qtext) {
@@ -31,123 +30,16 @@
     }
 
     return {
-
-      // query: function query() {
-      //   var args = asArray.apply(null, arguments);
-      //   return {
-      //     'query': {
-      //       'queries': args
-      //     }
-      //   };
-      // },
-
-      // text: function text(qtext) {
-      //   return {
-      //     'qtext': qtext
-      //   };
-      // },
-
-      // and: function and() {
-      //   var args = asArray.apply(null, arguments);
-      //   return {
-      //     'and-query': {
-      //       'queries': args
-      //     }
-      //   };
-      // },
-
-      // or: function or() {
-      //   var args = asArray.apply(null, arguments);
-      //   return {
-      //     'or-query': {
-      //       'queries': args
-      //     }
-      //   };
-      // },
-
-      // not: function properties(query) {
-      //   return {
-      //     'not-query': query
-      //   };
-      // },
-
-      // document: function document() {
-      //   var args = asArray.apply(null, arguments);
-      //   return {
-      //     'document-query': {
-      //       'uri': args
-      //     }
-      //   };
-      // },
-
-      // range: function range(name, values) {
-      //   values = asArray.apply(null, [values]);
-      //   return {
-      //     'range-constraint-query': {
-      //       'constraint-name': name,
-      //       'value': values
-      //     }
-      //   };
-      // },
-
-      // collection: function collection(name, values) {
-      //   values = asArray.apply(null, [values]);
-      //   return {
-      //     'collection-constraint-query': {
-      //       'constraint-name': name,
-      //       'uri': values
-      //     }
-      //   };
-      // },
-
-      // custom: function custom(name, values) {
-      //   values = asArray.apply(null, [values]);
-      //   return {
-      //     'custom-constraint-query': {
-      //       'constraint-name': name,
-      //       'value': values
-      //     }
-      //   };
-      // },
-
-      // constraint: function constraint(type) {
-      //   switch(type) {
-      //     case 'custom':
-      //       return this.custom;
-      //     case 'collection':
-      //       return this.collection;
-      //     default:
-      //       return this.range;
-      //   }
-      // },
-
-      // boost: function boost(matching, boosting) {
-      //   return {
-      //     'boost-query': {
-      //       'matching-query': matching,
-      //       'boosting-query': boosting
-      //     }
-      //   };
-      // },
-
-      // properties: function properties(query) {
-      //   return { 'properties-query': query };
-      // },
-
-      // operator: function operator(name, stateName) {
-      //   return {
-      //     'operator-state': {
-      //       'operator-name': name,
-      //       'state-name': stateName
-      //     }
-      //   };
-      // }
-
+      ext: require('./query-builder-extensions.js'),
       // deprecated, use qb.where()
       query: queryWrapper,
       // deprecated, use qb.parsedFrom()
       text: textWrapper,
 
+      // (un)wrapped for direct use with REST API
+      where: queryWrapper,
+
+      // imported as is
       anchor: qb.anchor,
       and: qb.and,
       andNot: qb.andNot,
@@ -218,32 +110,8 @@
       transform: qb.transform,
       value: qb.value,
       weight: qb.weight,
-
-      // wraps qb.where()
-      where: queryWrapper,
-
       word: qb.word
 
     };
-
   }
-
-  // function asArray() {
-  //   var args;
-
-  //   if ( arguments.length === 0 ) {
-  //     args = [];
-  //   } else if ( arguments.length === 1) {
-  //     if (Array.isArray( arguments[0] )) {
-  //       args = arguments[0];
-  //     } else {
-  //       args = [ arguments[0] ];
-  //     }
-  //   } else {
-  //     args = [].slice.call(arguments);
-  //   }
-
-  //   return args;
-  // }
-
-})()
+})();

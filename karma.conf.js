@@ -18,7 +18,8 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
 
       // App under test
-      'dist/ml-common-ng.js',
+      'src/*.js',
+      'browserified/ml*.js',
 
       // Mocks
       'bower_components/angular-mocks/angular-mocks.js',
@@ -36,6 +37,7 @@ module.exports = function(config) {
 
    preprocessors: {
       'src/*.js': ['coverage'],
+      // 'browserified/*.js': ['coverage'],
       'test/**/*.json': ['ng-json2js']
     },
 

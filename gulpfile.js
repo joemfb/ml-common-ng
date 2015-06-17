@@ -46,7 +46,7 @@ gulp.task('scripts', ['browserify'], function() {
 
   return gulp.src([
       './src/*.js',
-      './browserified/*.js'
+      './browserified/ml*.js'
     ])
     .pipe(concat('ml-common-ng.js'))
     .pipe(gulp.dest('dist'))
