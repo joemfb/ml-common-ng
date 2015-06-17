@@ -89,6 +89,17 @@ describe('MLQueryBuilder', function () {
     expect(qb.where( qb.and() ).whereClause).not.toBeDefined;
   });
 
+  it('should capture `qtext` from `qb.parsedFrom` in `qb.where`', function() {
+    var query = qb.where(
+      qb.and(),
+      qb.parsedFrom('my query')
+    );
+
+    expect(query.qtext).toBeDefined;
+    expect(query.parsedQuery).not.toBeDefined;
+    expect(query.query.queries.length).toEqual(1);
+  });
+
   it('should define extension methods', function() {
     expect(qb.ext).toBeDefined
     expect(qb.ext.rangeConstraint).toBeDefined

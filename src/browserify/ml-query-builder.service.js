@@ -14,16 +14,10 @@
 
     function queryWrapper() {
       var whereClause = qb.where.apply(null, arguments).whereClause;
-      var parsedQueries = whereClause.query.queries.filter(function(q) {
-        return !!q.parsedQuery;
-      });
 
-      if ( parsedQueries.length > 1 ) {
-        throw new Error('where clause includes multiple parsedQueries; only one is allowed');
-      }
-
-      if ( parsedQueries.length ) {
-        whereClause.qtext = parsedQueries[0].qtext;
+      if ( whereClause.parsedQuery ) {
+        whereClause.qtext = whereClause.parsedQuery.qtext;
+        delete whereClause.parsedQuery;
       }
 
       return whereClause;
