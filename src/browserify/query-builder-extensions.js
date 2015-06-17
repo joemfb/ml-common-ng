@@ -2,6 +2,15 @@
 
 var mlutil = require('marklogic/lib/mlutil.js');
 
+/**
+ * Builds a [`range-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
+ * @memberof! MLQueryBuilder
+ * @method ext.rangeConstraint
+ *
+ * @param {String} name - constraint name
+ * @param {Array} values - the values the constraint should equal (logical OR)
+ * @return {Object} [range-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
+ */
 function rangeConstraint(name, values) {
   values = mlutil.asArray.apply(null, [values]);
   return {
@@ -12,6 +21,15 @@ function rangeConstraint(name, values) {
   };
 }
 
+/**
+ * Builds a [`collection-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
+ * @memberof! MLQueryBuilder
+ * @method ext.collectionConstraint
+ *
+ * @param {String} name - constraint name
+ * @param {Array} values - the values the constraint should equal (logical OR)
+ * @return {Object} [collection-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
+ */
 function collectionConstraint(name, values) {
   values = mlutil.asArray.apply(null, [values]);
   return {
@@ -22,6 +40,15 @@ function collectionConstraint(name, values) {
   };
 }
 
+/**
+ * Builds a [`custom-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_28778)
+ * @memberof! MLQueryBuilder
+ * @method ext.customConstraint
+ *
+ * @param {String} name - constraint name
+ * @param {Array} values - the values the constraint should equal (logical OR)
+ * @return {Object} [custom-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_28778)
+ */
 function customConstraint(name, values) {
   values = mlutil.asArray.apply(null, [values]);
   return {
@@ -32,6 +59,17 @@ function customConstraint(name, values) {
   };
 }
 
+/**
+ * constraint query function factory
+ * @memberof! MLQueryBuilder
+ * @method ext.constraint
+ *
+ * @param {String} type - constraint type (`'collection' | 'custom' | '*'`)
+ * @return {Function} a constraint query builder function, one of:
+ *   - {@link MLQueryBuilder.ext.rangeConstraint}
+ *   - {@link MLQueryBuilder.ext.collectionConstraint}
+ *   - {@link MLQueryBuilder.ext.customConstraint}
+ */
 function constraint(type) {
   switch(type) {
     case 'custom':
@@ -43,6 +81,15 @@ function constraint(type) {
   }
 }
 
+/**
+ * Builds an [`operator-state` query component](http://docs.marklogic.com/guide/search-dev/structured-query#id_45570)
+ * @memberof! MLQueryBuilder
+ * @method ext.operator
+ *
+ * @param {String} name - operator name
+ * @param {String} stateName - operator-state name
+ * @return {Object} [operator-state component](http://docs.marklogic.com/guide/search-dev/structured-query#id_45570)
+ */
 function operator(name, stateName) {
   return {
     'operator-state': {
