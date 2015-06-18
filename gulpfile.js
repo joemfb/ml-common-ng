@@ -2,17 +2,21 @@
 
 'use strict';
 
-var gulp = require('gulp'),
+var browserify = require('browserify'),
+    buffer = require('vinyl-buffer'),
+    clone = require('gulp-clone'),
     concat = require('gulp-concat'),
+    cp = require('child_process'),
+    eventStream = require('event-stream'),
+    gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     karma = require('karma').server,
     path = require('path'),
     rename = require('gulp-rename'),
-    uglify = require('gulp-uglify'),
+    replace = require('gulp-replace-task'),
     rm = require('gulp-rm'),
-    cp = require('child_process'),
-    // eventStream = require('event-stream'),
-    browserify = require('gulp-browserify');
+    source = require('vinyl-source-stream'),
+    uglify = require('gulp-uglify');
 
 gulp.task('jshint', function() {
   return gulp.src([
@@ -23,39 +27,44 @@ gulp.task('jshint', function() {
     .pipe(jshint.reporter('default'));
 });
 
-gulp.task('browserify', function() {
-  // Single entry point to browserify
-  return gulp.src('./src/browserify/*.js')
-    .pipe(browserify({
-      detectGlobals : true,
-      debug : false
-    }))
-    .pipe(gulp.dest('browserified'));
+function myBrowserify(src, config) {
+  return eventStream.merge(src.pipe(clone()),
+    browserify(config).bundle()
+    .pipe(source('ml-query-builder.js'))
+    .pipe(buffer())
+  );
+}
+
+gulp.task('scripts', function() {
+  var src = gulp.src('./src/*.js');
+
+  var shim = myBrowserify(src, {
+    entries: 'src/browserify/query-builder-shim.js',
+    bare: true,
+    builtins: []
+  })
+  .pipe(concat('ml-common-ng-shim.js'))
+  .pipe(replace({
+    patterns: [{
+      match: /MLQueryBuilderShim/,
+      replacement: 'MLQueryBuilder'
+    }]
+  }));
+
+  var full = myBrowserify(src, { entries: [
+    'src/browserify/ml-query-builder.service.js',
+    'src/browserify/query-builder-extensions.js'
+  ]})
+  .pipe(concat('ml-common-ng.js'));
+
+  eventStream.merge(shim, full)
+  .pipe(gulp.dest('dist'))
+  .pipe(rename(function(path) { path.extname = '.min.js'; }))
+  .pipe(uglify())
+  .pipe(gulp.dest('dist'));
 });
 
-gulp.task('scripts', ['browserify'], function() {
-  // TODO: fix this
-  // var src = gulp.src('./src/*.js');
-  // var browserifiedSrc = gulp.src('./src/browserify/*.js')
-  //   .pipe(browserify({
-  //     insertGlobals : true,
-  //     debug : false
-  //   }));
-  // var browserifiedSrc = gulp.src('./browserified/*.js')
-  // return eventStream.merge(src, browserifiedSrc)
-
-  return gulp.src([
-      './src/*.js',
-      './browserified/ml*.js'
-    ])
-    .pipe(concat('ml-common-ng.js'))
-    .pipe(gulp.dest('dist'))
-    .pipe(rename('ml-common-ng.min.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('dist'));
-});
-
-gulp.task('test', ['scripts'], function() {
+gulp.task('test', function() {
   karma.start({
     configFile: path.join(__dirname, './karma.conf.js'),
     singleRun: true,

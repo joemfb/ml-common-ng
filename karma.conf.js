@@ -9,8 +9,16 @@ module.exports = function(config) {
     // base path, that will be used to resolve files and exclude
     basePath: '',
 
+    plugins: [
+      'karma-browserify',
+      'karma-jasmine',
+      'karma-phantomjs-launcher',
+      'karma-ng-json2js-preprocessor',
+      'karma-coverage'
+    ],
+
     // testing framework to use (jasmine/mocha/qunit/...)
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine', 'browserify'],
 
     // list of files / patterns to load in the browser
     files: [
@@ -19,7 +27,8 @@ module.exports = function(config) {
 
       // App under test
       'src/*.js',
-      'browserified/ml*.js',
+      'src/**/*.js',
+      // 'browserified/ml*.js',
 
       // Mocks
       'bower_components/angular-mocks/angular-mocks.js',
@@ -36,9 +45,13 @@ module.exports = function(config) {
    reporters: ['progress', 'coverage'],
 
    preprocessors: {
-      'src/*.js': ['coverage'],
-      // 'browserified/*.js': ['coverage'],
+      'src/**/*.js': ['coverage'],
+      'src/browserify/*.js': ['browserify'],
       'test/**/*.json': ['ng-json2js']
+    },
+
+    browserify: {
+      transform: [ 'browserify-istanbul' ]
     },
 
     ngJson2JsPreprocessor: {
@@ -48,8 +61,10 @@ module.exports = function(config) {
 
     coverageReporter: {
       reporters: [
-        { type : 'text-summary' },
-        { type : 'html', dir : 'coverage/' }
+        // TODO: re-enable when this is fixed: https://github.com/karma-runner/karma-coverage/issues/157
+        // { type : 'text-summary' },
+        // { type : 'html', dir : 'coverage/' },
+        { type : 'text' }
       ]
     },
 
