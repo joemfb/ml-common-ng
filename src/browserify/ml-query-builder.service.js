@@ -33,7 +33,7 @@
        * @memberof MLQueryBuilder
        * @type {Object}
        */
-      ext: require('./query-builder-extensions.js'),
+      ext: require('./query-builder-extensions.js').ext,
 
       /**
        * @method MLQueryBuilder#query

@@ -1,6 +1,21 @@
 'use strict';
 
-var mlutil = require('marklogic/lib/mlutil.js');
+function asArray() {
+  var args;
+
+  /* istanbul ignore else */
+  if ( arguments.length === 1) {
+    if (Array.isArray( arguments[0] )) {
+      args = arguments[0];
+    } else {
+      args = [ arguments[0] ];
+    }
+  } else {
+    args = [].slice.call(arguments);
+  }
+
+  return args;
+}
 
 /**
  * Builds a [`range-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
@@ -12,7 +27,7 @@ var mlutil = require('marklogic/lib/mlutil.js');
  * @return {Object} [range-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
  */
 function rangeConstraint(name, values) {
-  values = mlutil.asArray.apply(null, [values]);
+  values = asArray.apply(null, [values]);
   return {
     'range-constraint-query': {
       'constraint-name': name,
@@ -31,7 +46,7 @@ function rangeConstraint(name, values) {
  * @return {Object} [collection-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
  */
 function collectionConstraint(name, values) {
-  values = mlutil.asArray.apply(null, [values]);
+  values = asArray.apply(null, [values]);
   return {
     'collection-constraint-query': {
       'constraint-name': name,
@@ -50,7 +65,7 @@ function collectionConstraint(name, values) {
  * @return {Object} [custom-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_28778)
  */
 function customConstraint(name, values) {
-  values = mlutil.asArray.apply(null, [values]);
+  values = asArray.apply(null, [values]);
   return {
     'custom-constraint-query': {
       'constraint-name': name,
@@ -99,74 +114,15 @@ function operator(name, stateName) {
   };
 }
 
-// superceded
-
-// and: function and() {
-//   var args = asArray.apply(null, arguments);
-//   return {
-//     'and-query': {
-//       'queries': args
-//     }
-//   };
-// },
-
-// or: function or() {
-//   var args = asArray.apply(null, arguments);
-//   return {
-//     'or-query': {
-//       'queries': args
-//     }
-//   };
-// },
-
-// not: function properties(query) {
-//   return {
-//     'not-query': query
-//   };
-// },
-
-// document: function document() {
-//   var args = asArray.apply(null, arguments);
-//   return {
-//     'document-query': {
-//       'uri': args
-//     }
-//   };
-// },
-
-// boost: function boost(matching, boosting) {
-//   return {
-//     'boost-query': {
-//       'matching-query': matching,
-//       'boosting-query': boosting
-//     }
-//   };
-// },
-
-// (propertiesFragment)
-// properties: function properties(query) {
-//   return { 'properties-query': query };
-// },
-
-// query: function query() {
-//   var args = asArray.apply(null, arguments);
-//   return {
-//     'query': {
-//       'queries': args
-//     }
-//   };
-// },
-
-// text: function text(qtext) {
-//   return {
-//     'qtext': qtext
-//   };
-// },
-
 module.exports = {
-  rangeConstraint: rangeConstraint,
-  collectionConstraint: collectionConstraint,
-  customConstraint: customConstraint,
-  constraint: constraint,
-  operator: operator
+  util: {
+    asArray: asArray
+  },
+  ext: {
+    rangeConstraint: rangeConstraint,
+    collectionConstraint: collectionConstraint,
+    customConstraint: customConstraint,
+    constraint: constraint,
+    operator: operator
+  }
 };
