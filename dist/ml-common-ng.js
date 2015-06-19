@@ -1,7 +1,58 @@
 (function() {
   'use strict';
 
-  angular.module('ml.common', []);
+  /**
+   * @namespace 'ml.common'
+   */
+  angular.module('ml.common', [])
+    .filter('object2Array', object2Array)
+    .filter('truncate', truncate);
+
+  /**
+   * angular filter for converting object properties to arrays
+   *
+   * converts `{ prop: { value: 'val' }}` to `[{ value: 'val', __key: 'prop' }]`
+   *
+   * @name object2Array
+   * @memberof 'ml.common'
+   */
+  function object2Array() {
+    return function(input) {
+      var out = [];
+      for (var name in input) {
+        input[name].__key = name;
+        out.push(input[name]);
+      }
+      return out;
+    };
+  }
+
+  /**
+   * angular filter for truncating text.
+   *
+   * truncates to `length`, offset by the length of `end`, and concatenates with `end`.
+   *
+   * ex:
+   *
+   *   `'abcdefg' | truncate:5` returns `'ab...'` <br/>
+   *   `'abcdefg' | truncate:5:''` returns `'abcde'`
+   *
+   * @name truncate
+   * @memberof 'ml.common'
+   *
+   * @param {Number} length - output length (defaults to `10`)
+   * @param {String} [end] - string to append to the input (defaults to `'...'`)
+   */
+  function truncate() {
+    return function (text, length, end) {
+      length = length || 10;
+      end = end || '...';
+
+      return (text.length > length) ?
+             String(text).substring(0, length - end.length) + end :
+             text;
+    };
+  }
 
 }());
 
@@ -243,20 +294,35 @@
     }
 
     /**
-     * Makes a search request
+     * Makes a search request (POST if combined query, GET otherwise)
      * @method MLRest#search
      *
      * @param {Object} [options] - URL params
+     * @param {Object} [combined] - a combined search object (identified by a `search` property)
      * @return {Promise} a promise resolved with an angular `$http` service response object
      */
-    function search(options) {
-      options = options || {};
+    function search(options, combined) {
+      var settings = {};
+
+      if ( !combined && options && options.search ) {
+        combined = options;
+        options = {};
+      } else {
+        options = options || {};
+      }
 
       if (!options.format){
         options.format = 'json';
       }
 
-      return request('/search', { params: options });
+      settings.params = options;
+
+      if ( combined ) {
+        settings.method = 'POST';
+        settings.data = combined;
+      }
+
+      return request('/search', settings);
     }
 
     /**
