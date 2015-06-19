@@ -7,6 +7,12 @@
   angular.module('ml.common')
     .factory('MLQueryBuilderShim', MLQueryBuilder);
 
+  /**
+   * @class MLQueryBuilderShim
+   * @classdesc minimal angular service for building structured queries; included as an alternative to {@link MLQueryBuilder}, which is much larger.
+   *
+   * included in `dist/ml-common-ng-shim.js` and `dist/ml-common-ng-shim.min.js`
+   */
   function MLQueryBuilder() {
 
     return {
@@ -24,6 +30,9 @@
       text: text
     };
 
+    /**
+     * @method MLQueryBuilderShim#and
+     */
     function and() {
       var args = asArray.apply(null, arguments);
       return {
@@ -33,6 +42,9 @@
       };
     }
 
+    /**
+     * @method MLQueryBuilderShim#or
+     */
     function or() {
       var args = asArray.apply(null, arguments);
       return {
@@ -42,12 +54,18 @@
       };
     }
 
+    /**
+     * @method MLQueryBuilderShim#not
+     */
     function not(query) {
       return {
         'not-query': query
       };
     }
 
+    /**
+     * @method MLQueryBuilderShim#document
+     */
     function document() {
       var args = asArray.apply(null, arguments);
       return {
@@ -57,6 +75,9 @@
       };
     }
 
+    /**
+     * @method MLQueryBuilderShim#boost
+     */
     function boost(matching, boosting) {
       return {
         'boost-query': {
@@ -66,10 +87,16 @@
       };
     }
 
+    /**
+     * @method MLQueryBuilderShim#properties
+     */
     function properties(query) {
       return { 'properties-query': query };
     }
 
+    /**
+     * @method MLQueryBuilderShim#query
+     */
     function query() {
       var args = asArray.apply(null, arguments);
       return {
@@ -79,6 +106,9 @@
       };
     }
 
+    /**
+     * @method MLQueryBuilderShim#text
+     */
     function text(qtext) {
       return {
         'qtext': qtext

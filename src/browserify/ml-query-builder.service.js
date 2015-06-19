@@ -8,7 +8,12 @@
 
   /**
    * @class MLQueryBuilder
-   * @classdesc angular service for building structured queries; wraps the [node-client queryBuilder](http://docs.marklogic.com/jsdoc/queryBuilder.html) and includes extensions.
+   * @classdesc angular service for building structured queries; wraps the
+   * [node-client queryBuilder](http://docs.marklogic.com/jsdoc/queryBuilder.html) and includes extensions.
+   *
+   * included in `dist/ml-common-ng.js` and `dist/ml-common-ng.min.js`
+   *
+   * (See {@link MLQueryBuilderShim} for a lightweight alternative.)
    */
   function MLQueryBuilder() {
 
