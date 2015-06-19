@@ -91,20 +91,35 @@
     }
 
     /**
-     * Makes a search request
+     * Makes a search request (POST if combined query, GET otherwise)
      * @method MLRest#search
      *
      * @param {Object} [options] - URL params
+     * @param {Object} [combined] - a combined search object (identified by a `search` property)
      * @return {Promise} a promise resolved with an angular `$http` service response object
      */
-    function search(options) {
-      options = options || {};
+    function search(options, combined) {
+      var settings = {};
+
+      if ( !combined && options && options.search ) {
+        combined = options;
+        options = {};
+      } else {
+        options = options || {};
+      }
 
       if (!options.format){
         options.format = 'json';
       }
 
-      return request('/search', { params: options });
+      settings.params = options;
+
+      if ( combined ) {
+        settings.method = 'POST';
+        settings.data = combined;
+      }
+
+      return request('/search', settings);
     }
 
     /**

@@ -124,6 +124,35 @@ describe('MLRest', function () {
     expect(actual).toEqual('<results/>');
   });
 
+  it('should search with combined query', function() {
+    $httpBackend
+      .expectPOST('/v1/search?format=json')
+      .respond('foo');
+
+    var actual;
+    mlRest.search({
+      search: { options: {
+        'return-facets': false
+      } }
+    }).then(function(response) { actual = response.data; });
+    $httpBackend.flush();
+
+    expect(actual).toEqual('foo');
+
+    $httpBackend
+      .expectPOST('/v1/search?format=json&options=all')
+      .respond('bar');
+
+    mlRest.search({ options: 'all' }, {
+      search: { options: {
+        'return-facets': false
+      } }
+    }).then(function(response) { actual = response.data; });
+    $httpBackend.flush();
+
+    expect(actual).toEqual('bar');
+  });
+
   it('retrieves a document', function() {
     $httpBackend
       .expectGET('/v1/documents?format=json&uri=%2Fdocs%2Ftest1.json')
