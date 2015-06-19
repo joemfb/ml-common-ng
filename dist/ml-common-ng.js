@@ -155,21 +155,19 @@
 
   angular.module('ml.common')
     .provider('MLRest', function() {
-        this.$get = ['$q', '$http', MLRest];
+        this.$get = ['$http', MLRest];
     });
 
   /**
-   *  MLRest
+   * @class MLRest
+   * @classdesc low-level angular service, encapsulates REST API builtins and normalizes the responses.
    *
-   *  low-level angular service, encapsulates REST API builtins and normalizes the responses.
-   *
+   * @param {Object} $http - angular $http service
    */
+  function MLRest($http) {
+    var defaults = { apiVersion: 'v1' };
 
-  function MLRest($q, $http) {
-    var defaults = { apiVersion: 'v1' },
-        service = {};
-
-    service = {
+    var service = {
       search: search,
       getDocument: getDocument,
       createDocument: createDocument,
@@ -194,6 +192,14 @@
       return supported.indexOf(method) > -1;
     }
 
+    /**
+     * Makes a REST API request (all other methods wrap this)
+     * @method MLRest#request
+     *
+     * @param {String} endpoint - the request endpoint: can be version agnostic (`/search`) or specific (`/v1/search`)
+     * @param {Object} settings - angular `$http` service settings
+     * @return {Promise} a promise resolved with an angular `$http` service response object
+     */
     function request(endpoint, settings) {
       var url;
 
@@ -203,6 +209,7 @@
         url = '/' + defaults.apiVersion + endpoint;
       }
 
+      settings = settings || {};
       settings.method = settings.method || 'GET';
 
       if (!isSupportedMethod(settings.method)) {
@@ -220,6 +227,14 @@
       });
     }
 
+    /**
+     * Makes a resource extension request
+     * @method MLRest#extension
+     *
+     * @param {String} name - resource extension name
+     * @param {Object} [settings] - angular `$http` service settings
+     * @return {Promise} a promise resolved with an angular `$http` service response object
+     */
     function extension(name, settings) {
       if ( !/^\//.test(name) ) {
         name = '/' + name;
@@ -227,6 +242,13 @@
       return request('/resources' + name, settings);
     }
 
+    /**
+     * Makes a search request
+     * @method MLRest#search
+     *
+     * @param {Object} [options] - URL params
+     * @return {Promise} a promise resolved with an angular `$http` service response object
+     */
     function search(options) {
       options = options || {};
 
@@ -237,6 +259,14 @@
       return request('/search', { params: options });
     }
 
+    /**
+     * Retrieves a document at the specified URI
+     * @method MLRest#getDocument
+     *
+     * @param {String} uri - document URI
+     * @param {Object} options - URL params
+     * @return {Promise} a promise resolved with an angular `$http` service response object
+     */
     function getDocument(uri, options) {
       options = options || {};
       options.uri = uri;
@@ -248,71 +278,83 @@
       return request('/documents', { params: options });
     }
 
+    /**
+     * Creates a document, returning the new URI
+     * @method MLRest#createDocument
+     *
+     * @param {Object|String} doc - document contents
+     * @param {Object} [options] - URL params
+     * @return {Promise} a promise resolved with the new document URI
+     */
     function createDocument(doc, options) {
-      var d = $q.defer();
-
-      request('/documents', {
+      return request('/documents', {
         method: 'POST',
         params: options,
         data: doc
-      }).then(
-        function(response) {
-          d.resolve(response.headers('location'));
-        },
-        function(reason) {
-          d.reject(reason);
-        });
-
-      return d.promise;
+      }).then(function(response) {
+        return response.headers('location');
+      });
     }
 
+    /**
+     * Creates or updates a document at the specified URI (`options.uri`)
+     * @method MLRest#updateDocument
+     *
+     * @param {Object|String} doc - document contents
+     * @param {Object} options - URL params
+     * @return {Promise} a promise resolved with the new document URI
+     */
     //TODO: uri param?
+    //TODO: shouldn't resolve location?
     function updateDocument(doc, options) {
-      var d = $q.defer();
-
-      request('/documents', {
+      return request('/documents', {
         method: 'PUT',
         params: options,
         data: doc
-      }).then(
-        function(response) {
-          d.resolve(response.headers('location'));
-        },
-        function(reason) {
-          d.reject(reason);
-        });
-
-      return d.promise;
+      }).then(function(response) {
+        return response.headers('location');
+      });
     }
 
+    /**
+     * Applies the provided patch to the document at the specified URI
+     * @method MLRest#patchDocument
+     *
+     * @param {String} uri - document URI
+     * @param {Object} patch - a document patch definition
+     * @return {Promise} a promise resolved with the new document URI
+     */
+    //TODO: shouldn't resolve location?
     function patchDocument(uri, patch) {
-      var d = $q.defer(),
-          headers = {};
-
       // TODO: support XML patches
+
+      // var headers = {};
+      //
       // if (isObject(patch)) {
       //   headers = { 'Content-Type': 'application/json' }
       // } else {
       //   headers = { 'Content-Type': 'application/xml' }
       // }
 
-      request('/documents', {
+      return request('/documents', {
         method: 'PATCH',
         params: { uri: uri },
-        data: patch,
-        headers: headers
+        // headers: headers,
+        data: patch
       })
-      .then(
-        function(response) {
-          d.resolve(response.headers('location'));
-        },
-        function(reason) {
-          d.reject(reason);
-        });
-
-      return d.promise;
+      .then(function(response) {
+        return response.headers('location');
+      });
     }
 
+    /**
+     * Evaluates a SPARQL query
+     * @method MLRest#sparql
+     *
+     * @param {String} query - a SPARQL query
+     * @param {Object} [params] - URL params
+     * @return {Promise} a promise resolved with an angular `$http` service response object
+     */
     function sparql(query, params) {
       var accept = [
         'application/sparql-results+json'
@@ -331,6 +373,14 @@
       });
     }
 
+    /**
+     * Retrieves search phrase suggestions
+     * @method MLRest#suggest
+     *
+     * @param {Object} [params] - URL params
+     * @param {Object} [combined] - combined query
+     * @return {Promise} a promise resolved with an angular `$http` service response object
+     */
     function suggest(params, combined) {
       var settings = { params: params };
 
@@ -342,6 +392,15 @@
       return request('/suggest', settings);
     }
 
+    /**
+     * Retrieves lexicon values
+     * @method MLRest#values
+     *
+     * @param {String} name - values definition name (from stored or combined search options)
+     * @param {Object} [params] - URL params
+     * @param {Object} [combined] - combined query
+     * @return {Promise} a promise resolved with an angular `$http` service response object
+     */
     function values(name, params, combined) {
       var settings = { params: params };
 
@@ -353,6 +412,14 @@
       return request('/values/' + name, settings);
     }
 
+    /**
+     * Retrieves stored search options
+     * @method MLRest#queryConfig
+     *
+     * @param {String} name - stored search options name
+     * @param {String} [section] - options section to retrieve
+     * @return {Promise} a promise resolved with an angular `$http` service response object
+     */
     function queryConfig(name, section) {
       var url = '/config/query/' + name;
 
