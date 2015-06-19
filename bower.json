@@ -4,10 +4,10 @@
   "description": "An angular module that encapsulates the MarkLogic REST API builtins and normalizes the responses.",
   "main": "dist/ml-common-ng.min.js",
   "dependencies": {
-    "angular": "1.2.14"
+    "angular": "^1.2.14"
   },
   "devDependencies": {
-    "angular-mocks": "1.2.14"
+    "angular-mocks": "^1.2.14"
   },
   "homepage": "https://github.com/joemfb/ml-common-ng",
   "authors": [
