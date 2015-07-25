@@ -2,7 +2,7 @@
   "name": "ml-common-ng",
   "version": "0.0.6",
   "description": "An angular module that encapsulates the MarkLogic REST API builtins and normalizes the responses.",
-  "main": "dist/ml-common-ng.min.js",
+  "main": "dist/ml-common-ng.js",
   "dependencies": {
     "angular": "^1.2.14"
   },
