@@ -18,6 +18,7 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
 
       // App under test
+      'src/ml-common.js',
       'src/**/*.js',
 
       // Mocks
