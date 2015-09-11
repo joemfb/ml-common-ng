@@ -4,6 +4,11 @@
   angular.module('ml.common')
     .factory('MLQueryBuilder', MLQueryBuilder);
 
+  /**
+   * @class MLQueryBuilder
+   * @classdesc angular service for building structured queries; a subset of
+   * [node-client queryBuilder](http://docs.marklogic.com/jsdoc/queryBuilder.html), plus extensions.
+   */
   function MLQueryBuilder() {
     return {
 
@@ -31,6 +36,10 @@
         };
       },
 
+      /**
+       * @method MLQueryBuilder#or
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#or
+       */
       or: function or() {
         var args = asArray.apply(null, arguments);
         return {
@@ -40,17 +49,38 @@
         };
       },
 
+      /**
+       * @method MLQueryBuilder#not
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#not
+       */
       not: function properties(query) {
         return {
           'not-query': query
         };
       },
 
+      /**
+       * @method MLQueryBuilder#document
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#document
+       */
       document: function document() {
         var args = asArray.apply(null, arguments);
         return {
           'document-query': {
             'uri': args
+          }
+        };
+      },
+
+      /**
+       * @method MLQueryBuilder#boost
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#boost
+       */
+      boost: function boost(matching, boosting) {
+        return {
+          'boost-query': {
+            'matching-query': matching,
+            'boosting-query': boosting
           }
         };
       },
@@ -94,15 +124,6 @@
           default:
             return this.range;
         }
-      },
-
-      boost: function boost(matching, boosting) {
-        return {
-          'boost-query': {
-            'matching-query': matching,
-            'boosting-query': boosting
-          }
-        };
       },
 
       properties: function properties(query) {
