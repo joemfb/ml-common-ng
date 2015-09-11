@@ -35,7 +35,17 @@
         return this.where.apply(this, arguments);
       },
 
+      /**
+       * @method MLQueryBuilder#text
+       * @deprecated
+       */
+      // TODO: replace with what?
+      // * @see MLQueryBuilder#parsedFrom
       text: function text(qtext) {
+        console.log(
+          'Warning, MLQueryBuilder.text is deprecated, and will be removed in the next release!\n' +
+          'Use the qtext property of a structured query in it\'s place'
+        );
         return {
           'qtext': qtext
         };
