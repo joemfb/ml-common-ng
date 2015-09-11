@@ -37,14 +37,13 @@
 
       /**
        * @method MLQueryBuilder#text
+       * @see MLQueryBuilder.ext.combined
        * @deprecated
        */
-      // TODO: replace with what?
-      // * @see MLQueryBuilder#parsedFrom
       text: function text(qtext) {
         console.log(
           'Warning, MLQueryBuilder.text is deprecated, and will be removed in the next release!\n' +
-          'Use the qtext property of a structured query in it\'s place'
+          'Use the qtext argument of MLQueryBuilder.ext.combined in it\'s place'
         );
         return {
           'qtext': qtext
@@ -208,6 +207,31 @@
       ext: {
 
         /**
+         * Builds a [combined query](http://docs.marklogic.com/guide/rest-dev/search#id_69918)
+         * @memberof! MLQueryBuilder
+         * @method ext.combined
+         *
+         * @param {Object} query - a structured query (from {@link MLQueryBuilder#where})
+         * @param {String} [qtext] - a query text string, to be parsed server-side
+         * @param {Object} [options] - search options
+         * @return {Object} combined query
+         */
+        combined: function combined(query, qtext, options) {
+          if ( isObject(qtext) && !options ) {
+            options = qtext;
+            qtext = null;
+          }
+
+          return {
+            search: {
+              query: query.query || query,
+              qtext: qtext,
+              options: options.options || options
+            }
+          };
+        },
+
+        /**
          * Builds a [`range-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
          * @memberof! MLQueryBuilder
          * @method ext.rangeConstraint
@@ -325,6 +349,12 @@
     }
 
     return args;
+  }
+
+  // from lodash
+  function isObject(value) {
+    var type = typeof value;
+    return !!value && (type == 'object' || type == 'function');
   }
 
 

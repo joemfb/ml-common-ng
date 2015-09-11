@@ -212,4 +212,26 @@ describe('MLQueryBuilder', function () {
     expect(query['operator-state']['state-name']).toEqual('date');
   });
 
+  it('builds a combined query', function() {
+    var query = qb.and();
+
+    var combined = qb.ext.combined(query, 'blah', {})
+
+    expect(combined.search).toBeDefined();
+    expect(combined.search.query).toEqual(query);
+    expect(combined.search.qtext).toEqual('blah');
+    expect(combined.search.options).toEqual({});
+
+    query = qb.or();
+    combined = qb.ext.combined(query, {
+      options: { 'return-query': 0 }
+    });
+
+    expect(combined.search).toBeDefined();
+    expect(combined.search.query).toEqual(query);
+    expect(combined.search.qtext).toBeNull();
+    expect(combined.search.options).toBeDefined();
+    expect(combined.search.options['return-query']).toEqual(0);
+  });
+
 });
