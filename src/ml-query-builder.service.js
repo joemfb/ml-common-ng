@@ -187,13 +187,17 @@
         return this.ext.constraint.apply(this.ext, arguments);
       },
 
+      /**
+       * @method MLQueryBuilder#operator
+       * @see MLQueryBuilder.ext.operator
+       * @deprecated
+       */
       operator: function operator(name, stateName) {
-        return {
-          'operator-state': {
-            'operator-name': name,
-            'state-name': stateName
-          }
-        };
+        console.log(
+          'Warning, MLQueryBuilder.operator is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.ext.operator in it\'s place'
+        );
+        return this.ext.operatorState.apply(this.ext, arguments);
       },
 
       /**
@@ -280,6 +284,24 @@
             default:
               return this.rangeConstraint;
           }
+        },
+
+        /**
+         * Builds an [`operator-state` query component](http://docs.marklogic.com/guide/search-dev/structured-query#id_45570)
+         * @memberof! MLQueryBuilder
+         * @method ext.operatorState
+         *
+         * @param {String} name - operator name
+         * @param {String} stateName - operator-state name
+         * @return {Object} [operator-state component](http://docs.marklogic.com/guide/search-dev/structured-query#id_45570)
+         */
+        operatorState: function operatorState(name, stateName) {
+          return {
+            'operator-state': {
+              'operator-name': name,
+              'state-name': stateName
+            }
+          };
         }
       }
 

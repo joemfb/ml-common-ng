@@ -202,7 +202,10 @@ describe('MLQueryBuilder', function () {
   });
 
   it('builds an operator query', function() {
-    var query = qb.operator('sort', 'date');
+    var query = qb.ext.operatorState('sort', 'date');
+
+    var oldQuery = qb.operator('sort', 'date');
+    expect(query).toEqual(oldQuery);
 
     expect(query['operator-state']).toBeDefined();
     expect(query['operator-state']['operator-name']).toEqual('sort');
