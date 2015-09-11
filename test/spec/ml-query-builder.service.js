@@ -12,10 +12,17 @@ describe('MLQueryBuilder', function () {
   }));
 
   it('builds a query', function() {
-    var query = qb.query();
+    var query = qb.where();
+
+    var oldQuery = qb.query();
+    expect(query).toEqual(oldQuery);
+
     expect(query.query).toBeDefined;
     expect(query.query.queries.length).toEqual(0);
-    query = qb.query(qb.and())
+
+    query = qb.where(qb.and())
+    oldQuery = qb.query(qb.and())
+
     expect(query.query.queries.length).toEqual(1);
   });
 

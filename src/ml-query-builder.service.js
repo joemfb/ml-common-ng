@@ -10,15 +10,29 @@
    * [node-client queryBuilder](http://docs.marklogic.com/jsdoc/queryBuilder.html), plus extensions.
    */
   function MLQueryBuilder() {
+
+    function where() {
+      var args = asArray.apply(null, arguments);
+      return {
+        'query': {
+          'queries': args
+        }
+      };
+    }
+
     return {
 
-      query: function query() {
-        var args = asArray.apply(null, arguments);
-        return {
-          'query': {
-            'queries': args
-          }
-        };
+      /**
+       * @method MLQueryBuilder#query
+       * @see MLQueryBuilder#where
+       * @deprecated
+       */
+      query: function() {
+        console.log(
+          'Warning, MLQueryBuilder.query is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.where in it\'s place'
+        );
+        return this.where.apply(this, arguments);
       },
 
       text: function text(qtext) {
@@ -26,6 +40,12 @@
           'qtext': qtext
         };
       },
+
+      /**
+       * @method MLQueryBuilder#where
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#where
+       */
+      where: where,
 
       and: function and() {
         var args = asArray.apply(null, arguments);
