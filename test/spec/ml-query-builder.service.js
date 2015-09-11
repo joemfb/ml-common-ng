@@ -167,10 +167,13 @@ describe('MLQueryBuilder', function () {
   });
 
   it('builds a properties query', function() {
-    var query = qb.properties( qb.and() );
+    var query = qb.propertiesFragment( qb.and() );
 
-    expect(query['properties-query']).toBeDefined();
-    expect(query['properties-query']).toEqual( qb.and() );
+    var oldQuery = qb.properties( qb.and() );
+    expect(query).toEqual(oldQuery);
+
+    expect(query['properties-fragment-query']).toBeDefined();
+    expect(query['properties-fragment-query']).toEqual( qb.and() );
   });
 
   it('builds an operator query', function() {

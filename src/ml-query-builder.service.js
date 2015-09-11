@@ -52,6 +52,26 @@
       },
 
       /**
+       * @method MLQueryBuilder#properties
+       * @deprecated
+       */
+      properties: function properties(query) {
+        console.log(
+          'Warning, MLQueryBuilder.properties is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.propertiesFragment in it\'s place'
+        );
+        return this.propertiesFragment.apply(this, arguments);
+      },
+
+      /**
+       * @method MLQueryBuilder#propertiesFragment
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#propertiesFragment
+       */
+      propertiesFragment: function propertiesFragment(query) {
+        return { 'properties-fragment-query': query };
+      },
+
+      /**
        * @method MLQueryBuilder#where
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#where
        */
@@ -154,10 +174,6 @@
           default:
             return this.range;
         }
-      },
-
-      properties: function properties(query) {
-        return { 'properties-query': query };
       },
 
       operator: function operator(name, stateName) {
