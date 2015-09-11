@@ -135,45 +135,56 @@
         };
       },
 
+      /**
+       * @method MLQueryBuilder#range
+       * @see MLQueryBuilder.ext.rangeConstraint
+       * @deprecated
+       */
       range: function range(name, values) {
-        values = asArray.apply(null, [values]);
-        return {
-          'range-constraint-query': {
-            'constraint-name': name,
-            'value': values
-          }
-        };
+        console.log(
+          'Warning, MLQueryBuilder.range is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.ext.rangeConstraint in it\'s place'
+        );
+        return this.ext.rangeConstraint.apply(this.ext, arguments);
       },
 
+      /**
+       * @method MLQueryBuilder#collection
+       * @see MLQueryBuilder.ext.collectionConstraint
+       * @deprecated
+       */
       collection: function collection(name, values) {
-        values = asArray.apply(null, [values]);
-        return {
-          'collection-constraint-query': {
-            'constraint-name': name,
-            'uri': values
-          }
-        };
+        console.log(
+          'Warning, MLQueryBuilder.collection is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.ext.collectionConstraint in it\'s place'
+        );
+        return this.ext.collectionConstraint.apply(this.ext, arguments);
       },
 
+      /**
+       * @method MLQueryBuilder#custom
+       * @see MLQueryBuilder.ext.customConstraint
+       * @deprecated
+       */
       custom: function custom(name, values) {
-        values = asArray.apply(null, [values]);
-        return {
-          'custom-constraint-query': {
-            'constraint-name': name,
-            'value': values
-          }
-        };
+        console.log(
+          'Warning, MLQueryBuilder.custom is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.ext.customConstraint in it\'s place'
+        );
+        return this.ext.customConstraint.apply(this.ext, arguments);
       },
 
+      /**
+       * @method MLQueryBuilder#constraint
+       * @see MLQueryBuilder.ext.constraint
+       * @deprecated
+       */
       constraint: function constraint(type) {
-        switch(type) {
-          case 'custom':
-            return this.custom;
-          case 'collection':
-            return this.collection;
-          default:
-            return this.range;
-        }
+        console.log(
+          'Warning, MLQueryBuilder.constraint is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.ext.constraint in it\'s place'
+        );
+        return this.ext.constraint.apply(this.ext, arguments);
       },
 
       operator: function operator(name, stateName) {
@@ -183,6 +194,93 @@
             'state-name': stateName
           }
         };
+      },
+
+      /**
+       * query builder extensions
+       * @memberof MLQueryBuilder
+       * @type {Object}
+       */
+      ext: {
+
+        /**
+         * Builds a [`range-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
+         * @memberof! MLQueryBuilder
+         * @method ext.rangeConstraint
+         *
+         * @param {String} name - constraint name
+         * @param {Array} values - the values the constraint should equal (logical OR)
+         * @return {Object} [range-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
+         */
+        rangeConstraint: function rangeConstraint(name, values) {
+          values = asArray.apply(null, [values]);
+          return {
+            'range-constraint-query': {
+              'constraint-name': name,
+              'value': values
+            }
+          };
+        },
+
+        /**
+         * Builds a [`collection-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
+         * @memberof! MLQueryBuilder
+         * @method ext.collectionConstraint
+         *
+         * @param {String} name - constraint name
+         * @param {Array} values - the values the constraint should equal (logical OR)
+         * @return {Object} [collection-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
+         */
+        collectionConstraint: function collectionConstraint(name, values) {
+          values = asArray.apply(null, [values]);
+          return {
+            'collection-constraint-query': {
+              'constraint-name': name,
+              'uri': values
+            }
+          };
+        },
+
+        /**
+         * Builds a [`custom-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_28778)
+         * @memberof! MLQueryBuilder
+         * @method ext.customConstraint
+         *
+         * @param {String} name - constraint name
+         * @param {Array} values - the values the constraint should equal (logical OR)
+         * @return {Object} [custom-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_28778)
+         */
+        customConstraint: function customConstraint(name, values) {
+          values = asArray.apply(null, [values]);
+          return {
+            'custom-constraint-query': {
+              'constraint-name': name,
+              'value': values
+            }
+          };
+        },
+
+        /**
+         * constraint query function factory
+         * @memberof! MLQueryBuilder
+         * @method ext.constraint
+         *
+         * @param {String} type - constraint type (`'collection' | 'custom' | '*'`)
+         * @return {Function} a constraint query builder function, one of:
+         *   - {@link MLQueryBuilder.ext.rangeConstraint}
+         *   - {@link MLQueryBuilder.ext.collectionConstraint}
+         *   - {@link MLQueryBuilder.ext.customConstraint}
+         */
+        constraint: function constraint(type) {
+          switch(type) {
+            case 'custom':
+              return this.customConstraint;
+            case 'collection':
+              return this.collectionConstraint;
+            default:
+              return this.rangeConstraint;
+          }
+        }
       }
 
     };

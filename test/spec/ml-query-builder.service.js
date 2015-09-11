@@ -87,7 +87,10 @@ describe('MLQueryBuilder', function () {
   });
 
   it('builds a range-query with one value', function() {
-    var query = qb.range('test', 'value');
+    var query = qb.ext.rangeConstraint('test', 'value');
+
+    var oldQuery = qb.range('test', 'value');
+    expect(query).toEqual(oldQuery);
 
     expect(query['range-constraint-query']).toBeDefined();
     expect(query['range-constraint-query']['constraint-name']).toEqual('test');
@@ -96,7 +99,10 @@ describe('MLQueryBuilder', function () {
   });
 
   it('builds a range-query with multiple values', function() {
-    var query = qb.range('test', ['value1', 'value2']);
+    var query = qb.ext.rangeConstraint('test', ['value1', 'value2']);
+
+    var oldQuery = qb.range('test', ['value1', 'value2']);
+    expect(query).toEqual(oldQuery);
 
     expect(query['range-constraint-query']).toBeDefined();
     expect(query['range-constraint-query']['constraint-name']).toEqual('test');
@@ -106,7 +112,10 @@ describe('MLQueryBuilder', function () {
   });
 
   it('builds a collection-query with one collection', function() {
-    var query = qb.collection('name', 'uri');
+    var query = qb.ext.collectionConstraint('name', 'uri');
+
+    var oldQuery = qb.collection('name', 'uri');
+    expect(query).toEqual(oldQuery);
 
     expect(query['collection-constraint-query']).toBeDefined();
     expect(query['collection-constraint-query']['constraint-name']).toEqual('name');
@@ -115,7 +124,10 @@ describe('MLQueryBuilder', function () {
   });
 
   it('builds a collection-query with multiple collections', function() {
-    var query = qb.collection('name', ['uri1', 'uri2']);
+    var query = qb.ext.collectionConstraint('name', ['uri1', 'uri2']);
+
+    var oldQuery = qb.collection('name', ['uri1', 'uri2']);
+    expect(query).toEqual(oldQuery);
 
     expect(query['collection-constraint-query']).toBeDefined();
     expect(query['collection-constraint-query']['constraint-name']).toEqual('name');
@@ -125,7 +137,10 @@ describe('MLQueryBuilder', function () {
   });
 
   it('builds a custom-query with one value', function() {
-    var query = qb.custom('test', 'value');
+    var query = qb.ext.customConstraint('test', 'value');
+
+    var oldQuery = qb.custom('test', 'value');
+    expect(query).toEqual(oldQuery);
 
     expect(query['custom-constraint-query']).toBeDefined();
     expect(query['custom-constraint-query']['constraint-name']).toEqual('test');
@@ -134,7 +149,10 @@ describe('MLQueryBuilder', function () {
   });
 
   it('builds a custom-query with multiple values', function() {
-    var query = qb.custom('test', ['value1', 'value2']);
+    var query = qb.ext.customConstraint('test', ['value1', 'value2']);
+
+    var oldQuery = qb.custom('test', ['value1', 'value2']);
+    expect(query).toEqual(oldQuery);
 
     expect(query['custom-constraint-query']).toBeDefined();
     expect(query['custom-constraint-query']['constraint-name']).toEqual('test');
@@ -146,14 +164,21 @@ describe('MLQueryBuilder', function () {
   it('chooses a constraint query by type', function() {
     var constraint;
 
-    constraint = qb.constraint(null)
-    expect(constraint('name', 'value')).toEqual(qb.range('name', 'value'))
+    constraint = qb.ext.constraint(null);
+    expect(constraint('name', 'value')).toEqual(qb.ext.rangeConstraint('name', 'value'));
 
-    constraint = qb.constraint('collection')
-    expect(constraint('name', 'value')).toEqual(qb.collection('name', 'value'))
+    var oldConstraint = qb.constraint(null);
 
-    constraint = qb.constraint('custom')
-    expect(constraint('name', 'value')).toEqual(qb.custom('name', 'value'))
+    expect(constraint('name', 'value')).toEqual(oldConstraint('name', 'value'));
+
+    constraint = qb.ext.constraint('range')
+    expect(constraint('name', 'value')).toEqual(qb.ext.rangeConstraint('name', 'value'))
+
+    constraint = qb.ext.constraint('collection');
+    expect(constraint('name', 'value')).toEqual(qb.ext.collectionConstraint('name', 'value'));
+
+    constraint = qb.ext.constraint('custom');
+    expect(constraint('name', 'value')).toEqual(qb.ext.customConstraint('name', 'value'));
   });
 
   it('builds a boost query', function() {
