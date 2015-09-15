@@ -1,9 +1,40 @@
-(function() {
-  'use strict';
+<!doctype html>
+<html>
 
-  angular.module('ml.common')
-    .provider('MLRest', function() {
-      this.$get = ['$http', MLRest];
+<head>
+  <meta name="generator" content="JSDoc 3.3.2">
+  <meta charset="utf-8">
+  <title>Source: ml-rest.service.js</title>
+  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
+  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Noto+Serif:400,400i,700,700i" type="text/css">
+  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Inconsolata:500" type="text/css">
+  <link href="css/baseline.css" rel="stylesheet">
+</head>
+
+<body onload="prettyPrint()">
+  <nav id="jsdoc-navbar" role="navigation" class="jsdoc-navbar">
+    <div id="jsdoc-navbar-container">
+      <div id="jsdoc-navbar-content">
+        <a href="index.html" class="jsdoc-navbar-package-name">Home</a>
+      </div>
+    </div>
+  </nav>
+  <div id="jsdoc-body-container">
+    <div id="jsdoc-content">
+      <div id="jsdoc-content-container">
+        <div id="jsdoc-banner" role="banner">
+        </div>
+        <div id="jsdoc-main" role="main">
+          <header class="page-header">
+            <h1>Source: ml-rest.service.js</h1>
+          </header>
+          <article>
+            <pre class="prettyprint linenums"><code>(function() {
+  &#x27;use strict&#x27;;
+
+  angular.module(&#x27;ml.common&#x27;)
+    .provider(&#x27;MLRest&#x27;, function() {
+      this.$get = [&#x27;$http&#x27;, MLRest];
     });
 
   /**
@@ -13,7 +44,7 @@
    * @param {Object} $http - angular [$http service](https://docs.angularjs.org/api/ng/service/$http)
    */
   function MLRest($http) {
-    var defaults = { apiVersion: 'v1' };
+    var defaults = { apiVersion: &#x27;v1&#x27; };
 
     var service = {
       search: search,
@@ -36,17 +67,17 @@
 
     // private function for checking if a method is supported
     function isSupportedMethod(method) {
-      var supported = [ 'GET', 'PUT', 'POST', 'DELETE' ];
-      return supported.indexOf(method) > -1;
+      var supported = [ &#x27;GET&#x27;, &#x27;PUT&#x27;, &#x27;POST&#x27;, &#x27;DELETE&#x27; ];
+      return supported.indexOf(method) &gt; -1;
     }
 
     /**
      * Makes a REST API request (all other methods wrap this)
      * @method MLRest#request
      *
-     * @param {String} endpoint - the request endpoint: can be version agnostic (`/search`) or specific (`/v1/search`)
-     * @param {Object} settings - angular `$http` service [settings](https://docs.angularjs.org/api/ng/service/$http#usage)
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @param {String} endpoint - the request endpoint: can be version agnostic (&#x60;/search&#x60;) or specific (&#x60;/v1/search&#x60;)
+     * @param {Object} settings - angular &#x60;$http&#x60; service [settings](https://docs.angularjs.org/api/ng/service/$http#usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function request(endpoint, settings) {
       var url;
@@ -54,16 +85,16 @@
       if (/^\/v1\//.test(endpoint)) {
         url = endpoint;
       } else {
-        url = '/' + defaults.apiVersion + endpoint;
+        url = &#x27;/&#x27; + defaults.apiVersion + endpoint;
       }
 
       settings = settings || {};
-      settings.method = settings.method || 'GET';
+      settings.method = settings.method || &#x27;GET&#x27;;
 
       if (!isSupportedMethod(settings.method)) {
         settings.headers = settings.headers || {};
-        settings.headers['X-HTTP-Method-Override'] = settings.method;
-        settings.method = 'POST';
+        settings.headers[&#x27;X-HTTP-Method-Override&#x27;] = settings.method;
+        settings.method = &#x27;POST&#x27;;
       }
 
       return $http({
@@ -81,14 +112,14 @@
      * @method MLRest#extension
      *
      * @param {String} name - resource extension name
-     * @param {Object} settings - angular `$http` service [settings](https://docs.angularjs.org/api/ng/service/$http#usage)
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @param {Object} settings - angular &#x60;$http&#x60; service [settings](https://docs.angularjs.org/api/ng/service/$http#usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function extension(name, settings) {
       if ( !/^\//.test(name) ) {
-        name = '/' + name;
+        name = &#x27;/&#x27; + name;
       }
-      return request('/resources' + name, settings);
+      return request(&#x27;/resources&#x27; + name, settings);
     }
 
     /**
@@ -98,13 +129,13 @@
      * @method MLRest#search
      *
      * @param {Object} [options] - URL params
-     * @param {Object} [combined] - a combined search object (identified by a `search` property)
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @param {Object} [combined] - a combined search object (identified by a &#x60;search&#x60; property)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function search(options, combined) {
       var settings = {};
 
-      if ( !combined && options && options.search ) {
+      if ( !combined &amp;amp;&amp;amp; options &amp;amp;&amp;amp; options.search ) {
         combined = options;
         options = {};
       } else {
@@ -112,17 +143,17 @@
       }
 
       if (!options.format) {
-        options.format = 'json';
+        options.format = &#x27;json&#x27;;
       }
 
       settings.params = options;
 
       if ( combined ) {
-        settings.method = 'POST';
+        settings.method = &#x27;POST&#x27;;
         settings.data = combined;
       }
 
-      return request('/search', settings);
+      return request(&#x27;/search&#x27;, settings);
     }
 
     /**
@@ -132,17 +163,17 @@
      *
      * @param {String} uri - document URI
      * @param {Object} options - URL params
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function getDocument(uri, options) {
       options = options || {};
       options.uri = uri;
 
       if (!options.format) {
-        options.format = 'json';
+        options.format = &#x27;json&#x27;;
       }
 
-      return request('/documents', { params: options });
+      return request(&#x27;/documents&#x27;, { params: options });
     }
 
     /**
@@ -155,17 +186,17 @@
      * @return {Promise} a promise resolved with the new document URI
      */
     function createDocument(doc, options) {
-      return request('/documents', {
-        method: 'POST',
+      return request(&#x27;/documents&#x27;, {
+        method: &#x27;POST&#x27;,
         params: options,
         data: doc
       }).then(function(response) {
-        return response.headers('location');
+        return response.headers(&#x27;location&#x27;);
       });
     }
 
     /**
-     * Creates or updates a document at the specified URI (`options.uri`)
+     * Creates or updates a document at the specified URI (&#x60;options.uri&#x60;)
      * - {@link http://docs.marklogic.com/REST/PUT/v1/documents}
      * @method MLRest#updateDocument
      *
@@ -174,14 +205,14 @@
      * @return {Promise} a promise resolved with the new document URI
      */
     //TODO: uri param?
-    //TODO: shouldn't resolve location?
+    //TODO: shouldn&#x27;t resolve location?
     function updateDocument(doc, options) {
-      return request('/documents', {
-        method: 'PUT',
+      return request(&#x27;/documents&#x27;, {
+        method: &#x27;PUT&#x27;,
         params: options,
         data: doc
       }).then(function(response) {
-        return response.headers('location');
+        return response.headers(&#x27;location&#x27;);
       });
     }
 
@@ -194,26 +225,26 @@
      * @param {Object} patch - a document patch definition
      * @return {Promise} a promise resolved with the new document URI
      */
-    //TODO: shouldn't resolve location?
+    //TODO: shouldn&#x27;t resolve location?
     function patchDocument(uri, patch) {
       // TODO: support XML patches
 
       // var headers = {};
       //
       // if (isObject(patch)) {
-      //   headers = { 'Content-Type': 'application/json' }
+      //   headers = { &#x27;Content-Type&#x27;: &#x27;application/json&#x27; }
       // } else {
-      //   headers = { 'Content-Type': 'application/xml' }
+      //   headers = { &#x27;Content-Type&#x27;: &#x27;application/xml&#x27; }
       // }
 
-      return request('/documents', {
-        method: 'PATCH',
+      return request(&#x27;/documents&#x27;, {
+        method: &#x27;PATCH&#x27;,
         params: { uri: uri },
         // headers: headers,
         data: patch
       })
       .then(function(response) {
-        return response.headers('location');
+        return response.headers(&#x27;location&#x27;);
       });
     }
 
@@ -224,13 +255,13 @@
      *
      * @param {String} query - a SPARQL query
      * @param {Object} [params] - URL params
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function sparql(query, params) {
       var accept = [
-        'application/sparql-results+json'
+        &#x27;application/sparql-results+json&#x27;
         // TODO: file bug against REST API for not supporting multiple Accept mime-types
-        // 'application/rdf+json'
+        // &#x27;application/rdf+json&#x27;
       ];
 
       params = params || {};
@@ -238,9 +269,9 @@
       //TODO: POST query?
       params.query = query;
 
-      return request('/graphs/sparql', {
+      return request(&#x27;/graphs/sparql&#x27;, {
         params: params,
-        headers: { 'Accept': accept.join(', ') }
+        headers: { &#x27;Accept&#x27;: accept.join(&#x27;, &#x27;) }
       });
     }
 
@@ -252,17 +283,17 @@
      *
      * @param {Object} [params] - URL params
      * @param {Object} [combined] - combined query
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function suggest(params, combined) {
       var settings = { params: params };
 
       if (combined) {
-        settings.method = 'POST';
+        settings.method = &#x27;POST&#x27;;
         settings.data = combined;
       }
 
-      return request('/suggest', settings);
+      return request(&#x27;/suggest&#x27;, settings);
     }
 
     /**
@@ -274,37 +305,37 @@
      * @param {String} name - values definition name (from stored or combined search options)
      * @param {Object} [params] - URL params
      * @param {Object} [combined] - combined query
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function values(name, params, combined) {
       var settings = { params: params };
 
       if (combined) {
-        settings.method = 'POST';
+        settings.method = &#x27;POST&#x27;;
         settings.data = combined;
       }
 
-      return request('/values/' + name, settings);
+      return request(&#x27;/values/&#x27; + name, settings);
     }
 
     /**
      * Retrieves stored search options
-     * - {@link http://docs.marklogic.com/REST/GET/v1/config/query/['default'-or-name]}
-     * - {@link http://docs.marklogic.com/REST/GET/v1/config/query/['default'-or-name]/[child-element]}
+     * - {@link http://docs.marklogic.com/REST/GET/v1/config/query/[&#x27;default&#x27;-or-name]}
+     * - {@link http://docs.marklogic.com/REST/GET/v1/config/query/[&#x27;default&#x27;-or-name]/[child-element]}
      * @method MLRest#queryConfig
      *
      * @param {String} name - stored search options name
      * @param {String} [section] - options section to retrieve
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function queryConfig(name, section) {
-      var url = '/config/query/' + name;
+      var url = &#x27;/config/query/&#x27; + name;
 
       if (section) {
-        url += '/' + section;
+        url += &#x27;/&#x27; + section;
       }
       return request(url, {
-        params: { format: 'json' }
+        params: { format: &#x27;json&#x27; }
       });
     }
 
@@ -312,3 +343,27 @@
   }
 
 }());
+</code></pre>
+          </article>
+        </div>
+      </div>
+      <nav id="jsdoc-toc-nav" role="navigation"></nav>
+    </div>
+  </div>
+  <footer id="jsdoc-footer" class="jsdoc-footer">
+    <div id="jsdoc-footer-container">
+      <p>
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.3.2 on September 15, 2015.
+      </p>
+    </div>
+  </footer>
+  <script src="scripts/jquery.min.js"></script>
+  <script src="scripts/jquery.cookie.js"></script>
+  <script src="scripts/tree.jquery.js"></script>
+  <script src="scripts/prettify.js"></script>
+  <script src="scripts/jsdoc-toc.js"></script>
+  <script src="scripts/linenumber.js"></script>
+  <script src="scripts/scrollanchor.js"></script>
+</body>
+
+</html>

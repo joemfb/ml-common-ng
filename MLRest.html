@@ -1,0 +1,756 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta name="generator" content="JSDoc 3.3.2">
+  <meta charset="utf-8">
+  <title>Class: MLRest</title>
+  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
+  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Noto+Serif:400,400i,700,700i" type="text/css">
+  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Inconsolata:500" type="text/css">
+  <link href="css/baseline.css" rel="stylesheet">
+</head>
+
+<body onload="prettyPrint()">
+  <nav id="jsdoc-navbar" role="navigation" class="jsdoc-navbar">
+    <div id="jsdoc-navbar-container">
+      <div id="jsdoc-navbar-content">
+        <a href="index.html" class="jsdoc-navbar-package-name">Home</a>
+      </div>
+    </div>
+  </nav>
+  <div id="jsdoc-body-container">
+    <div id="jsdoc-content">
+      <div id="jsdoc-content-container">
+        <div id="jsdoc-main" role="main">
+          <header class="page-header">
+            <h1><div class="symbol-detail-labels"><span class="label label-kind">class</span></div><small></small><span class="symbol-name">MLRest</span></h1>
+            <p class="source-link">Source: <a href="ml-rest.service.js.html#source-line-9">ml-rest.<wbr>service.<wbr>js:9</a></p>
+            <div class="symbol-classdesc">
+              <p>low-level angular service, encapsulates REST API builtins and normalizes the responses.</p>
+            </div>
+            <dl class="dl-compact">
+            </dl>
+          </header>
+          <section id="summary">
+            <div class="summary-callout">
+              <h2 class="summary-callout-heading">Methods</h2>
+              <div class="summary-content">
+                <div class="summary-column">
+                  <dl class="dl-summary-callout">
+                    <dt><a href="MLRest.html#createDocument">createDocument(doc[, options])</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLRest.html#extension">extension(name, settings)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLRest.html#getDocument">getDocument(uri, options)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLRest.html#patchDocument">patchDocument(uri, patch)</a></dt>
+                    <dd>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="summary-column">
+                  <dl class="dl-summary-callout">
+                    <dt><a href="MLRest.html#queryConfig">queryConfig(name[, section])</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLRest.html#request">request(endpoint, settings)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLRest.html#search">search([options][, combined])</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLRest.html#sparql">sparql(query[, params])</a></dt>
+                    <dd>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="summary-column">
+                  <dl class="dl-summary-callout">
+                    <dt><a href="MLRest.html#suggest">suggest([params][, combined])</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLRest.html#updateDocument">updateDocument(doc, options)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLRest.html#values">values(name[, params][, combined])</a></dt>
+                    <dd>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section>
+            <h2 id="MLRest">new&nbsp;<span class="symbol-name">MLRest</span><span class="signature"><span class="signature-params">($http)</span></span></h2>
+            <section>
+              <h3>Parameter</h3>
+              <table class="jsdoc-details-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Optional</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <p>$http</p>
+                    </td>
+                    <td>
+                      <p>Object</p>
+                    </td>
+                    <td>
+                      <p>&nbsp;</p>
+                    </td>
+                    <td>
+                      <p>angular <a href="https://docs.angularjs.org/api/ng/service/$http">$http service</a></p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+            <dl class="dl-compact">
+            </dl>
+          </section>
+          <section>
+            <h2>Methods</h2>
+            <section>
+              <h3 id="createDocument"><span class="symbol-name">createDocument</span><span class="signature"><span class="signature-params">(doc[, options])</span>&nbsp;&rarr; <span class="signature-returns"> Promise</span></span></h3>
+              <p>Creates a document, returning the new URI</p>
+              <ul>
+                <li><a href="http://docs.marklogic.com/REST/POST/v1/documents">http://docs.marklogic.com/REST/POST/v1/documents</a></li>
+              </ul>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>doc</p>
+                      </td>
+                      <td>
+                        <p>(Object or String)</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>document contents</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>options</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>URL params</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Promise</code>&nbsp;a promise resolved with the new document URI</p>
+                </dd>
+              </dl>
+              <h3 id="extension"><span class="symbol-name">extension</span><span class="signature"><span class="signature-params">(name, settings)</span>&nbsp;&rarr; <span class="signature-returns"> Promise</span></span></h3>
+              <p>Makes a resource extension request</p>
+              <ul>
+                <li><a href="http://docs.marklogic.com/REST/GET/v1/resources/%5Bname%5D">http://docs.marklogic.com/REST/GET/v1/resources/[name]</a></li>
+              </ul>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>name</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>resource extension name</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>settings</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>angular <code>$http</code> service <a href="https://docs.angularjs.org/api/ng/service/$http#usage">settings</a></p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Promise</code>&nbsp;a promise resolved with an angular <code>$http</code> service <a href="https://docs.angularjs.org/api/ng/service/$http#general-usage">response object</a></p>
+                </dd>
+              </dl>
+              <h3 id="getDocument"><span class="symbol-name">getDocument</span><span class="signature"><span class="signature-params">(uri, options)</span>&nbsp;&rarr; <span class="signature-returns"> Promise</span></span></h3>
+              <p>Retrieves a document at the specified URI</p>
+              <ul>
+                <li><a href="http://docs.marklogic.com/REST/GET/v1/documents">http://docs.marklogic.com/REST/GET/v1/documents</a></li>
+              </ul>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>uri</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>document URI</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>options</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>URL params</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Promise</code>&nbsp;a promise resolved with an angular <code>$http</code> service <a href="https://docs.angularjs.org/api/ng/service/$http#general-usage">response object</a></p>
+                </dd>
+              </dl>
+              <h3 id="patchDocument"><span class="symbol-name">patchDocument</span><span class="signature"><span class="signature-params">(uri, patch)</span>&nbsp;&rarr; <span class="signature-returns"> Promise</span></span></h3>
+              <p>Applies the provided patch to the document at the specified URI</p>
+              <ul>
+                <li><a href="http://docs.marklogic.com/REST/PATCH/v1/documents">http://docs.marklogic.com/REST/PATCH/v1/documents</a></li>
+              </ul>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>uri</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>document URI</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>patch</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>a document patch definition</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Promise</code>&nbsp;a promise resolved with the new document URI</p>
+                </dd>
+              </dl>
+              <h3 id="queryConfig"><span class="symbol-name">queryConfig</span><span class="signature"><span class="signature-params">(name[, section])</span>&nbsp;&rarr; <span class="signature-returns"> Promise</span></span></h3>
+              <p>Retrieves stored search options</p>
+              <ul>
+                <li><a href="http://docs.marklogic.com/REST/GET/v1/config/query/%5B'default'-or-name%5D">http://docs.marklogic.com/REST/GET/v1/config/query/['default'-or-name]</a></li>
+                <li><a href="http://docs.marklogic.com/REST/GET/v1/config/query/%5B'default'-or-name%5D/%5Bchild-element%5D">http://docs.marklogic.com/REST/GET/v1/config/query/['default'-or-name]/[child-element]</a></li>
+              </ul>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>name</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>stored search options name</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>section</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>options section to retrieve</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Promise</code>&nbsp;a promise resolved with an angular <code>$http</code> service <a href="https://docs.angularjs.org/api/ng/service/$http#general-usage">response object</a></p>
+                </dd>
+              </dl>
+              <h3 id="request"><span class="symbol-name">request</span><span class="signature"><span class="signature-params">(endpoint, settings)</span>&nbsp;&rarr; <span class="signature-returns"> Promise</span></span></h3>
+              <p>Makes a REST API request (all other methods wrap this)</p>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>endpoint</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>the request endpoint: can be version agnostic (<code>/search</code>) or specific (<code>/v1/search</code>)</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>settings</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>angular <code>$http</code> service <a href="https://docs.angularjs.org/api/ng/service/$http#usage">settings</a></p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Promise</code>&nbsp;a promise resolved with an angular <code>$http</code> service <a href="https://docs.angularjs.org/api/ng/service/$http#general-usage">response object</a></p>
+                </dd>
+              </dl>
+              <h3 id="search"><span class="symbol-name">search</span><span class="signature"><span class="signature-params">([options][, combined])</span>&nbsp;&rarr; <span class="signature-returns"> Promise</span></span></h3>
+              <p>Makes a search request (POST if combined query, GET otherwise)</p>
+              <ul>
+                <li><a href="http://docs.marklogic.com/REST/GET/v1/search">http://docs.marklogic.com/REST/GET/v1/search</a></li>
+                <li><a href="http://docs.marklogic.com/REST/POST/v1/search">http://docs.marklogic.com/REST/POST/v1/search</a></li>
+              </ul>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>options</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>URL params</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>combined</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>a combined search object (identified by a <code>search</code> property)</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Promise</code>&nbsp;a promise resolved with an angular <code>$http</code> service <a href="https://docs.angularjs.org/api/ng/service/$http#general-usage">response object</a></p>
+                </dd>
+              </dl>
+              <h3 id="sparql"><span class="symbol-name">sparql</span><span class="signature"><span class="signature-params">(query[, params])</span>&nbsp;&rarr; <span class="signature-returns"> Promise</span></span></h3>
+              <p>Evaluates a SPARQL query</p>
+              <ul>
+                <li><a href="http://docs.marklogic.com/REST/GET/v1/graphs/sparql">http://docs.marklogic.com/REST/GET/v1/graphs/sparql</a></li>
+              </ul>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>query</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>a SPARQL query</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>params</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>URL params</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Promise</code>&nbsp;a promise resolved with an angular <code>$http</code> service <a href="https://docs.angularjs.org/api/ng/service/$http#general-usage">response object</a></p>
+                </dd>
+              </dl>
+              <h3 id="suggest"><span class="symbol-name">suggest</span><span class="signature"><span class="signature-params">([params][, combined])</span>&nbsp;&rarr; <span class="signature-returns"> Promise</span></span></h3>
+              <p>Retrieves search phrase suggestions</p>
+              <ul>
+                <li><a href="http://docs.marklogic.com/REST/GET/v1/suggest">http://docs.marklogic.com/REST/GET/v1/suggest</a></li>
+                <li><a href="http://docs.marklogic.com/REST/POST/v1/suggest">http://docs.marklogic.com/REST/POST/v1/suggest</a></li>
+              </ul>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>params</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>URL params</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>combined</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>combined query</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Promise</code>&nbsp;a promise resolved with an angular <code>$http</code> service <a href="https://docs.angularjs.org/api/ng/service/$http#general-usage">response object</a></p>
+                </dd>
+              </dl>
+              <h3 id="updateDocument"><span class="symbol-name">updateDocument</span><span class="signature"><span class="signature-params">(doc, options)</span>&nbsp;&rarr; <span class="signature-returns"> Promise</span></span></h3>
+              <p>Creates or updates a document at the specified URI (<code>options.uri</code>)</p>
+              <ul>
+                <li><a href="http://docs.marklogic.com/REST/PUT/v1/documents">http://docs.marklogic.com/REST/PUT/v1/documents</a></li>
+              </ul>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>doc</p>
+                      </td>
+                      <td>
+                        <p>(Object or String)</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>document contents</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>options</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>URL params</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Promise</code>&nbsp;a promise resolved with the new document URI</p>
+                </dd>
+              </dl>
+              <h3 id="values"><span class="symbol-name">values</span><span class="signature"><span class="signature-params">(name[, params][, combined])</span>&nbsp;&rarr; <span class="signature-returns"> Promise</span></span></h3>
+              <p>Retrieves lexicon values</p>
+              <ul>
+                <li><a href="http://docs.marklogic.com/REST/GET/v1/values/%5Bname%5D">http://docs.marklogic.com/REST/GET/v1/values/[name]</a></li>
+                <li><a href="http://docs.marklogic.com/REST/POST/v1/values/%5Bname%5D">http://docs.marklogic.com/REST/POST/v1/values/[name]</a></li>
+              </ul>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>name</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>values definition name (from stored or combined search options)</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>params</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>URL params</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>combined</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>combined query</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Promise</code>&nbsp;a promise resolved with an angular <code>$http</code> service <a href="https://docs.angularjs.org/api/ng/service/$http#general-usage">response object</a></p>
+                </dd>
+              </dl>
+            </section>
+          </section>
+        </div>
+      </div>
+      <nav id="jsdoc-toc-nav" role="navigation"></nav>
+    </div>
+  </div>
+  <footer id="jsdoc-footer" class="jsdoc-footer">
+    <div id="jsdoc-footer-container">
+      <p>
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.3.2 on September 15, 2015.
+      </p>
+    </div>
+  </footer>
+  <script src="scripts/jquery.min.js"></script>
+  <script src="scripts/jquery.cookie.js"></script>
+  <script src="scripts/tree.jquery.js"></script>
+  <script src="scripts/prettify.js"></script>
+  <script src="scripts/jsdoc-toc.js"></script>
+  <script src="scripts/linenumber.js"></script>
+  <script src="scripts/scrollanchor.js"></script>
+</body>
+
+</html>
