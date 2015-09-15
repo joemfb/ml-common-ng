@@ -6,7 +6,7 @@
     treeNode.tree({
         autoEscape: false,
         closedIcon: '&#x21e2;',
-        data: [{"label":"<a href=\"-_ml.common_.html\">'ml.common'</a>","id":"'ml.common'","children":[]},{"label":"<a href=\"MLQueryBuilder.html\">MLQueryBuilder</a>","id":"MLQueryBuilder","children":[]},{"label":"<a href=\"MLRest.html\">MLRest</a>","id":"MLRest","children":[]}],
+        data: [{"label":"<a href=\"-_ml.common_.html\">'ml.common'</a>","id":"'ml.common'","children":[]},{"label":"<a href=\"MLQueryBuilder.html\">MLQueryBuilder</a>","id":"MLQueryBuilder","children":[]},{"label":"<a href=\"MLRest.html\">MLRest</a>","id":"MLRest","children":[]},{"label":"<a href=\"compile.html\">compile</a>","id":"compile","children":[]}],
         openedIcon: ' &#x21e3;',
         saveState: true,
         useContextMenu: false
