@@ -5,6 +5,7 @@
 var gulp = require('gulp'),
     concat = require('gulp-concat'),
     jshint = require('gulp-jshint'),
+    jscs = require('gulp-jscs'),
     karma = require('karma').server,
     path = require('path'),
     rename = require('gulp-rename'),
@@ -12,8 +13,20 @@ var gulp = require('gulp'),
     rm = require('gulp-rm'),
     cp = require('child_process');
 
-gulp.task('jshint', function() {
-  gulp.src([
+gulp.task('lint-style', function(done) {
+  return gulp.src([
+      './gulpfile.js',
+      './src/**/*.js'
+    ])
+    .pipe(jscs())
+    .on('error', function(err) {
+      console.error(err.message);
+      this.emit('end');
+    });
+});
+
+gulp.task('lint', ['lint-style'], function() {
+  return gulp.src([
       './gulpfile.js',
       './src/**/*.js'
     ])
@@ -33,7 +46,7 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('test', function(done) {
+gulp.task('test', ['lint'], function(done) {
   karma.start({
     configFile: path.join(__dirname, './karma.conf.js'),
     singleRun: true,
@@ -75,4 +88,4 @@ gulp.task('clean-docs', function() {
   .pipe(rm({async: false}));
 });
 
-gulp.task('default', ['test', 'jshint', 'scripts']);
+gulp.task('default', ['lint', 'test', 'scripts']);
