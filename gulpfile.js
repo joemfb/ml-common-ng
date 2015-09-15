@@ -33,36 +33,40 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('test', function() {
+gulp.task('test', function(done) {
   karma.start({
     configFile: path.join(__dirname, './karma.conf.js'),
     singleRun: true,
     autoWatch: false
-  }, function (exitCode) {
-    console.log('Karma has exited with ' + exitCode);
-    process.exit(exitCode);
+  }, function() {
+    done();
   });
 });
 
-gulp.task('autotest', function() {
+gulp.task('autotest', function(done) {
   karma.start({
     configFile: path.join(__dirname, './karma.conf.js'),
     autoWatch: true
-  }, function (exitCode) {
-    console.log('Karma has exited with ' + exitCode);
-    process.exit(exitCode);
+  }, function() {
+    done();
   });
 });
 
-gulp.task('docs', function() {
+gulp.task('docs', function(done) {
   cp.exec('./node_modules/.bin/jsdoc -c jsdoc.conf.json', function(err) {
     if (err) {
       return console.log(err);
     }
 
-    gulp.src([ './docs/generated/css/baseline.css', './docs/custom-styles.css' ])
-    .pipe(concat('baseline.css'))
-    .pipe(gulp.dest('./docs/generated/css'));
+    gulp.src([
+        './docs/generated/css/baseline.css',
+        './docs/custom-styles.css'
+      ])
+      .pipe(concat('baseline.css'))
+      .pipe(gulp.dest('./docs/generated/css'))
+      .on('end', function() {
+        done();
+      });
   });
 });
 
