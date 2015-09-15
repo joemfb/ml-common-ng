@@ -27,6 +27,7 @@
     };
   }
 
+  // jscs:disable
   /**
    * angular filter for truncating text.
    *
@@ -43,8 +44,9 @@
    * @param {Number} length - output length (defaults to `10`)
    * @param {String} [end] - string to append to the input (defaults to `'...'`)
    */
+  // jscs:enable
   function truncate() {
-    return function (text, length, end) {
+    return function(text, length, end) {
       length = length || 10;
       end = end || '...';
 

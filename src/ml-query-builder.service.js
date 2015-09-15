@@ -354,8 +354,7 @@
   // from lodash
   function isObject(value) {
     var type = typeof value;
-    return !!value && (type == 'object' || type == 'function');
+    return !!value && (type === 'object' || type === 'function');
   }
-
 
 }());

@@ -1,9 +1,9 @@
-(function () {
+(function() {
   'use strict';
 
   angular.module('ml.common')
     .provider('MLRest', function() {
-        this.$get = ['$http', MLRest];
+      this.$get = ['$http', MLRest];
     });
 
   /**
@@ -108,7 +108,7 @@
         options = options || {};
       }
 
-      if (!options.format){
+      if (!options.format) {
         options.format = 'json';
       }
 
@@ -134,7 +134,7 @@
       options = options || {};
       options.uri = uri;
 
-      if (!options.format){
+      if (!options.format) {
         options.format = 'json';
       }
 
