@@ -1,6 +1,18 @@
 (function() {
   'use strict';
 
+  /**
+   * angular directive; compiles HTML strings into the DOM
+   *
+   *
+   * Example:
+   *
+   * ```
+   * <div compile="ctrl.stringContent"></div>```
+   *
+   * @namespace compile
+   */
+
   // Copied from https://docs.angularjs.org/api/ng/service/$compile
   angular.module('ml.common')
   .directive('compile', function($compile) {
