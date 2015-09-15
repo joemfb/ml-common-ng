@@ -10,7 +10,7 @@
    * @class MLRest
    * @classdesc low-level angular service, encapsulates REST API builtins and normalizes the responses.
    *
-   * @param {Object} $http - angular $http service
+   * @param {Object} $http - angular [$http service](https://docs.angularjs.org/api/ng/service/$http)
    */
   function MLRest($http) {
     var defaults = { apiVersion: 'v1' };
@@ -45,8 +45,8 @@
      * @method MLRest#request
      *
      * @param {String} endpoint - the request endpoint: can be version agnostic (`/search`) or specific (`/v1/search`)
-     * @param {Object} settings - angular `$http` service settings
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @param {Object} settings - angular `$http` service [settings](https://docs.angularjs.org/api/ng/service/$http#usage)
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function request(endpoint, settings) {
       var url;
@@ -77,11 +77,12 @@
 
     /**
      * Makes a resource extension request
+     * - {@link http://docs.marklogic.com/REST/GET/v1/resources/[name]}
      * @method MLRest#extension
      *
      * @param {String} name - resource extension name
-     * @param {Object} [settings] - angular `$http` service settings
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @param {Object} settings - angular `$http` service [settings](https://docs.angularjs.org/api/ng/service/$http#usage)
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function extension(name, settings) {
       if ( !/^\//.test(name) ) {
@@ -92,11 +93,13 @@
 
     /**
      * Makes a search request (POST if combined query, GET otherwise)
+     * - {@link http://docs.marklogic.com/REST/GET/v1/search}
+     * - {@link http://docs.marklogic.com/REST/POST/v1/search}
      * @method MLRest#search
      *
      * @param {Object} [options] - URL params
      * @param {Object} [combined] - a combined search object (identified by a `search` property)
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function search(options, combined) {
       var settings = {};
@@ -124,11 +127,12 @@
 
     /**
      * Retrieves a document at the specified URI
+     * - {@link http://docs.marklogic.com/REST/GET/v1/documents}
      * @method MLRest#getDocument
      *
      * @param {String} uri - document URI
      * @param {Object} options - URL params
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function getDocument(uri, options) {
       options = options || {};
@@ -143,6 +147,7 @@
 
     /**
      * Creates a document, returning the new URI
+     * - {@link http://docs.marklogic.com/REST/POST/v1/documents}
      * @method MLRest#createDocument
      *
      * @param {Object|String} doc - document contents
@@ -161,6 +166,7 @@
 
     /**
      * Creates or updates a document at the specified URI (`options.uri`)
+     * - {@link http://docs.marklogic.com/REST/PUT/v1/documents}
      * @method MLRest#updateDocument
      *
      * @param {Object|String} doc - document contents
@@ -181,6 +187,7 @@
 
     /**
      * Applies the provided patch to the document at the specified URI
+     * - {@link http://docs.marklogic.com/REST/PATCH/v1/documents}
      * @method MLRest#patchDocument
      *
      * @param {String} uri - document URI
@@ -212,11 +219,12 @@
 
     /**
      * Evaluates a SPARQL query
+     * - {@link http://docs.marklogic.com/REST/GET/v1/graphs/sparql}
      * @method MLRest#sparql
      *
      * @param {String} query - a SPARQL query
      * @param {Object} [params] - URL params
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function sparql(query, params) {
       var accept = [
@@ -238,11 +246,13 @@
 
     /**
      * Retrieves search phrase suggestions
+     * - {@link http://docs.marklogic.com/REST/GET/v1/suggest}
+     * - {@link http://docs.marklogic.com/REST/POST/v1/suggest}
      * @method MLRest#suggest
      *
      * @param {Object} [params] - URL params
      * @param {Object} [combined] - combined query
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function suggest(params, combined) {
       var settings = { params: params };
@@ -257,12 +267,14 @@
 
     /**
      * Retrieves lexicon values
+     * - {@link http://docs.marklogic.com/REST/GET/v1/values/[name]}
+     * - {@link http://docs.marklogic.com/REST/POST/v1/values/[name]}
      * @method MLRest#values
      *
      * @param {String} name - values definition name (from stored or combined search options)
      * @param {Object} [params] - URL params
      * @param {Object} [combined] - combined query
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function values(name, params, combined) {
       var settings = { params: params };
@@ -277,11 +289,13 @@
 
     /**
      * Retrieves stored search options
+     * - {@link http://docs.marklogic.com/REST/GET/v1/config/query/['default'-or-name]}
+     * - {@link http://docs.marklogic.com/REST/GET/v1/config/query/['default'-or-name]/[child-element]}
      * @method MLRest#queryConfig
      *
      * @param {String} name - stored search options name
      * @param {String} [section] - options section to retrieve
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function queryConfig(name, section) {
       var url = '/config/query/' + name;
