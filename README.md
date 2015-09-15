@@ -20,4 +20,6 @@ An angular module for interacting with the MarkLogic REST API (and some basic ut
 
 - `compile`: compile HTML strings into the DOM
 
+See [https://joemfb.github.io/ml-common-ng/](https://joemfb.github.io/ml-common-ng/) for API docs and directive examples. 
+
 See [https://github.com/marklogic/slush-marklogic-node](https://github.com/marklogic/slush-marklogic-node) for a quick way to get started with an angular search application on top of the MarkLogic REST API.

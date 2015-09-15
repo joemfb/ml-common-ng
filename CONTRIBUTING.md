@@ -225,6 +225,12 @@ git tag "v$version"
 git push origin master --tags
 ```
 
+Publish docs to [https://joemfb.github.io/ml-common-ng/](https://joemfb.github.io/ml-common-ng/):
+
+```sh
+gulp publish-docs
+```
+
 [readme]: https://github.com/joemfb/ml-common-ng/blob/master/README.md
 [issue tracker]: https://github.com/joemfb/ml-common-ng/issues
 [.editorconfig]: http://editorconfig.org/
