@@ -27,6 +27,7 @@
     };
   }
 
+  // jscs:disable
   /**
    * angular filter for truncating text.
    *
@@ -43,8 +44,9 @@
    * @param {Number} length - output length (defaults to `10`)
    * @param {String} [end] - string to append to the input (defaults to `'...'`)
    */
+  // jscs:enable
   function truncate() {
-    return function (text, length, end) {
+    return function(text, length, end) {
       length = length || 10;
       end = end || '...';
 
@@ -59,26 +61,122 @@
 (function() {
   'use strict';
 
+  /**
+   * angular directive; compiles HTML strings into the DOM
+   *
+   *
+   * Example:
+   *
+   * ```
+   * <div compile="ctrl.stringContent"></div>```
+   *
+   * @namespace compile
+   */
+
+  // Copied from https://docs.angularjs.org/api/ng/service/$compile
+  angular.module('ml.common')
+  .directive('compile', function($compile) {
+    // directive factory creates a link function
+    return function(scope, element, attrs) {
+      scope.$watch(
+        function(scope) {
+          // watch the 'compile' expression for changes
+          return scope.$eval(attrs.compile);
+        },
+        function(value) {
+          // when the 'compile' expression changes
+          // assign it into the current DOM
+          element.html(value);
+
+          // compile the new DOM and link it to the current
+          // scope.
+          // NOTE: we only compile .childNodes so that
+          // we don't get into infinite loop compiling ourselves
+          $compile(element.contents())(scope);
+        }
+      );
+    };
+  });
+
+})();
+
+(function() {
+  'use strict';
+
   angular.module('ml.common')
     .factory('MLQueryBuilder', MLQueryBuilder);
 
+  /**
+   * @class MLQueryBuilder
+   * @classdesc angular service for building structured queries; a subset of the official `node-client-api`
+   * [queryBuilder](http://docs.marklogic.com/jsdoc/queryBuilder.html), plus extensions.
+   */
   function MLQueryBuilder() {
+
+    function where() {
+      var args = asArray.apply(null, arguments);
+      return {
+        'query': {
+          'queries': args
+        }
+      };
+    }
+
     return {
 
-      query: function query() {
-        var args = asArray.apply(null, arguments);
-        return {
-          'query': {
-            'queries': args
-          }
-        };
+      /**
+       * @method MLQueryBuilder#query
+       * @see MLQueryBuilder#where
+       * @deprecated
+       */
+      query: function() {
+        console.log(
+          'Warning, MLQueryBuilder.query is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.where in it\'s place'
+        );
+        return this.where.apply(this, arguments);
       },
 
+      /**
+       * @method MLQueryBuilder#text
+       * @see MLQueryBuilder.ext.combined
+       * @deprecated
+       */
       text: function text(qtext) {
+        console.log(
+          'Warning, MLQueryBuilder.text is deprecated, and will be removed in the next release!\n' +
+          'Use the qtext argument of MLQueryBuilder.ext.combined in it\'s place'
+        );
         return {
           'qtext': qtext
         };
       },
+
+      /**
+       * @method MLQueryBuilder#properties
+       * @deprecated
+       */
+      properties: function properties(query) {
+        console.log(
+          'Warning, MLQueryBuilder.properties is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.propertiesFragment in it\'s place'
+        );
+        return this.propertiesFragment.apply(this, arguments);
+      },
+
+      /**
+       * @method MLQueryBuilder#propertiesFragment
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#propertiesFragment
+       */
+      propertiesFragment: function propertiesFragment(query) {
+        return { 'properties-fragment-query': query };
+      },
+
+      /**
+       * @method MLQueryBuilder#where
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#where
+       */
+      where: where,
 
       and: function and() {
         var args = asArray.apply(null, arguments);
@@ -89,6 +187,10 @@
         };
       },
 
+      /**
+       * @method MLQueryBuilder#or
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#or
+       */
       or: function or() {
         var args = asArray.apply(null, arguments);
         return {
@@ -98,12 +200,20 @@
         };
       },
 
+      /**
+       * @method MLQueryBuilder#not
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#not
+       */
       not: function properties(query) {
         return {
           'not-query': query
         };
       },
 
+      /**
+       * @method MLQueryBuilder#document
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#document
+       */
       document: function document() {
         var args = asArray.apply(null, arguments);
         return {
@@ -113,47 +223,10 @@
         };
       },
 
-      range: function range(name, values) {
-        values = asArray.apply(null, [values]);
-        return {
-          'range-constraint-query': {
-            'constraint-name': name,
-            'value': values
-          }
-        };
-      },
-
-      collection: function collection(name, values) {
-        values = asArray.apply(null, [values]);
-        return {
-          'collection-constraint-query': {
-            'constraint-name': name,
-            'uri': values
-          }
-        };
-      },
-
-      custom: function custom(name, values) {
-        values = asArray.apply(null, [values]);
-        return {
-          'custom-constraint-query': {
-            'constraint-name': name,
-            'value': values
-          }
-        };
-      },
-
-      constraint: function constraint(type) {
-        switch(type) {
-          case 'custom':
-            return this.custom;
-          case 'collection':
-            return this.collection;
-          default:
-            return this.range;
-        }
-      },
-
+      /**
+       * @method MLQueryBuilder#boost
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#boost
+       */
       boost: function boost(matching, boosting) {
         return {
           'boost-query': {
@@ -163,17 +236,199 @@
         };
       },
 
-      properties: function properties(query) {
-        return { 'properties-query': query };
+      /**
+       * @method MLQueryBuilder#range
+       * @see MLQueryBuilder.ext.rangeConstraint
+       * @deprecated
+       */
+      range: function range(name, values) {
+        console.log(
+          'Warning, MLQueryBuilder.range is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.ext.rangeConstraint in it\'s place'
+        );
+        return this.ext.rangeConstraint.apply(this.ext, arguments);
       },
 
+      /**
+       * @method MLQueryBuilder#collection
+       * @see MLQueryBuilder.ext.collectionConstraint
+       * @deprecated
+       */
+      collection: function collection(name, values) {
+        console.log(
+          'Warning, MLQueryBuilder.collection is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.ext.collectionConstraint in it\'s place'
+        );
+        return this.ext.collectionConstraint.apply(this.ext, arguments);
+      },
+
+      /**
+       * @method MLQueryBuilder#custom
+       * @see MLQueryBuilder.ext.customConstraint
+       * @deprecated
+       */
+      custom: function custom(name, values) {
+        console.log(
+          'Warning, MLQueryBuilder.custom is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.ext.customConstraint in it\'s place'
+        );
+        return this.ext.customConstraint.apply(this.ext, arguments);
+      },
+
+      /**
+       * @method MLQueryBuilder#constraint
+       * @see MLQueryBuilder.ext.constraint
+       * @deprecated
+       */
+      constraint: function constraint(type) {
+        console.log(
+          'Warning, MLQueryBuilder.constraint is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.ext.constraint in it\'s place'
+        );
+        return this.ext.constraint.apply(this.ext, arguments);
+      },
+
+      /**
+       * @method MLQueryBuilder#operator
+       * @see MLQueryBuilder.ext.operator
+       * @deprecated
+       */
       operator: function operator(name, stateName) {
-        return {
-          'operator-state': {
-            'operator-name': name,
-            'state-name': stateName
+        console.log(
+          'Warning, MLQueryBuilder.operator is deprecated, and will be removed in the next release!\n' +
+          'Use MLQueryBuilder.ext.operator in it\'s place'
+        );
+        return this.ext.operatorState.apply(this.ext, arguments);
+      },
+
+      /**
+       * query builder extensions
+       * @memberof MLQueryBuilder
+       * @type {Object}
+       */
+      ext: {
+
+        /**
+         * Builds a [combined query](http://docs.marklogic.com/guide/rest-dev/search#id_69918)
+         * @memberof! MLQueryBuilder
+         * @method ext.combined
+         *
+         * @param {Object} query - a structured query (from {@link MLQueryBuilder#where})
+         * @param {String} [qtext] - a query text string, to be parsed server-side
+         * @param {Object} [options] - search options
+         * @return {Object} combined query
+         */
+        combined: function combined(query, qtext, options) {
+          if ( isObject(qtext) && !options ) {
+            options = qtext;
+            qtext = null;
           }
-        };
+
+          return {
+            search: {
+              query: query.query || query,
+              qtext: qtext,
+              options: options.options || options
+            }
+          };
+        },
+
+        /**
+         * Builds a [`range-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
+         * @memberof! MLQueryBuilder
+         * @method ext.rangeConstraint
+         *
+         * @param {String} name - constraint name
+         * @param {Array} values - the values the constraint should equal (logical OR)
+         * @return {Object} [range-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
+         */
+        rangeConstraint: function rangeConstraint(name, values) {
+          values = asArray.apply(null, [values]);
+          return {
+            'range-constraint-query': {
+              'constraint-name': name,
+              'value': values
+            }
+          };
+        },
+
+        /**
+         * Builds a [`collection-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
+         * @memberof! MLQueryBuilder
+         * @method ext.collectionConstraint
+         *
+         * @param {String} name - constraint name
+         * @param {Array} values - the values the constraint should equal (logical OR)
+         * @return {Object} [collection-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
+         */
+        collectionConstraint: function collectionConstraint(name, values) {
+          values = asArray.apply(null, [values]);
+          return {
+            'collection-constraint-query': {
+              'constraint-name': name,
+              'uri': values
+            }
+          };
+        },
+
+        /**
+         * Builds a [`custom-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_28778)
+         * @memberof! MLQueryBuilder
+         * @method ext.customConstraint
+         *
+         * @param {String} name - constraint name
+         * @param {Array} values - the values the constraint should equal (logical OR)
+         * @return {Object} [custom-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_28778)
+         */
+        customConstraint: function customConstraint(name, values) {
+          values = asArray.apply(null, [values]);
+          return {
+            'custom-constraint-query': {
+              'constraint-name': name,
+              'value': values
+            }
+          };
+        },
+
+        /**
+         * constraint query function factory
+         * @memberof! MLQueryBuilder
+         * @method ext.constraint
+         *
+         * @param {String} type - constraint type (`'collection' | 'custom' | '*'`)
+         * @return {Function} a constraint query builder function, one of:
+         *   - {@link MLQueryBuilder.ext.rangeConstraint}
+         *   - {@link MLQueryBuilder.ext.collectionConstraint}
+         *   - {@link MLQueryBuilder.ext.customConstraint}
+         */
+        constraint: function constraint(type) {
+          switch(type) {
+            case 'custom':
+              return this.customConstraint;
+            case 'collection':
+              return this.collectionConstraint;
+            default:
+              return this.rangeConstraint;
+          }
+        },
+
+        /**
+         * Builds an [`operator-state` query component](http://docs.marklogic.com/guide/search-dev/structured-query#id_45570)
+         * @memberof! MLQueryBuilder
+         * @method ext.operatorState
+         *
+         * @param {String} name - operator name
+         * @param {String} stateName - operator-state name
+         * @return {Object} [operator-state component](http://docs.marklogic.com/guide/search-dev/structured-query#id_45570)
+         */
+        operatorState: function operatorState(name, stateName) {
+          return {
+            'operator-state': {
+              'operator-name': name,
+              'state-name': stateName
+            }
+          };
+        }
       }
 
     };
@@ -198,22 +453,27 @@
     return args;
   }
 
+  // from lodash
+  function isObject(value) {
+    var type = typeof value;
+    return !!value && (type === 'object' || type === 'function');
+  }
 
 }());
 
-(function () {
+(function() {
   'use strict';
 
   angular.module('ml.common')
     .provider('MLRest', function() {
-        this.$get = ['$http', MLRest];
+      this.$get = ['$http', MLRest];
     });
 
   /**
    * @class MLRest
    * @classdesc low-level angular service, encapsulates REST API builtins and normalizes the responses.
    *
-   * @param {Object} $http - angular $http service
+   * @param {Object} $http - angular [$http service](https://docs.angularjs.org/api/ng/service/$http)
    */
   function MLRest($http) {
     var defaults = { apiVersion: 'v1' };
@@ -248,8 +508,8 @@
      * @method MLRest#request
      *
      * @param {String} endpoint - the request endpoint: can be version agnostic (`/search`) or specific (`/v1/search`)
-     * @param {Object} settings - angular `$http` service settings
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @param {Object} settings - angular `$http` service [settings](https://docs.angularjs.org/api/ng/service/$http#usage)
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function request(endpoint, settings) {
       var url;
@@ -280,11 +540,12 @@
 
     /**
      * Makes a resource extension request
+     * - {@link http://docs.marklogic.com/REST/GET/v1/resources/[name]}
      * @method MLRest#extension
      *
      * @param {String} name - resource extension name
-     * @param {Object} [settings] - angular `$http` service settings
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @param {Object} settings - angular `$http` service [settings](https://docs.angularjs.org/api/ng/service/$http#usage)
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function extension(name, settings) {
       if ( !/^\//.test(name) ) {
@@ -295,11 +556,13 @@
 
     /**
      * Makes a search request (POST if combined query, GET otherwise)
+     * - {@link http://docs.marklogic.com/REST/GET/v1/search}
+     * - {@link http://docs.marklogic.com/REST/POST/v1/search}
      * @method MLRest#search
      *
      * @param {Object} [options] - URL params
      * @param {Object} [combined] - a combined search object (identified by a `search` property)
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function search(options, combined) {
       var settings = {};
@@ -311,7 +574,7 @@
         options = options || {};
       }
 
-      if (!options.format){
+      if (!options.format) {
         options.format = 'json';
       }
 
@@ -327,17 +590,18 @@
 
     /**
      * Retrieves a document at the specified URI
+     * - {@link http://docs.marklogic.com/REST/GET/v1/documents}
      * @method MLRest#getDocument
      *
      * @param {String} uri - document URI
      * @param {Object} options - URL params
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function getDocument(uri, options) {
       options = options || {};
       options.uri = uri;
 
-      if (!options.format){
+      if (!options.format) {
         options.format = 'json';
       }
 
@@ -346,6 +610,7 @@
 
     /**
      * Creates a document, returning the new URI
+     * - {@link http://docs.marklogic.com/REST/POST/v1/documents}
      * @method MLRest#createDocument
      *
      * @param {Object|String} doc - document contents
@@ -364,6 +629,7 @@
 
     /**
      * Creates or updates a document at the specified URI (`options.uri`)
+     * - {@link http://docs.marklogic.com/REST/PUT/v1/documents}
      * @method MLRest#updateDocument
      *
      * @param {Object|String} doc - document contents
@@ -384,6 +650,7 @@
 
     /**
      * Applies the provided patch to the document at the specified URI
+     * - {@link http://docs.marklogic.com/REST/PATCH/v1/documents}
      * @method MLRest#patchDocument
      *
      * @param {String} uri - document URI
@@ -415,11 +682,12 @@
 
     /**
      * Evaluates a SPARQL query
+     * - {@link http://docs.marklogic.com/REST/GET/v1/graphs/sparql}
      * @method MLRest#sparql
      *
      * @param {String} query - a SPARQL query
      * @param {Object} [params] - URL params
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function sparql(query, params) {
       var accept = [
@@ -441,11 +709,13 @@
 
     /**
      * Retrieves search phrase suggestions
+     * - {@link http://docs.marklogic.com/REST/GET/v1/suggest}
+     * - {@link http://docs.marklogic.com/REST/POST/v1/suggest}
      * @method MLRest#suggest
      *
      * @param {Object} [params] - URL params
      * @param {Object} [combined] - combined query
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function suggest(params, combined) {
       var settings = { params: params };
@@ -460,12 +730,14 @@
 
     /**
      * Retrieves lexicon values
+     * - {@link http://docs.marklogic.com/REST/GET/v1/values/[name]}
+     * - {@link http://docs.marklogic.com/REST/POST/v1/values/[name]}
      * @method MLRest#values
      *
      * @param {String} name - values definition name (from stored or combined search options)
      * @param {Object} [params] - URL params
      * @param {Object} [combined] - combined query
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function values(name, params, combined) {
       var settings = { params: params };
@@ -480,11 +752,13 @@
 
     /**
      * Retrieves stored search options
+     * - {@link http://docs.marklogic.com/REST/GET/v1/config/query/['default'-or-name]}
+     * - {@link http://docs.marklogic.com/REST/GET/v1/config/query/['default'-or-name]/[child-element]}
      * @method MLRest#queryConfig
      *
      * @param {String} name - stored search options name
      * @param {String} [section] - options section to retrieve
-     * @return {Promise} a promise resolved with an angular `$http` service response object
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
      */
     function queryConfig(name, section) {
       var url = '/config/query/' + name;
