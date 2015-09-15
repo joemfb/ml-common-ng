@@ -11,6 +11,7 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     uglify = require('gulp-uglify'),
     rm = require('gulp-rm'),
+    ghpages = require('gulp-gh-pages'),
     cp = require('child_process');
 
 gulp.task('lint-style', function(done) {
@@ -86,6 +87,11 @@ gulp.task('docs', function(done) {
 gulp.task('clean-docs', function() {
   return gulp.src('./docs/generated/**/*', { read: false })
   .pipe(rm({async: false}));
+});
+
+gulp.task('publish-docs', function() {
+  return gulp.src([ './docs/generated/**/*.*' ])
+  .pipe(ghpages());
 });
 
 gulp.task('default', ['lint', 'test', 'scripts']);
