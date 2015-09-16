@@ -282,6 +282,24 @@
         },
 
         /**
+         * Builds a [`word-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_66833)
+         * @memberof! MLQueryBuilder
+         * @method ext.wordConstraint
+         *
+         * @param {String} name - constraint name
+         * @param {String|Array<String>} values - the values the constraint should equal (logical OR)
+         * @return {Object} [`word-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_66833)
+         */
+        wordConstraint: function wordConstraint(name, values) {
+          return {
+            'word-constraint-query': {
+              'constraint-name': name,
+              'text': asArray(values)
+            }
+          };
+        },
+
+        /**
          * Builds a [`collection-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
          * @memberof! MLQueryBuilder
          * @method ext.collectionConstraint
@@ -326,6 +344,7 @@
          * @return {Function} a constraint query builder function, one of:
          *   - {@link MLQueryBuilder.ext.rangeConstraint}
          *   - {@link MLQueryBuilder.ext.valueConstraint}
+         *   - {@link MLQueryBuilder.ext.wordConstraint}
          *   - {@link MLQueryBuilder.ext.collectionConstraint}
          *   - {@link MLQueryBuilder.ext.customConstraint}
          */
@@ -333,6 +352,8 @@
           switch(type) {
             case 'value':
               return this.valueConstraint;
+            case 'word':
+              return this.wordConstraint;
             case 'custom':
               return this.customConstraint;
             case 'collection':
