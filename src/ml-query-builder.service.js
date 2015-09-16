@@ -151,6 +151,19 @@
       },
 
       /**
+       * @method MLQueryBuilder#term
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#term
+       */
+      term: function term() {
+        var args = asArray.apply(null, arguments);
+        return {
+          'term-query': {
+            'text': args
+          }
+        };
+      },
+
+      /**
        * @method MLQueryBuilder#range
        * @see MLQueryBuilder.ext.rangeConstraint
        * @deprecated

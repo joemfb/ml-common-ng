@@ -86,6 +86,23 @@ describe('MLQueryBuilder', function () {
     expect(query['document-query'].uri[1]).toEqual('uri2');
   });
 
+  it('builds a term query with one value', function() {
+    var query = qb.term('foo');
+
+    expect(query['term-query']).toBeDefined();
+    expect(query['term-query'].text.length).toEqual(1);
+    expect(query['term-query'].text[0]).toEqual('foo');
+  });
+
+  it('builds a term query with multiple values', function() {
+    var query = qb.term(['foo', 'bar']);
+
+    expect(query['term-query']).toBeDefined();
+    expect(query['term-query'].text.length).toEqual(2);
+    expect(query['term-query'].text[0]).toEqual('foo');
+    expect(query['term-query'].text[1]).toEqual('bar');
+  });
+
   it('builds a range-query with one value', function() {
     var query = qb.ext.rangeConstraint('test', 'value');
 
