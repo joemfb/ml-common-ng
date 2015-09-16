@@ -250,6 +250,38 @@
         },
 
         /**
+         * Builds a [`value-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_63420)
+         * @memberof! MLQueryBuilder
+         * @method ext.valueConstraint
+         *
+         * @param {String} name - constraint name
+         * @param {String|Number|Array<String>|Array<Number>|null} values - the values the constraint should equal (logical OR)
+         * @return {Object} [`value-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_63420)
+         */
+        valueConstraint: function valueConstraint(name, values) {
+          var query = {
+            'value-constraint-query': {
+              'constraint-name': name
+            }
+          };
+
+          var type;
+
+          if (values === null) {
+            type = 'null';
+            values = [];
+          } else {
+            values = asArray(values);
+            type = typeof values[0];
+            type = ((type === 'string') && 'text') || type;
+          }
+
+          query['value-constraint-query'][type] = values;
+
+          return query;
+        },
+
+        /**
          * Builds a [`collection-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
          * @memberof! MLQueryBuilder
          * @method ext.collectionConstraint
@@ -293,11 +325,14 @@
          * @param {String} type - constraint type (`'collection' | 'custom' | '*'`)
          * @return {Function} a constraint query builder function, one of:
          *   - {@link MLQueryBuilder.ext.rangeConstraint}
+         *   - {@link MLQueryBuilder.ext.valueConstraint}
          *   - {@link MLQueryBuilder.ext.collectionConstraint}
          *   - {@link MLQueryBuilder.ext.customConstraint}
          */
         constraint: function constraint(type) {
           switch(type) {
+            case 'value':
+              return this.valueConstraint;
             case 'custom':
               return this.customConstraint;
             case 'collection':

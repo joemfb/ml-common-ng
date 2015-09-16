@@ -161,6 +161,49 @@ describe('MLQueryBuilder', function () {
     expect(query['custom-constraint-query']['value'][1]).toEqual('value2');
   });
 
+  it('builds a value-constraint-query with one value', function() {
+    var query = qb.ext.valueConstraint('test', 'value');
+
+    expect(query['value-constraint-query']).toBeDefined();
+    expect(query['value-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['value-constraint-query']['text'].length).toEqual(1);
+    expect(query['value-constraint-query']['text'][0]).toEqual('value');
+
+    query = null;
+    query = qb.ext.valueConstraint('test', 1);
+
+    expect(query['value-constraint-query']).toBeDefined();
+    expect(query['value-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['value-constraint-query']['number'].length).toEqual(1);
+    expect(query['value-constraint-query']['number'][0]).toEqual(1);
+
+    query = null;
+    query = qb.ext.valueConstraint('test', null);
+
+    expect(query['value-constraint-query']).toBeDefined();
+    expect(query['value-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['value-constraint-query']['null'].length).toEqual(0);
+  });
+
+  it('builds a value-constraint-query with multiple values', function() {
+    var query = qb.ext.valueConstraint('test', ['value1', 'value2']);
+
+    expect(query['value-constraint-query']).toBeDefined();
+    expect(query['value-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['value-constraint-query']['text'].length).toEqual(2);
+    expect(query['value-constraint-query']['text'][0]).toEqual('value1');
+    expect(query['value-constraint-query']['text'][1]).toEqual('value2');
+
+    query = null;
+    query = qb.ext.valueConstraint('test', [1, 2]);
+
+    expect(query['value-constraint-query']).toBeDefined();
+    expect(query['value-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['value-constraint-query']['number'].length).toEqual(2);
+    expect(query['value-constraint-query']['number'][0]).toEqual(1);
+    expect(query['value-constraint-query']['number'][1]).toEqual(2);
+  });
+
   it('chooses a constraint query by type', function() {
     var constraint;
 
@@ -179,6 +222,12 @@ describe('MLQueryBuilder', function () {
 
     constraint = qb.ext.constraint('custom');
     expect(constraint('name', 'value')).toEqual(qb.ext.customConstraint('name', 'value'));
+
+    constraint = qb.ext.constraint('value');
+    expect(constraint('name', 'value')).toEqual(qb.ext.valueConstraint('name', 'value'));
+
+    constraint = qb.ext.constraint('word');
+    expect(constraint('name', 'value')).toEqual(qb.ext.wordConstraint('name', 'value'));
   });
 
   it('builds a boost query', function() {
