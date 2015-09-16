@@ -259,7 +259,14 @@ describe('MLQueryBuilder', function () {
     expect(query['boost-query']['boosting-query'].qtext).toEqual('blah');
   });
 
-  it('builds a properties query', function() {
+  it('builds a document-fragment query', function() {
+    var query = qb.documentFragment( qb.and() );
+
+    expect(query['document-fragment-query']).toBeDefined();
+    expect(query['document-fragment-query']).toEqual( qb.and() );
+  });
+
+  it('builds a properties-fragment query', function() {
     var query = qb.propertiesFragment( qb.and() );
 
     var oldQuery = qb.properties( qb.and() );
@@ -267,6 +274,13 @@ describe('MLQueryBuilder', function () {
 
     expect(query['properties-fragment-query']).toBeDefined();
     expect(query['properties-fragment-query']).toEqual( qb.and() );
+  });
+
+  it('builds a locks-fragment query', function() {
+    var query = qb.locksFragment( qb.and() );
+
+    expect(query['locks-fragment-query']).toBeDefined();
+    expect(query['locks-fragment-query']).toEqual( qb.and() );
   });
 
   it('builds an operator query', function() {

@@ -63,14 +63,6 @@
       },
 
       /**
-       * @method MLQueryBuilder#propertiesFragment
-       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#propertiesFragment
-       */
-      propertiesFragment: function propertiesFragment(query) {
-        return { 'properties-fragment-query': query };
-      },
-
-      /**
        * @method MLQueryBuilder#where
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#where
        */
@@ -106,6 +98,30 @@
         return {
           'not-query': query
         };
+      },
+
+      /**
+       * @method MLQueryBuilder#documentFragment
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#documentFragment
+       */
+      documentFragment: function documentFragment(query) {
+        return { 'document-fragment-query': query };
+      },
+
+      /**
+       * @method MLQueryBuilder#propertiesFragment
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#propertiesFragment
+       */
+      propertiesFragment: function propertiesFragment(query) {
+        return { 'properties-fragment-query': query };
+      },
+
+      /**
+       * @method MLQueryBuilder#locksFragment
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#locksFragment
+       */
+      locksFragment: function locksFragment(query) {
+        return { 'locks-fragment-query': query };
       },
 
       /**
