@@ -215,7 +215,14 @@ describe('MLQueryBuilder', function () {
   it('builds a combined query', function() {
     var query = qb.and();
 
-    var combined = qb.ext.combined(query, 'blah', {})
+    var combined = qb.ext.combined(query, 'blah')
+
+    expect(combined.search).toBeDefined();
+    expect(combined.search.query).toEqual(query);
+    expect(combined.search.qtext).toEqual('blah');
+    expect(combined.search.options).toBe(undefined);
+
+    combined = qb.ext.combined(query, 'blah', {})
 
     expect(combined.search).toBeDefined();
     expect(combined.search.query).toEqual(query);

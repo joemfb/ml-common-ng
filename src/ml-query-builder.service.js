@@ -224,9 +224,9 @@
 
           return {
             search: {
-              query: query.query || query,
+              query: query && query.query || query,
               qtext: qtext,
-              options: options.options || options
+              options: options && options.options || options
             }
           };
         },
