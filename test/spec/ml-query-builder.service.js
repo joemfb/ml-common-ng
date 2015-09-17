@@ -189,7 +189,7 @@ describe('MLQueryBuilder', function () {
     expect(query['collection-constraint-query'].uri[1]).toEqual('uri2');
   });
 
-  it('builds a custom-query with one value', function() {
+  it('builds a custom-constraint-query with one value', function() {
     var query = qb.ext.customConstraint('test', 'value');
 
     var oldQuery = qb.custom('test', 'value');
@@ -197,11 +197,11 @@ describe('MLQueryBuilder', function () {
 
     expect(query['custom-constraint-query']).toBeDefined();
     expect(query['custom-constraint-query']['constraint-name']).toEqual('test');
-    expect(query['custom-constraint-query']['value'].length).toEqual(1);
-    expect(query['custom-constraint-query']['value'][0]).toEqual('value');
+    expect(query['custom-constraint-query'].text.length).toEqual(1);
+    expect(query['custom-constraint-query'].text[0]).toEqual('value');
   });
 
-  it('builds a custom-query with multiple values', function() {
+  it('builds a custom-constraint-query with multiple values', function() {
     var query = qb.ext.customConstraint('test', ['value1', 'value2']);
 
     var oldQuery = qb.custom('test', ['value1', 'value2']);
@@ -209,9 +209,103 @@ describe('MLQueryBuilder', function () {
 
     expect(query['custom-constraint-query']).toBeDefined();
     expect(query['custom-constraint-query']['constraint-name']).toEqual('test');
-    expect(query['custom-constraint-query']['value'].length).toEqual(2);
-    expect(query['custom-constraint-query']['value'][0]).toEqual('value1');
-    expect(query['custom-constraint-query']['value'][1]).toEqual('value2');
+    expect(query['custom-constraint-query'].text.length).toEqual(2);
+    expect(query['custom-constraint-query'].text[0]).toEqual('value1');
+    expect(query['custom-constraint-query'].text[1]).toEqual('value2');
+  });
+
+  it('builds a custom-constraint-query with object properties', function() {
+    var query = qb.ext.customConstraint('name', qb.ext.geospatialValues(
+      { latitude: 1, longitude: 2 },
+      { south: 1, west: 2, north: 3, east: 4 }
+    ));
+
+    expect(query['custom-constraint-query']).toBeDefined();
+    expect(query['custom-constraint-query']['constraint-name']).toEqual('name');
+    expect(query['custom-constraint-query'].text).not.toBeDefined();
+    expect(query['custom-constraint-query'].point).toBeDefined();
+    expect(query['custom-constraint-query'].point.length).toEqual(1);
+    expect(query['custom-constraint-query'].box).toBeDefined();
+    expect(query['custom-constraint-query'].box.length).toEqual(1);
+    expect(query['custom-constraint-query'].circle).toBeDefined();
+    expect(query['custom-constraint-query'].circle.length).toEqual(0);
+    expect(query['custom-constraint-query'].polygon).toBeDefined();
+    expect(query['custom-constraint-query'].polygon.length).toEqual(0);
+  });
+
+  it('builds a custom-constraint-query with mixed properties', function() {
+    var query = qb.ext.customConstraint(
+      'name',
+      { prop: 'value' },
+      'blah'
+    );
+
+    expect(query['custom-constraint-query']).toBeDefined();
+    expect(query['custom-constraint-query']['constraint-name']).toEqual('name');
+    expect(query['custom-constraint-query'].text).toBeDefined();
+    expect(query['custom-constraint-query'].text.length).toEqual(1);
+
+  });
+
+  it('parses geospatial values', function() {
+    var values = qb.ext.geospatialValues(
+      { latitude: 1, longitude: 2 },
+      { south: 1, west: 2, north: 3, east: 4 },
+      { point: { latitude: 1, longitude: 2 } },
+      { point: { latitude: 10, longitude: 20 } },
+      { radius: 100, point: { latitude: 4, longitude: 5 } },
+      { ignored: true }
+    );
+
+    expect(values).toBeDefined();
+    expect(values.point).toBeDefined();
+    expect(values.point.length).toEqual(1);
+    expect(values.box).toBeDefined();
+    expect(values.box.length).toEqual(1);
+    expect(values.circle).toBeDefined();
+    expect(values.circle.length).toEqual(1);
+    expect(values.polygon).toBeDefined();
+    expect(values.polygon.length).toEqual(2);
+    expect(values.ignored).not.toBeDefined();
+  });
+
+  it('builds a geospatial-constraint-query', function() {
+    var query = qb.ext.geospatialConstraint('name', [
+      { latitude: 1, longitude: 2 },
+      { south: 1, west: 2, north: 3, east: 4 }
+    ]);
+
+    expect(query['geospatial-constraint-query']).toBeDefined();
+    expect(query['geospatial-constraint-query']['constraint-name']).toEqual('name');
+    expect(query['geospatial-constraint-query'].text).not.toBeDefined();
+    expect(query['geospatial-constraint-query'].point).toBeDefined();
+    expect(query['geospatial-constraint-query'].point.length).toEqual(1);
+    expect(query['geospatial-constraint-query'].box).toBeDefined();
+    expect(query['geospatial-constraint-query'].box.length).toEqual(1);
+    expect(query['geospatial-constraint-query'].circle).toBeDefined();
+    expect(query['geospatial-constraint-query'].circle.length).toEqual(0);
+    expect(query['geospatial-constraint-query'].polygon).toBeDefined();
+    expect(query['geospatial-constraint-query'].polygon.length).toEqual(0);
+  });
+
+  it('builds a geospatial-constraint-query with rest params', function() {
+    var query = qb.ext.geospatialConstraint(
+      'name',
+      { latitude: 1, longitude: 2 },
+      { south: 1, west: 2, north: 3, east: 4 }
+    );
+
+    expect(query['geospatial-constraint-query']).toBeDefined();
+    expect(query['geospatial-constraint-query']['constraint-name']).toEqual('name');
+    expect(query['geospatial-constraint-query'].text).not.toBeDefined();
+    expect(query['geospatial-constraint-query'].point).toBeDefined();
+    expect(query['geospatial-constraint-query'].point.length).toEqual(1);
+    expect(query['geospatial-constraint-query'].box).toBeDefined();
+    expect(query['geospatial-constraint-query'].box.length).toEqual(1);
+    expect(query['geospatial-constraint-query'].circle).toBeDefined();
+    expect(query['geospatial-constraint-query'].circle.length).toEqual(0);
+    expect(query['geospatial-constraint-query'].polygon).toBeDefined();
+    expect(query['geospatial-constraint-query'].polygon.length).toEqual(0);
   });
 
   it('builds a value-constraint-query with one value', function() {

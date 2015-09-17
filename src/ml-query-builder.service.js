@@ -445,16 +445,133 @@
          * @method ext.customConstraint
          *
          * @param {String} name - constraint name
-         * @param {String|Array<String>} values - the values the constraint should equal (logical OR)
+         * @param {...String|Array<String>|Array<Object>} values - the values the constraint should equal (logical OR)
          * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_28778 custom-constraint-query}
          */
-        customConstraint: function customConstraint(name, values) {
-          return {
+        customConstraint: function customConstraint() {
+          var args = asArray.apply(null, arguments);
+
+          var constraintName = args.shift();
+
+          // horrible hack for when arguments.length === 2 and arguments[1] is an array
+          if ( args.length === 1 && Array.isArray(args[0]) ) {
+            args = args[0];
+          }
+
+          // args instanceof Array<Object>
+          var shouldExtend = args.map(
+            function(arg) { return isObject(arg); }
+          ).reduce(
+            function(a, b) { return a && b; }
+          );
+
+          var query = {
             'custom-constraint-query': {
-              'constraint-name': name,
-              'value': asArray(values)
+              'constraint-name': constraintName
             }
           };
+
+          if ( shouldExtend ) {
+            while ( args.length ) {
+              extendObject(query['custom-constraint-query'], args.shift());
+            }
+          } else {
+            query['custom-constraint-query'].text = args.filter(function(arg) {
+              return !isObject(arg);
+            });
+          }
+
+          return query;
+        },
+
+        /**
+         * Helper method: builds an object of `points`, `boxes`, `circles`, and `polygons`,
+         * used by {@link MLQueryBuilder.ext.geospatialConstraint}, for use with
+         * {@link MLQueryBuilder.ext.customConstraint}
+         *
+         * examples:
+         *
+         *   ```
+         *   qb.ext.geospatialConstraint('name',
+         *     { latitude: 1, longitude: 2 },
+         *     { south: 1, west: 2, north: 3, east: 4 }
+         *   );
+         *   ```
+         *
+         *   ```
+         *   qb.ext.customConstraint('name', qb.ext.geospatialValues(
+         *     { latitude: 1, longitude: 2 },
+         *     { south: 1, west: 2, north: 3, east: 4 }
+         *   ));
+         *   ```
+         *
+         * @memberof! MLQueryBuilder
+         * @method ext.geospatialValues
+         *
+         * @param {...Object} values - the geospatial values to parse
+         * @return {Object} parsed geospatial values
+         */
+        geospatialValues: function geospatialValues() {
+          var shapes = asArray.apply(null, arguments);
+
+          var points = [],
+              boxes = [],
+              circles = [],
+              polygons = [],
+              shape;
+
+          for (var i = 0; i < shapes.length; i++) {
+            shape = shapes[i];
+
+            if (shape.latitude) {
+              points.push(shape);
+            } else if (shape.south) {
+              boxes.push(shape);
+            } else if (shape.radius) {
+              circles.push(shape);
+            } else if (shape.point) {
+              polygons.push(shape);
+            }
+          }
+
+          return {
+            point: points,
+            box: boxes,
+            circle: circles,
+            polygon: polygons
+          };
+        },
+
+        /**
+         * builds a [geospatial-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_88775)
+         * @memberof! MLQueryBuilder
+         * @method ext.geospatialConstraint
+         *
+         * @param {String} name - constraint name
+         * @param {...Object} values - the geospatial values to parse
+         * @return {Object} [geospatial-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_88775)
+         */
+        geospatialConstraint: function geospatialConstraint() {
+          var args = asArray.apply(null, arguments);
+
+          var constraintName = args.shift();
+
+          // horrible hack for when arguments.length === 2 and arguments[1] is an array
+          if ( args.length === 1 && Array.isArray(args[0]) ) {
+            args = args[0];
+          }
+
+          var geoValues = this.geospatialValues.apply(this, args);
+
+          var query = {
+            'geospatial-constraint-query': {
+              'constraint-name': constraintName
+            }
+          };
+
+          extendObject(query['geospatial-constraint-query'], geoValues);
+
+          return query;
         },
 
         /**
@@ -528,6 +645,34 @@
   function isObject(value) {
     var type = typeof value;
     return !!value && (type === 'object' || type === 'function');
+  }
+
+  // from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
+  // istanbul ignore next
+  function extendObject(target) {
+    'use strict';
+    if (target === undefined || target === null) {
+      throw new TypeError('Cannot convert first argument to object');
+    }
+
+    var to = Object(target);
+    for (var i = 1; i < arguments.length; i++) {
+      var nextSource = arguments[i];
+      if (nextSource === undefined || nextSource === null) {
+        continue;
+      }
+      nextSource = Object(nextSource);
+
+      var keysArray = Object.keys(Object(nextSource));
+      for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+        var nextKey = keysArray[nextIndex];
+        var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+        if (desc !== undefined && desc.enumerable) {
+          to[nextKey] = nextSource[nextKey];
+        }
+      }
+    }
+    return to;
   }
 
 }());
