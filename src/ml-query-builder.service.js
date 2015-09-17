@@ -237,15 +237,14 @@
          * @method ext.rangeConstraint
          *
          * @param {String} name - constraint name
-         * @param {Array} values - the values the constraint should equal (logical OR)
+         * @param {String|Array<String>} values - the values the constraint should equal (logical OR)
          * @return {Object} [range-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
          */
         rangeConstraint: function rangeConstraint(name, values) {
-          values = asArray.apply(null, [values]);
           return {
             'range-constraint-query': {
               'constraint-name': name,
-              'value': values
+              'value': asArray(values)
             }
           };
         },
@@ -256,15 +255,14 @@
          * @method ext.collectionConstraint
          *
          * @param {String} name - constraint name
-         * @param {Array} values - the values the constraint should equal (logical OR)
+         * @param {String|Array<String>} values - the values the constraint should equal (logical OR)
          * @return {Object} [collection-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
          */
         collectionConstraint: function collectionConstraint(name, values) {
-          values = asArray.apply(null, [values]);
           return {
             'collection-constraint-query': {
               'constraint-name': name,
-              'uri': values
+              'uri': asArray(values)
             }
           };
         },
@@ -275,15 +273,14 @@
          * @method ext.customConstraint
          *
          * @param {String} name - constraint name
-         * @param {Array} values - the values the constraint should equal (logical OR)
+         * @param {String|Array<String>} values - the values the constraint should equal (logical OR)
          * @return {Object} [custom-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_28778)
          */
         customConstraint: function customConstraint(name, values) {
-          values = asArray.apply(null, [values]);
           return {
             'custom-constraint-query': {
               'constraint-name': name,
-              'value': values
+              'value': asArray(values)
             }
           };
         },
@@ -336,9 +333,7 @@
   function asArray() {
     var args;
 
-    if ( arguments.length === 0 ) {
-      args = [];
-    } else if ( arguments.length === 1) {
+    if ( arguments.length === 1) {
       if (Array.isArray( arguments[0] )) {
         args = arguments[0];
       } else {
