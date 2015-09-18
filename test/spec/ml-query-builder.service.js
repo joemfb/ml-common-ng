@@ -68,7 +68,25 @@ describe('MLQueryBuilder', function () {
     expect(query['not-query'].qtext).toEqual('blah');
   });
 
-  // Document query
+  it('builds a directory query with one uri', function() {
+    var query = qb.directory('uri');
+
+    expect(query['directory-query']).toBeDefined();
+    expect(query['directory-query'].uri.length).toEqual(1);
+    expect(query['directory-query'].uri[0]).toEqual('uri');
+    expect(query['directory-query'].infinite).toEqual(true);
+  });
+
+  it('builds a directory query with multiple uris', function() {
+    var query = qb.directory(['uri1', 'uri2'], false);
+
+    expect(query['directory-query']).toBeDefined();
+    expect(query['directory-query'].uri.length).toEqual(2);
+    expect(query['directory-query'].uri[0]).toEqual('uri1');
+    expect(query['directory-query'].uri[1]).toEqual('uri2');
+    expect(query['directory-query'].infinite).toEqual(false);
+  });
+
   it('builds a document query with one document', function() {
     var query = qb.document('uri');
 

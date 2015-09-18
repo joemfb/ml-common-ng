@@ -125,6 +125,38 @@
       },
 
       /**
+       * Builds a [`directory-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_94821)
+       * @method MLQueryBuilder#directory
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#directory
+       *
+       * @param {...String|Array<String>} uris - the directory URIs to query (logical OR)
+       * @param {Boolean} [infinite] - whether to query into all sub-directories (defaults to `true`)
+       * @return {Object} [`directory-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_94821)
+       */
+      directory: function directory() {
+        var args = asArray.apply(null, arguments);
+        var last = args[args.length - 1];
+        var infinite = true;
+
+        if ( last === true || last === false ) {
+          infinite = last;
+          args.pop();
+        }
+
+        // horrible hack to support an array of URIs
+        if ( args.length === 1 && Array.isArray(args[0]) ) {
+          args = args[0];
+        }
+
+        return {
+          'directory-query': {
+            'uri': args,
+            'infinite': infinite
+          }
+        };
+      },
+
+      /**
        * @method MLQueryBuilder#document
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#document
        */
