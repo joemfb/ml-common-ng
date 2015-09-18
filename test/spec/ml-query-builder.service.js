@@ -103,7 +103,7 @@ describe('MLQueryBuilder', function () {
     expect(query['term-query'].text[1]).toEqual('bar');
   });
 
-  it('builds a range-query with one value', function() {
+  it('builds a range-constraint-query with one value', function() {
     var query = qb.ext.rangeConstraint('test', 'value');
 
     var oldQuery = qb.range('test', 'value');
@@ -111,11 +111,11 @@ describe('MLQueryBuilder', function () {
 
     expect(query['range-constraint-query']).toBeDefined();
     expect(query['range-constraint-query']['constraint-name']).toEqual('test');
-    expect(query['range-constraint-query']['value'].length).toEqual(1);
-    expect(query['range-constraint-query']['value'][0]).toEqual('value');
+    expect(query['range-constraint-query'].value.length).toEqual(1);
+    expect(query['range-constraint-query'].value[0]).toEqual('value');
   });
 
-  it('builds a range-query with multiple values', function() {
+  it('builds a range-constraint-query with multiple values', function() {
     var query = qb.ext.rangeConstraint('test', ['value1', 'value2']);
 
     var oldQuery = qb.range('test', ['value1', 'value2']);
@@ -123,9 +123,27 @@ describe('MLQueryBuilder', function () {
 
     expect(query['range-constraint-query']).toBeDefined();
     expect(query['range-constraint-query']['constraint-name']).toEqual('test');
-    expect(query['range-constraint-query']['value'].length).toEqual(2);
-    expect(query['range-constraint-query']['value'][0]).toEqual('value1');
-    expect(query['range-constraint-query']['value'][1]).toEqual('value2');
+    expect(query['range-constraint-query'].value.length).toEqual(2);
+    expect(query['range-constraint-query'].value[0]).toEqual('value1');
+    expect(query['range-constraint-query'].value[1]).toEqual('value2');
+  });
+
+  it('builds a range-constraint-query with an operator', function() {
+    var query = qb.ext.rangeConstraint('test', 'NE', 'value');
+
+    expect(query['range-constraint-query']).toBeDefined();
+    expect(query['range-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['range-constraint-query']['range-operator']).toEqual('NE');
+    expect(query['range-constraint-query'].value.length).toEqual(1);
+    expect(query['range-constraint-query'].value[0]).toEqual('value');
+  });
+
+  it('throws an error when rangeConstraint is invoked with an invalid operator', function() {
+    try {
+      qb.ext.rangeConstraint('test', 'ZZ', 'value');
+    } catch (err) {
+      expect(err).toEqual(new Error('invalid rangeConstraint query operator: ZZ'));
+    }
   });
 
   it('builds a collection-query with one collection', function() {

@@ -266,14 +266,27 @@
          * @method ext.rangeConstraint
          *
          * @param {String} name - constraint name
+         * @param {String} [operator] - operator for matching constraint to `values`; one of `LT`, `LE`, `GT`, `GE`, `EQ`, `NE` (defaults to `EQ`)
          * @param {String|Array<String>} values - the values the constraint should equal (logical OR)
+         * @param {String|Array<String>} [options] - range options: {@link http://docs.marklogic.com/guide/rest-dev/appendixa#id_84264}
          * @return {Object} [range-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
          */
-        rangeConstraint: function rangeConstraint(name, values) {
+        rangeConstraint: function rangeConstraint(name, operator, values, options) {
+          if ( !values && !options ) {
+            values = operator;
+            operator = null;
+          }
+
+          if ( operator && ['LT', 'LE', 'GT', 'GE', 'EQ', 'NE'].indexOf(operator) === -1 ) {
+            throw new Error('invalid rangeConstraint query operator: ' + operator);
+          }
+
           return {
             'range-constraint-query': {
               'constraint-name': name,
-              'value': asArray(values)
+              'range-operator': operator || 'EQ',
+              'value': asArray(values),
+              'range-option': asArray(options)
             }
           };
         },
