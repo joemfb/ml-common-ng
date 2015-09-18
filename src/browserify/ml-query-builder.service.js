@@ -2,7 +2,9 @@
   'use strict';
 
   var extensions = require('./query-builder-extensions.js');
-  var asArray = require('./util.js').asArray;
+  var util = require('./util.js');
+  var asArray = util.asArray;
+  var extendObject = util.extendObject;
 
   angular.module('ml.common')
     .factory('MLQueryBuilder', MLQueryBuilder);
@@ -206,6 +208,168 @@
       },
 
       /**
+       *
+       * @method MLQueryBuilder#qname
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#qname
+       */
+      qname: function qname(ns, name) {
+        var args = asArray.apply(null, arguments);
+
+        if ( args.length === 1 ) {
+          return { ns: null, name: args[0] };
+        } else {
+          return { ns: args[0], name: args[1] };
+        }
+      },
+
+      /**
+       *
+       * @method MLQueryBuilder#element
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#element
+       */
+      element: function element() {
+        var args = asArray.apply(null, arguments);
+        var qname;
+
+        if ( args.length === 1 ) {
+          if ( args[0].ns || args[0].name ) {
+            qname = args[0];
+          } else {
+            qname = this.qname(args[0]);
+          }
+        } else {
+          qname = this.qname(args[0], args[1]);
+        }
+
+        return { element: qname };
+      },
+
+      /**
+       *
+       * @method MLQueryBuilder#datatype
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#datatype
+       */
+      datatype: function datatype(type, collation) {
+        var datatypes = [
+          'anyURI',
+          'date',
+          'dateTime',
+          'dayTimeDuration',
+          'decimal',
+          'double',
+          'float',
+          'gDay',
+          'gMonth',
+          'gMonthDay',
+          'gYear',
+          'gYearMonth',
+          'int',
+          'long',
+          'string',
+          'time',
+          'unsignedInt',
+          'unsignedLong',
+          'yearMonthDuration'
+        ];
+
+        if ( datatypes.indexOf(type) > -1 ) {
+          type = 'xs:' + type;
+        } else {
+          throw new Error('Unknown datatype: ' + type);
+        }
+
+        return {
+          datatype: type,
+          collation: collation
+        };
+      },
+
+      /**
+       * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_83393 `range-query`}
+       *
+       * @method MLQueryBuilder#range
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#range
+       *
+       * @param {Object|String|Array<String>} indexedName - the name of a range index
+       * @param {Object} [datatype] - the type/collation of the range index (as returned by {@link MLQueryBuilder#datatype})
+       * @param {String} [operator] - the query operator
+       * @param {...*} [value] - the values to compare
+       * @param {Object} [rangeOptions] - the range query options (as returned by {@link MLQueryBuilder#rangeOptions})
+       * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_83393 range-query}
+       */
+      range: function range() {
+        var comparisons = {
+          '<': 'LT',
+          '<=': 'LE',
+          '>': 'GT',
+          '>=': 'GE',
+          '=': 'EQ',
+          '!=': 'NE'
+        };
+
+        var args = asArray.apply(null, arguments);
+
+        var indexedName = args.shift();
+
+        // TODO: attribute/field/path
+        if ( !indexedName.element ) {
+          indexedName = { 'json-property': indexedName };
+        }
+
+        var datatype = args.shift();
+        var operator = null;
+        var values = [];
+
+        if ( datatype && datatype.datatype ) {
+          datatype = { type: datatype.datatype, collation: datatype.collation };
+          operator = args.shift();
+        } else {
+          operator = datatype;
+          datatype = null;
+        }
+
+        if ( !comparisons[ operator ] ) {
+          Array.prototype.push.apply(values, asArray(operator));
+          operator = null;
+        }
+
+        var options = [];
+
+        args.forEach(function(arg) {
+          if ( arg['range-option'] ) {
+            Array.prototype.push.apply(options, asArray(arg['range-option']));
+          } else {
+            Array.prototype.push.apply(values, asArray(arg));
+          }
+        });
+
+        // console.log(values)
+
+        var query = {
+          'range-query': {
+            'range-operator': comparisons[ operator ] || 'EQ',
+            'value': values,
+            'range-option': options
+          }
+        };
+
+        extendObject(query['range-query'], indexedName, datatype);
+
+        return query;
+      },
+
+      /**
+       *
+       * @method MLQueryBuilder#rangeOptions
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#rangeOptions
+       */
+      rangeOptions: function rangeOptions(ns, name) {
+        var args = asArray.apply(null, arguments);
+
+        return { 'range-option': args };
+      },
+
+      /**
        * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_56027 `term-query`}
        * @method MLQueryBuilder#term
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#term
@@ -220,19 +384,6 @@
             'text': args
           }
         };
-      },
-
-      /**
-       * @method MLQueryBuilder#range
-       * @see MLQueryBuilder.ext.rangeConstraint
-       * @deprecated
-       */
-      range: function range(name, values) {
-        console.log(
-          'Warning, MLQueryBuilder.range is deprecated, and will be removed in the next release!\n' +
-          'Use MLQueryBuilder.ext.rangeConstraint in it\'s place'
-        );
-        return this.ext.rangeConstraint.apply(this.ext, arguments);
       },
 
       /**
