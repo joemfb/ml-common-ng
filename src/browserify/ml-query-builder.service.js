@@ -122,6 +122,23 @@
       },
 
       /**
+       * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_76890 `collection-query`}
+       * @method MLQueryBuilder#collection
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#collection
+       *
+       * @param {...String|Array<String>} uris - the collection URIs to query (logical OR)
+       * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_76890 collection-query}
+       */
+      collection: function collection() {
+        var args = asArray.apply(null, arguments);
+        return {
+          'collection-query': {
+            'uri': args
+          }
+        };
+      },
+
+      /**
        * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_94821 `directory-query`}
        * @method MLQueryBuilder#directory
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#directory
@@ -216,19 +233,6 @@
           'Use MLQueryBuilder.ext.rangeConstraint in it\'s place'
         );
         return this.ext.rangeConstraint.apply(this.ext, arguments);
-      },
-
-      /**
-       * @method MLQueryBuilder#collection
-       * @see MLQueryBuilder.ext.collectionConstraint
-       * @deprecated
-       */
-      collection: function collection(name, values) {
-        console.log(
-          'Warning, MLQueryBuilder.collection is deprecated, and will be removed in the next release!\n' +
-          'Use MLQueryBuilder.ext.collectionConstraint in it\'s place'
-        );
-        return this.ext.collectionConstraint.apply(this.ext, arguments);
       },
 
       /**

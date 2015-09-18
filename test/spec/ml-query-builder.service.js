@@ -59,6 +59,25 @@ describe('MLQueryBuilder', function () {
     expect(query['not-query']['term-query'].text[0]).toEqual('blah');
   });
 
+  it('builds a collection query with one uri', function() {
+    var query = qb.collection('uri');
+
+    expect(query['collection-query']).toBeDefined();
+    expect(query['collection-query'].uri.length).toEqual(1);
+    expect(query['collection-query'].uri[0]).toEqual('uri');
+  });
+
+  it('builds a collection query with multiple uris', function() {
+    var query = qb.collection('uri1', 'uri2');
+
+    expect(query['collection-query']).toBeDefined();
+    expect(query['collection-query'].uri.length).toEqual(2);
+    expect(query['collection-query'].uri[0]).toEqual('uri1');
+    expect(query['collection-query'].uri[1]).toEqual('uri2');
+
+    expect(query).toEqual( qb.collection(['uri1', 'uri2']) );
+  });
+
   it('builds a directory query with one uri', function() {
     var query = qb.directory('uri');
 
@@ -159,9 +178,6 @@ describe('MLQueryBuilder', function () {
   it('builds a collection-query with one collection', function() {
     var query = qb.ext.collectionConstraint('name', 'uri');
 
-    var oldQuery = qb.collection('name', 'uri');
-    expect(query).toEqual(oldQuery);
-
     expect(query['collection-constraint-query']).toBeDefined();
     expect(query['collection-constraint-query']['constraint-name']).toEqual('name');
     expect(query['collection-constraint-query'].uri.length).toEqual(1);
@@ -170,9 +186,6 @@ describe('MLQueryBuilder', function () {
 
   it('builds a collection-query with multiple collections', function() {
     var query = qb.ext.collectionConstraint('name', ['uri1', 'uri2']);
-
-    var oldQuery = qb.collection('name', ['uri1', 'uri2']);
-    expect(query).toEqual(oldQuery);
 
     expect(query['collection-constraint-query']).toBeDefined();
     expect(query['collection-constraint-query']['constraint-name']).toEqual('name');
