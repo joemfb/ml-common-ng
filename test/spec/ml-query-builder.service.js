@@ -14,22 +14,12 @@ describe('MLQueryBuilder', function () {
   it('builds a query', function() {
     var query = qb.where();
 
-    var oldQuery = qb.query();
-    expect(query).toEqual(oldQuery);
-
     expect(query.query).toBeDefined;
     expect(query.query.queries.length).toEqual(0);
 
     query = qb.where(qb.and())
-    oldQuery = qb.query(qb.and())
 
     expect(query.query.queries.length).toEqual(1);
-  });
-
-  it('builds a text query', function() {
-    var query = qb.text('blah');
-    expect(query.qtext).toBeDefined;
-    expect(query.qtext).toEqual('blah');
   });
 
   it('builds an and-query with one sub-query', function() {
@@ -37,35 +27,36 @@ describe('MLQueryBuilder', function () {
     expect(query['and-query']).toBeDefined;
     expect(query['and-query'].queries.length).toEqual(0);
 
-    query = qb.and( qb.text('blah'));
+    query = qb.and( qb.term('blah'));
     expect(query['and-query'].queries.length).toEqual(1);
   });
 
   it('builds an and-query with multiple sub-query', function() {
-    var query = query = qb.and( qb.text('blah'), qb.text('blue') );
+    var query = query = qb.and( qb.term('blah'), qb.term('blue') );
 
     expect(query['and-query'].queries.length).toEqual(2);
   });
 
   it('builds an or-query with one sub-query', function() {
-    var query = qb.or( qb.text('foo') );
+    var query = qb.or( qb.term('foo') );
 
     expect(query['or-query']).toBeDefined();
     expect(query['or-query'].queries.length).toEqual(1);
   });
 
   it('builds an or-query with multiple sub-queries', function() {
-    var query = qb.or( qb.text('foo'), qb.text('bar') );
+    var query = qb.or( qb.term('foo'), qb.term('bar') );
 
     expect(query['or-query']).toBeDefined();
     expect(query['or-query'].queries.length).toEqual(2);
   });
 
   it('builds a not-query', function() {
-    var query = qb.not( qb.text('blah') );
+    var query = qb.not( qb.term('blah') );
 
     expect(query['not-query']).toBeDefined();
-    expect(query['not-query'].qtext).toEqual('blah');
+    expect(query['not-query']['term-query']).toBeDefined();
+    expect(query['not-query']['term-query'].text[0]).toEqual('blah');
   });
 
   it('builds a directory query with one uri', function() {
@@ -193,9 +184,6 @@ describe('MLQueryBuilder', function () {
   it('builds a custom-constraint-query with one value', function() {
     var query = qb.ext.customConstraint('test', 'value');
 
-    var oldQuery = qb.custom('test', 'value');
-    expect(query).toEqual(oldQuery);
-
     expect(query['custom-constraint-query']).toBeDefined();
     expect(query['custom-constraint-query']['constraint-name']).toEqual('test');
     expect(query['custom-constraint-query'].text.length).toEqual(1);
@@ -204,9 +192,6 @@ describe('MLQueryBuilder', function () {
 
   it('builds a custom-constraint-query with multiple values', function() {
     var query = qb.ext.customConstraint('test', ['value1', 'value2']);
-
-    var oldQuery = qb.custom('test', ['value1', 'value2']);
-    expect(query).toEqual(oldQuery);
 
     expect(query['custom-constraint-query']).toBeDefined();
     expect(query['custom-constraint-query']['constraint-name']).toEqual('test');
@@ -377,10 +362,6 @@ describe('MLQueryBuilder', function () {
     constraint = qb.ext.constraint(null);
     expect(constraint('name', 'value')).toEqual(qb.ext.rangeConstraint('name', 'value'));
 
-    var oldConstraint = qb.constraint(null);
-
-    expect(constraint('name', 'value')).toEqual(oldConstraint('name', 'value'));
-
     constraint = qb.ext.constraint('range')
     expect(constraint('name', 'value')).toEqual(qb.ext.rangeConstraint('name', 'value'))
 
@@ -398,13 +379,15 @@ describe('MLQueryBuilder', function () {
   });
 
   it('builds a boost query', function() {
-    var query = qb.boost( qb.and(), qb.text('blah') );
+    var query = qb.boost( qb.and(), qb.term('blah') );
 
     expect(query['boost-query']).toBeDefined();
     expect(query['boost-query']['matching-query']).toBeDefined();
     expect(query['boost-query']['matching-query']).toEqual( qb.and() );
 
-    expect(query['boost-query']['boosting-query'].qtext).toEqual('blah');
+    expect(query['boost-query']['boosting-query']).toBeDefined();
+    expect(query['boost-query']['boosting-query']['term-query']).toBeDefined();
+    expect(query['boost-query']['boosting-query']['term-query'].text[0]).toEqual('blah');
   });
 
   it('builds a document-fragment query', function() {
@@ -416,9 +399,6 @@ describe('MLQueryBuilder', function () {
 
   it('builds a properties-fragment query', function() {
     var query = qb.propertiesFragment( qb.and() );
-
-    var oldQuery = qb.properties( qb.and() );
-    expect(query).toEqual(oldQuery);
 
     expect(query['properties-fragment-query']).toBeDefined();
     expect(query['properties-fragment-query']).toEqual( qb.and() );
@@ -433,9 +413,6 @@ describe('MLQueryBuilder', function () {
 
   it('builds an operator query', function() {
     var query = qb.ext.operatorState('sort', 'date');
-
-    var oldQuery = qb.operator('sort', 'date');
-    expect(query).toEqual(oldQuery);
 
     expect(query['operator-state']).toBeDefined();
     expect(query['operator-state']['operator-name']).toEqual('sort');

@@ -35,46 +35,6 @@
     return {
 
       /**
-       * @method MLQueryBuilder#query
-       * @see MLQueryBuilder#where
-       * @deprecated
-       */
-      query: function() {
-        console.log(
-          'Warning, MLQueryBuilder.query is deprecated, and will be removed in the next release!\n' +
-          'Use MLQueryBuilder.where in it\'s place'
-        );
-        return this.where.apply(this, arguments);
-      },
-
-      /**
-       * @method MLQueryBuilder#text
-       * @see MLQueryBuilder.ext.combined
-       * @deprecated
-       */
-      text: function text(qtext) {
-        console.log(
-          'Warning, MLQueryBuilder.text is deprecated, and will be removed in the next release!\n' +
-          'Use the qtext argument of MLQueryBuilder.ext.combined in it\'s place'
-        );
-        return {
-          'qtext': qtext
-        };
-      },
-
-      /**
-       * @method MLQueryBuilder#properties
-       * @deprecated
-       */
-      properties: function properties(query) {
-        console.log(
-          'Warning, MLQueryBuilder.properties is deprecated, and will be removed in the next release!\n' +
-          'Use MLQueryBuilder.propertiesFragment in it\'s place'
-        );
-        return this.propertiesFragment.apply(this, arguments);
-      },
-
-      /**
        * Creates a {@link http://docs.marklogic.com/guide/search-dev/structured-query structured query}
        * from a set of sub-queries
        * @method MLQueryBuilder#where
@@ -269,45 +229,6 @@
           'Use MLQueryBuilder.ext.collectionConstraint in it\'s place'
         );
         return this.ext.collectionConstraint.apply(this.ext, arguments);
-      },
-
-      /**
-       * @method MLQueryBuilder#custom
-       * @see MLQueryBuilder.ext.customConstraint
-       * @deprecated
-       */
-      custom: function custom(name, values) {
-        console.log(
-          'Warning, MLQueryBuilder.custom is deprecated, and will be removed in the next release!\n' +
-          'Use MLQueryBuilder.ext.customConstraint in it\'s place'
-        );
-        return this.ext.customConstraint.apply(this.ext, arguments);
-      },
-
-      /**
-       * @method MLQueryBuilder#constraint
-       * @see MLQueryBuilder.ext.constraint
-       * @deprecated
-       */
-      constraint: function constraint(type) {
-        console.log(
-          'Warning, MLQueryBuilder.constraint is deprecated, and will be removed in the next release!\n' +
-          'Use MLQueryBuilder.ext.constraint in it\'s place'
-        );
-        return this.ext.constraint.apply(this.ext, arguments);
-      },
-
-      /**
-       * @method MLQueryBuilder#operator
-       * @see MLQueryBuilder.ext.operator
-       * @deprecated
-       */
-      operator: function operator(name, stateName) {
-        console.log(
-          'Warning, MLQueryBuilder.operator is deprecated, and will be removed in the next release!\n' +
-          'Use MLQueryBuilder.ext.operator in it\'s place'
-        );
-        return this.ext.operatorState.apply(this.ext, arguments);
       },
 
       /**
