@@ -63,14 +63,6 @@
       },
 
       /**
-       * @method MLQueryBuilder#propertiesFragment
-       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#propertiesFragment
-       */
-      propertiesFragment: function propertiesFragment(query) {
-        return { 'properties-fragment-query': query };
-      },
-
-      /**
        * @method MLQueryBuilder#where
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#where
        */
@@ -109,6 +101,30 @@
       },
 
       /**
+       * @method MLQueryBuilder#documentFragment
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#documentFragment
+       */
+      documentFragment: function documentFragment(query) {
+        return { 'document-fragment-query': query };
+      },
+
+      /**
+       * @method MLQueryBuilder#propertiesFragment
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#propertiesFragment
+       */
+      propertiesFragment: function propertiesFragment(query) {
+        return { 'properties-fragment-query': query };
+      },
+
+      /**
+       * @method MLQueryBuilder#locksFragment
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#locksFragment
+       */
+      locksFragment: function locksFragment(query) {
+        return { 'locks-fragment-query': query };
+      },
+
+      /**
        * @method MLQueryBuilder#document
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#document
        */
@@ -130,6 +146,19 @@
           'boost-query': {
             'matching-query': matching,
             'boosting-query': boosting
+          }
+        };
+      },
+
+      /**
+       * @method MLQueryBuilder#term
+       * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#term
+       */
+      term: function term() {
+        var args = asArray.apply(null, arguments);
+        return {
+          'term-query': {
+            'text': args
           }
         };
       },
@@ -250,6 +279,56 @@
         },
 
         /**
+         * Builds a [`value-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_63420)
+         * @memberof! MLQueryBuilder
+         * @method ext.valueConstraint
+         *
+         * @param {String} name - constraint name
+         * @param {String|Number|Array<String>|Array<Number>|null} values - the values the constraint should equal (logical OR)
+         * @return {Object} [`value-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_63420)
+         */
+        valueConstraint: function valueConstraint(name, values) {
+          var query = {
+            'value-constraint-query': {
+              'constraint-name': name
+            }
+          };
+
+          var type;
+
+          if (values === null) {
+            type = 'null';
+            values = [];
+          } else {
+            values = asArray(values);
+            type = typeof values[0];
+            type = ((type === 'string') && 'text') || type;
+          }
+
+          query['value-constraint-query'][type] = values;
+
+          return query;
+        },
+
+        /**
+         * Builds a [`word-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_66833)
+         * @memberof! MLQueryBuilder
+         * @method ext.wordConstraint
+         *
+         * @param {String} name - constraint name
+         * @param {String|Array<String>} values - the values the constraint should equal (logical OR)
+         * @return {Object} [`word-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_66833)
+         */
+        wordConstraint: function wordConstraint(name, values) {
+          return {
+            'word-constraint-query': {
+              'constraint-name': name,
+              'text': asArray(values)
+            }
+          };
+        },
+
+        /**
          * Builds a [`collection-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
          * @memberof! MLQueryBuilder
          * @method ext.collectionConstraint
@@ -293,11 +372,17 @@
          * @param {String} type - constraint type (`'collection' | 'custom' | '*'`)
          * @return {Function} a constraint query builder function, one of:
          *   - {@link MLQueryBuilder.ext.rangeConstraint}
+         *   - {@link MLQueryBuilder.ext.valueConstraint}
+         *   - {@link MLQueryBuilder.ext.wordConstraint}
          *   - {@link MLQueryBuilder.ext.collectionConstraint}
          *   - {@link MLQueryBuilder.ext.customConstraint}
          */
         constraint: function constraint(type) {
           switch(type) {
+            case 'value':
+              return this.valueConstraint;
+            case 'word':
+              return this.wordConstraint;
             case 'custom':
               return this.customConstraint;
             case 'collection':

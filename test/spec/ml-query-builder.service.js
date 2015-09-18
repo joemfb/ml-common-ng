@@ -86,6 +86,23 @@ describe('MLQueryBuilder', function () {
     expect(query['document-query'].uri[1]).toEqual('uri2');
   });
 
+  it('builds a term query with one value', function() {
+    var query = qb.term('foo');
+
+    expect(query['term-query']).toBeDefined();
+    expect(query['term-query'].text.length).toEqual(1);
+    expect(query['term-query'].text[0]).toEqual('foo');
+  });
+
+  it('builds a term query with multiple values', function() {
+    var query = qb.term(['foo', 'bar']);
+
+    expect(query['term-query']).toBeDefined();
+    expect(query['term-query'].text.length).toEqual(2);
+    expect(query['term-query'].text[0]).toEqual('foo');
+    expect(query['term-query'].text[1]).toEqual('bar');
+  });
+
   it('builds a range-query with one value', function() {
     var query = qb.ext.rangeConstraint('test', 'value');
 
@@ -161,6 +178,68 @@ describe('MLQueryBuilder', function () {
     expect(query['custom-constraint-query']['value'][1]).toEqual('value2');
   });
 
+  it('builds a value-constraint-query with one value', function() {
+    var query = qb.ext.valueConstraint('test', 'value');
+
+    expect(query['value-constraint-query']).toBeDefined();
+    expect(query['value-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['value-constraint-query']['text'].length).toEqual(1);
+    expect(query['value-constraint-query']['text'][0]).toEqual('value');
+
+    query = null;
+    query = qb.ext.valueConstraint('test', 1);
+
+    expect(query['value-constraint-query']).toBeDefined();
+    expect(query['value-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['value-constraint-query']['number'].length).toEqual(1);
+    expect(query['value-constraint-query']['number'][0]).toEqual(1);
+
+    query = null;
+    query = qb.ext.valueConstraint('test', null);
+
+    expect(query['value-constraint-query']).toBeDefined();
+    expect(query['value-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['value-constraint-query']['null'].length).toEqual(0);
+  });
+
+  it('builds a value-constraint-query with multiple values', function() {
+    var query = qb.ext.valueConstraint('test', ['value1', 'value2']);
+
+    expect(query['value-constraint-query']).toBeDefined();
+    expect(query['value-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['value-constraint-query']['text'].length).toEqual(2);
+    expect(query['value-constraint-query']['text'][0]).toEqual('value1');
+    expect(query['value-constraint-query']['text'][1]).toEqual('value2');
+
+    query = null;
+    query = qb.ext.valueConstraint('test', [1, 2]);
+
+    expect(query['value-constraint-query']).toBeDefined();
+    expect(query['value-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['value-constraint-query']['number'].length).toEqual(2);
+    expect(query['value-constraint-query']['number'][0]).toEqual(1);
+    expect(query['value-constraint-query']['number'][1]).toEqual(2);
+  });
+
+  it('builds a word-constraint-query with one value', function() {
+    var query = qb.ext.wordConstraint('test', 'value');
+
+    expect(query['word-constraint-query']).toBeDefined();
+    expect(query['word-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['word-constraint-query']['text'].length).toEqual(1);
+    expect(query['word-constraint-query']['text'][0]).toEqual('value');
+  });
+
+  it('builds a word-constraint-query with multiple values', function() {
+    var query = qb.ext.wordConstraint('test', ['value1', 'value2']);
+
+    expect(query['word-constraint-query']).toBeDefined();
+    expect(query['word-constraint-query']['constraint-name']).toEqual('test');
+    expect(query['word-constraint-query']['text'].length).toEqual(2);
+    expect(query['word-constraint-query']['text'][0]).toEqual('value1');
+    expect(query['word-constraint-query']['text'][1]).toEqual('value2');
+  });
+
   it('chooses a constraint query by type', function() {
     var constraint;
 
@@ -179,6 +258,12 @@ describe('MLQueryBuilder', function () {
 
     constraint = qb.ext.constraint('custom');
     expect(constraint('name', 'value')).toEqual(qb.ext.customConstraint('name', 'value'));
+
+    constraint = qb.ext.constraint('value');
+    expect(constraint('name', 'value')).toEqual(qb.ext.valueConstraint('name', 'value'));
+
+    constraint = qb.ext.constraint('word');
+    expect(constraint('name', 'value')).toEqual(qb.ext.wordConstraint('name', 'value'));
   });
 
   it('builds a boost query', function() {
@@ -191,7 +276,14 @@ describe('MLQueryBuilder', function () {
     expect(query['boost-query']['boosting-query'].qtext).toEqual('blah');
   });
 
-  it('builds a properties query', function() {
+  it('builds a document-fragment query', function() {
+    var query = qb.documentFragment( qb.and() );
+
+    expect(query['document-fragment-query']).toBeDefined();
+    expect(query['document-fragment-query']).toEqual( qb.and() );
+  });
+
+  it('builds a properties-fragment query', function() {
     var query = qb.propertiesFragment( qb.and() );
 
     var oldQuery = qb.properties( qb.and() );
@@ -199,6 +291,13 @@ describe('MLQueryBuilder', function () {
 
     expect(query['properties-fragment-query']).toBeDefined();
     expect(query['properties-fragment-query']).toEqual( qb.and() );
+  });
+
+  it('builds a locks-fragment query', function() {
+    var query = qb.locksFragment( qb.and() );
+
+    expect(query['locks-fragment-query']).toBeDefined();
+    expect(query['locks-fragment-query']).toEqual( qb.and() );
   });
 
   it('builds an operator query', function() {
