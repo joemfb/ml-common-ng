@@ -21,6 +21,7 @@
       createDocument: createDocument,
       updateDocument: updateDocument,
       patchDocument: patchDocument,
+      deleteDocument: deleteDocument,
       sparql: sparql,
       suggest: suggest,
       values: values,
@@ -214,6 +215,25 @@
       })
       .then(function(response) {
         return response.headers('location');
+      });
+    }
+
+    /**
+     * Deletes a document at the specified URI
+     * - {@link http://docs.marklogic.com/REST/DELETE/v1/documents}
+     * @method MLRest#deleteDocument
+     *
+     * @param {String} uri - document uri
+     * @param {Object} options - URL params
+     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     */
+    function deleteDocument(uri, options) {
+      options = options || {};
+      options.uri = uri;
+
+      return request('/documents', {
+        method: 'DELETE',
+        params: options
       });
     }
 

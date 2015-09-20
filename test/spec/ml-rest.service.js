@@ -191,7 +191,6 @@ describe('MLRest', function () {
     $httpBackend.flush();
   });
 
-  // TODO: should this respond with location header ???
   it('should update document', function() {
     $httpBackend
       .expectPUT('/v1/documents?uri=%2Fdocs%2Ftest2.json')
@@ -228,6 +227,21 @@ describe('MLRest', function () {
     $httpBackend.flush();
 
     expect(counter).toEqual(1);
+  });
+
+  it('should delete document', function() {
+    $httpBackend
+      .expectDELETE('/v1/documents?uri=%2Fdocs%2Ftest2.json')
+      .respond(204, null);
+
+    var response;
+    mlRest.deleteDocument('/docs/test2.json')
+    .then(function(resp){
+      response = resp;
+    });
+    $httpBackend.flush();
+
+    expect(response.status).toEqual(204);
   });
 
   it('should evaluate SPARQL', function() {
