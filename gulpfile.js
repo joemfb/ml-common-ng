@@ -12,7 +12,11 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     del = require('del'),
     ghpages = require('gulp-gh-pages'),
-    cp = require('child_process');
+    cp = require('child_process'),
+    browserify = require('browserify'),
+    buffer = require('vinyl-buffer'),
+    eventStream = require('event-stream'),
+    source = require('vinyl-source-stream');
 
 gulp.task('lint-style', function(done) {
   return gulp.src([
@@ -36,10 +40,13 @@ gulp.task('lint', ['lint-style'], function() {
 });
 
 gulp.task('scripts', function() {
-  return gulp.src([
-      './src/ml-common.js',
-      './src/**/*.js'
-    ])
+  return eventStream.merge(
+      gulp.src([ './src/ml-common.js', './src/*.js' ]),
+      browserify({ entries: [ './src/browserify/ml-query-builder.service.js', ]})
+      .bundle()
+      .pipe(source('ml-query-builder.js'))
+      .pipe(buffer())
+    )
     .pipe(concat('ml-common-ng.js'))
     .pipe(gulp.dest('dist'))
     .pipe(rename('ml-common-ng.min.js'))
