@@ -6,8 +6,18 @@
 
   /**
    * @class MLQueryBuilder
-   * @classdesc angular service for building structured queries; a subset of the official `node-client-api`
-   * [queryBuilder](http://docs.marklogic.com/jsdoc/queryBuilder.html), plus extensions.
+   * @classdesc angular service for building
+   * {@link http://docs.marklogic.com/guide/search-dev/structured-query structured queries}
+   *
+   * Designed for one-way compatibility with a subset of the official
+   * {@link http://developer.marklogic.com/features/node-client-api node-client-api}
+   * {@link http://docs.marklogic.com/jsdoc/queryBuilder.html query-builder};
+   * queries written to {@link MLQueryBuilder} (excluding deprecated methods)
+   * should work with the offical API, but not necessarily vice-versa.
+   *
+   * Additionally includes extension methods (on {@link MLQueryBuilder.ext}),
+   * supporting various constraint queries, operator state query components,
+   * and combined queries.
    */
   function MLQueryBuilder() {
 
@@ -63,8 +73,13 @@
       },
 
       /**
+       * Creates a {@link http://docs.marklogic.com/guide/search-dev/structured-query structured query}
+       * from a set of sub-queries
        * @method MLQueryBuilder#where
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#where
+       *
+       * @param {...Object} queries - sub queries
+       * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query structured query}
        */
       where: where,
 
@@ -78,8 +93,12 @@
       },
 
       /**
+       * Builds an {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_64259 `or-query`}
        * @method MLQueryBuilder#or
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#or
+       *
+       * @param {...Object} queries - sub queries
+       * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_64259 or-query}
        */
       or: function or() {
         var args = asArray.apply(null, arguments);
@@ -91,8 +110,12 @@
       },
 
       /**
+       * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_39488 `not-query`}
        * @method MLQueryBuilder#not
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#not
+       *
+       * @param {Object} query - sub query to be negated
+       * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_39488 not-query}
        */
       not: function properties(query) {
         return {
@@ -101,37 +124,49 @@
       },
 
       /**
+       * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_30556 `document-fragment-query`}
        * @method MLQueryBuilder#documentFragment
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#documentFragment
+       *
+       * @param {Object} query - sub query to be constrained to document fragments
+       * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_30556 document-fragment-query}
        */
       documentFragment: function documentFragment(query) {
         return { 'document-fragment-query': query };
       },
 
       /**
+       * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_67222 `properties-fragment-query`}
        * @method MLQueryBuilder#propertiesFragment
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#propertiesFragment
+       *
+       * @param {Object} query - sub query to be constrained to properties fragments
+       * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_67222 properties-fragment-query}
        */
       propertiesFragment: function propertiesFragment(query) {
         return { 'properties-fragment-query': query };
       },
 
       /**
+       * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_53441 `locks-fragment-query`}
        * @method MLQueryBuilder#locksFragment
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#locksFragment
+       *
+       * @param {Object} query - sub query to be constrained to document locks
+       * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_53441 locks-fragment-query}
        */
       locksFragment: function locksFragment(query) {
         return { 'locks-fragment-query': query };
       },
 
       /**
-       * Builds a [`directory-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_94821)
+       * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_94821 `directory-query`}
        * @method MLQueryBuilder#directory
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#directory
        *
        * @param {...String|Array<String>} uris - the directory URIs to query (logical OR)
        * @param {Boolean} [infinite] - whether to query into all sub-directories (defaults to `true`)
-       * @return {Object} [`directory-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_94821)
+       * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_94821 directory-query}
        */
       directory: function directory() {
         var args = asArray.apply(null, arguments);
@@ -157,8 +192,12 @@
       },
 
       /**
+       * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_27172 `document-query`}
        * @method MLQueryBuilder#document
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#document
+       *
+       * @param {...String} uris - document URIs to match
+       * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_27172 document-query}
        */
       document: function document() {
         var args = asArray.apply(null, arguments);
@@ -170,8 +209,13 @@
       },
 
       /**
+       * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_25949 `boost-query`}
        * @method MLQueryBuilder#boost
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#boost
+       *
+       * @param {Object} matching - matching query
+       * @param {Object} boosting - boosting query
+       * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_25949 boost-query}
        */
       boost: function boost(matching, boosting) {
         return {
@@ -183,8 +227,12 @@
       },
 
       /**
+       * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_56027 `term-query`}
        * @method MLQueryBuilder#term
        * @see http://docs.marklogic.com/jsdoc/queryBuilder.html#term
+       *
+       * @param {...String} terms - terms to match (logical OR)
+       * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_56027 term-query}
        */
       term: function term() {
         var args = asArray.apply(null, arguments);
@@ -268,14 +316,14 @@
       ext: {
 
         /**
-         * Builds a [combined query](http://docs.marklogic.com/guide/rest-dev/search#id_69918)
+         * Builds a {@link http://docs.marklogic.com/guide/rest-dev/search#id_69918 combined query}
          * @memberof! MLQueryBuilder
          * @method ext.combined
          *
          * @param {Object} query - a structured query (from {@link MLQueryBuilder#where})
          * @param {String} [qtext] - a query text string, to be parsed server-side
          * @param {Object} [options] - search options
-         * @return {Object} combined query
+         * @return {Object} {@link http://docs.marklogic.com/guide/rest-dev/search#id_69918 combined query}
          */
         combined: function combined(query, qtext, options) {
           if ( isObject(qtext) && !options ) {
@@ -293,7 +341,7 @@
         },
 
         /**
-         * Builds a [`range-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
+         * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_38268 `range-constraint-query`}
          * @memberof! MLQueryBuilder
          * @method ext.rangeConstraint
          *
@@ -301,7 +349,7 @@
          * @param {String} [operator] - operator for matching constraint to `values`; one of `LT`, `LE`, `GT`, `GE`, `EQ`, `NE` (defaults to `EQ`)
          * @param {String|Array<String>} values - the values the constraint should equal (logical OR)
          * @param {String|Array<String>} [options] - range options: {@link http://docs.marklogic.com/guide/rest-dev/appendixa#id_84264}
-         * @return {Object} [range-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_38268)
+         * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_38268 range-constraint-query}
          */
         rangeConstraint: function rangeConstraint(name, operator, values, options) {
           if ( !values && !options ) {
@@ -324,13 +372,13 @@
         },
 
         /**
-         * Builds a [`value-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_63420)
+         * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_63420 `value-constraint-query`}
          * @memberof! MLQueryBuilder
          * @method ext.valueConstraint
          *
          * @param {String} name - constraint name
          * @param {String|Number|Array<String>|Array<Number>|null} values - the values the constraint should equal (logical OR)
-         * @return {Object} [`value-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_63420)
+         * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_63420 value-constraint-query}
          */
         valueConstraint: function valueConstraint(name, values) {
           var query = {
@@ -356,13 +404,13 @@
         },
 
         /**
-         * Builds a [`word-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_66833)
+         * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_66833 `word-constraint-query`}
          * @memberof! MLQueryBuilder
          * @method ext.wordConstraint
          *
          * @param {String} name - constraint name
          * @param {String|Array<String>} values - the values the constraint should equal (logical OR)
-         * @return {Object} [`word-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_66833)
+         * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_66833 word-constraint-query}
          */
         wordConstraint: function wordConstraint(name, values) {
           return {
@@ -374,13 +422,13 @@
         },
 
         /**
-         * Builds a [`collection-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
+         * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_30776 `collection-constraint-query`}
          * @memberof! MLQueryBuilder
          * @method ext.collectionConstraint
          *
          * @param {String} name - constraint name
          * @param {String|Array<String>} values - the values the constraint should equal (logical OR)
-         * @return {Object} [collection-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_30776)
+         * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_30776 collection-constraint-query}
          */
         collectionConstraint: function collectionConstraint(name, values) {
           return {
@@ -392,13 +440,13 @@
         },
 
         /**
-         * Builds a [`custom-constraint-query`](http://docs.marklogic.com/guide/search-dev/structured-query#id_28778)
+         * Builds a {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_28778 `custom-constraint-query`}
          * @memberof! MLQueryBuilder
          * @method ext.customConstraint
          *
          * @param {String} name - constraint name
          * @param {String|Array<String>} values - the values the constraint should equal (logical OR)
-         * @return {Object} [custom-constraint-query](http://docs.marklogic.com/guide/search-dev/structured-query#id_28778)
+         * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_28778 custom-constraint-query}
          */
         customConstraint: function customConstraint(name, values) {
           return {
@@ -414,7 +462,7 @@
          * @memberof! MLQueryBuilder
          * @method ext.constraint
          *
-         * @param {String} type - constraint type (`'collection' | 'custom' | '*'`)
+         * @param {String} type - constraint type (`'value' || 'word' || collection' || 'custom' || '*'`)
          * @return {Function} a constraint query builder function, one of:
          *   - {@link MLQueryBuilder.ext.rangeConstraint}
          *   - {@link MLQueryBuilder.ext.valueConstraint}
@@ -438,13 +486,13 @@
         },
 
         /**
-         * Builds an [`operator-state` query component](http://docs.marklogic.com/guide/search-dev/structured-query#id_45570)
+         * Builds an {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_45570 `operator-state` query component}
          * @memberof! MLQueryBuilder
          * @method ext.operatorState
          *
          * @param {String} name - operator name
          * @param {String} stateName - operator-state name
-         * @return {Object} [operator-state component](http://docs.marklogic.com/guide/search-dev/structured-query#id_45570)
+         * @return {Object} {@link http://docs.marklogic.com/guide/search-dev/structured-query#id_45570 operator-state query component}
          */
         operatorState: function operatorState(name, stateName) {
           return {

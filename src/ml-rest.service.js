@@ -10,7 +10,7 @@
    * @class MLRest
    * @classdesc low-level angular service, encapsulates REST API builtins and normalizes the responses.
    *
-   * @param {Object} $http - angular [$http service](https://docs.angularjs.org/api/ng/service/$http)
+   * @param {Object} $http - angular {@link https://docs.angularjs.org/api/ng/service/$http $http service}
    */
   function MLRest($http) {
     var defaults = { apiVersion: 'v1' };
@@ -46,8 +46,8 @@
      * @method MLRest#request
      *
      * @param {String} endpoint - the request endpoint: can be version agnostic (`/search`) or specific (`/v1/search`)
-     * @param {Object} settings - angular `$http` service [settings](https://docs.angularjs.org/api/ng/service/$http#usage)
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @param {Object} settings - angular `$http` service {@link https://docs.angularjs.org/api/ng/service/$http#usage settings}
+     * @return {Promise} a promise resolved with an angular `$http` service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function request(endpoint, settings) {
       var url;
@@ -82,8 +82,8 @@
      * @method MLRest#extension
      *
      * @param {String} name - resource extension name
-     * @param {Object} settings - angular `$http` service [settings](https://docs.angularjs.org/api/ng/service/$http#usage)
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @param {Object} settings - angular `$http` service {@link https://docs.angularjs.org/api/ng/service/$http#usage settings}
+     * @return {Promise} a promise resolved with an angular `$http` service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function extension(name, settings) {
       if ( !/^\//.test(name) ) {
@@ -100,7 +100,7 @@
      *
      * @param {Object} [options] - URL params
      * @param {Object} [combined] - a combined search object (identified by a `search` property)
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular `$http` service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function search(options, combined) {
       var settings = {};
@@ -133,7 +133,7 @@
      *
      * @param {String} uri - document URI
      * @param {Object} options - URL params
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular `$http` service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function getDocument(uri, options) {
       options = options || {};
@@ -225,7 +225,7 @@
      *
      * @param {String} uri - document uri
      * @param {Object} options - URL params
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular `$http` service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function deleteDocument(uri, options) {
       options = options || {};
@@ -244,7 +244,7 @@
      *
      * @param {String} query - a SPARQL query
      * @param {Object} [params] - URL params
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular `$http` service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function sparql(query, params) {
       var accept = [
@@ -272,7 +272,7 @@
      *
      * @param {Object} [params] - URL params
      * @param {Object} [combined] - combined query
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular `$http` service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function suggest(params, combined) {
       var settings = { params: params };
@@ -294,7 +294,7 @@
      * @param {String} name - values definition name (from stored or combined search options)
      * @param {Object} [params] - URL params
      * @param {Object} [combined] - combined query
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular `$http` service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function values(name, params, combined) {
       var settings = { params: params };
@@ -315,7 +315,7 @@
      *
      * @param {String} name - stored search options name
      * @param {String} [section] - options section to retrieve
-     * @return {Promise} a promise resolved with an angular `$http` service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular `$http` service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function queryConfig(name, section) {
       var url = '/config/query/' + name;
