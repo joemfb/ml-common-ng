@@ -10,7 +10,7 @@ var gulp = require('gulp'),
     path = require('path'),
     rename = require('gulp-rename'),
     uglify = require('gulp-uglify'),
-    rm = require('gulp-rm'),
+    del = require('del'),
     ghpages = require('gulp-gh-pages'),
     cp = require('child_process');
 
@@ -66,7 +66,7 @@ gulp.task('autotest', function(done) {
   });
 });
 
-gulp.task('docs', function(done) {
+gulp.task('docs', ['clean-docs'], function(done) {
   cp.exec('./node_modules/.bin/jsdoc -c jsdoc.conf.json', function(err) {
     if (err) {
       return console.log(err);
@@ -84,12 +84,11 @@ gulp.task('docs', function(done) {
   });
 });
 
-gulp.task('clean-docs', function() {
-  return gulp.src('./docs/generated/**/*', { read: false })
-  .pipe(rm({async: false}));
+gulp.task('clean-docs', function(done) {
+  return del(['./docs/generated/**/*']);
 });
 
-gulp.task('publish-docs', function() {
+gulp.task('publish-docs', ['docs'], function() {
   return gulp.src([ './docs/generated/**/*.*' ])
   .pipe(ghpages());
 });
