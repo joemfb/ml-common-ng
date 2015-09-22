@@ -123,7 +123,17 @@
                       <dd>
                       </dd>
                       <dt class="symbol-index-name">
-                <a href="MLQueryBuilder.html#..ext.rangeConstraint" class="!symbol-index-name">MLQueryBuilder.<wbr>ext.<wbr>rangeConstraint(name, values)</a>
+                <a href="MLQueryBuilder.html#..ext.rangeConstraint" class="!symbol-index-name">MLQueryBuilder.<wbr>ext.<wbr>rangeConstraint(name[, operator], values[, options])</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="MLQueryBuilder.html#..ext.valueConstraint" class="!symbol-index-name">MLQueryBuilder.<wbr>ext.<wbr>valueConstraint(name, values)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="MLQueryBuilder.html#..ext.wordConstraint" class="!symbol-index-name">MLQueryBuilder.<wbr>ext.<wbr>wordConstraint(name, values)</a>
             </dt>
                       <dd>
                       </dd>
@@ -132,7 +142,7 @@
                   <div class="symbol-index-column">
                     <dl class="symbol-index-list">
                       <dt class="symbol-index-name">
-                <a href="MLQueryBuilder.html#boost" class="!symbol-index-name">MLQueryBuilder#<wbr>boost()</a>
+                <a href="MLQueryBuilder.html#boost" class="!symbol-index-name">MLQueryBuilder#<wbr>boost(matching, boosting)</a>
             </dt>
                       <dd>
                       </dd>
@@ -152,12 +162,27 @@
                       <dd>
                       </dd>
                       <dt class="symbol-index-name">
-                <a href="MLQueryBuilder.html#document" class="!symbol-index-name">MLQueryBuilder#<wbr>document()</a>
+                <a href="MLQueryBuilder.html#directory" class="!symbol-index-name">MLQueryBuilder#<wbr>directory(uris[, infinite])</a>
             </dt>
                       <dd>
                       </dd>
                       <dt class="symbol-index-name">
-                <a href="MLQueryBuilder.html#not" class="!symbol-index-name">MLQueryBuilder#<wbr>not()</a>
+                <a href="MLQueryBuilder.html#document" class="!symbol-index-name">MLQueryBuilder#<wbr>document(.<wbr>.<wbr>.<wbr>uris)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="MLQueryBuilder.html#documentFragment" class="!symbol-index-name">MLQueryBuilder#<wbr>documentFragment(query)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="MLQueryBuilder.html#locksFragment" class="!symbol-index-name">MLQueryBuilder#<wbr>locksFragment(query)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="MLQueryBuilder.html#not" class="!symbol-index-name">MLQueryBuilder#<wbr>not(query)</a>
             </dt>
                       <dd>
                       </dd>
@@ -166,22 +191,22 @@
             </dt>
                       <dd>
                       </dd>
-                      <dt class="symbol-index-name">
-                <a href="MLQueryBuilder.html#or" class="!symbol-index-name">MLQueryBuilder#<wbr>or()</a>
-            </dt>
-                      <dd>
-                      </dd>
                     </dl>
                   </div>
                   <div class="symbol-index-column">
                     <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="MLQueryBuilder.html#or" class="!symbol-index-name">MLQueryBuilder#<wbr>or(.<wbr>.<wbr>.<wbr>queries)</a>
+            </dt>
+                      <dd>
+                      </dd>
                       <dt class="symbol-index-name">
                 <a href="MLQueryBuilder.html#properties" class="!symbol-index-name">MLQueryBuilder#<wbr>properties()</a>
             </dt>
                       <dd>
                       </dd>
                       <dt class="symbol-index-name">
-                <a href="MLQueryBuilder.html#propertiesFragment" class="!symbol-index-name">MLQueryBuilder#<wbr>propertiesFragment()</a>
+                <a href="MLQueryBuilder.html#propertiesFragment" class="!symbol-index-name">MLQueryBuilder#<wbr>propertiesFragment(query)</a>
             </dt>
                       <dd>
                       </dd>
@@ -196,12 +221,17 @@
                       <dd>
                       </dd>
                       <dt class="symbol-index-name">
+                <a href="MLQueryBuilder.html#term" class="!symbol-index-name">MLQueryBuilder#<wbr>term(.<wbr>.<wbr>.<wbr>terms)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
                 <a href="MLQueryBuilder.html#text" class="!symbol-index-name">MLQueryBuilder#<wbr>text()</a>
             </dt>
                       <dd>
                       </dd>
                       <dt class="symbol-index-name">
-                <a href="MLQueryBuilder.html#where" class="!symbol-index-name">MLQueryBuilder#<wbr>where()</a>
+                <a href="MLQueryBuilder.html#where" class="!symbol-index-name">MLQueryBuilder#<wbr>where(.<wbr>.<wbr>.<wbr>queries)</a>
             </dt>
                       <dd>
                       </dd>
@@ -223,6 +253,11 @@
                       </dd>
                       <dt class="symbol-index-name">
                 <a href="MLRest.html#createDocument" class="!symbol-index-name">MLRest#<wbr>createDocument(doc[, options])</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="MLRest.html#deleteDocument" class="!symbol-index-name">MLRest#<wbr>deleteDocument(uri, options)</a>
             </dt>
                       <dd>
                       </dd>
@@ -260,15 +295,15 @@
             </dt>
                       <dd>
                       </dd>
-                    </dl>
-                  </div>
-                  <div class="symbol-index-column">
-                    <dl class="symbol-index-list">
                       <dt class="symbol-index-name">
                 <a href="MLRest.html#sparql" class="!symbol-index-name">MLRest#<wbr>sparql(query[, params])</a>
             </dt>
                       <dd>
                       </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
                       <dt class="symbol-index-name">
                 <a href="MLRest.html#suggest" class="!symbol-index-name">MLRest#<wbr>suggest([params][, combined])</a>
             </dt>
@@ -322,7 +357,7 @@
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.3.2 on September 15, 2015.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.3.2 on September 22, 2015.
       </p>
     </div>
   </footer>

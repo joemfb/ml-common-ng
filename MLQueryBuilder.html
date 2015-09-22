@@ -27,8 +27,12 @@
             <h1><div class="symbol-detail-labels"><span class="label label-kind">class</span></div><small></small><span class="symbol-name">MLQueryBuilder</span></h1>
             <p class="source-link">Source: <a href="ml-query-builder.service.js.html#source-line-7">ml-query-builder.<wbr>service.<wbr>js:7</a></p>
             <div class="symbol-classdesc">
-              <p>angular service for building structured queries; a subset of the official <code>node-client-api</code>
-                <a href="http://docs.marklogic.com/jsdoc/queryBuilder.html">queryBuilder</a>, plus extensions.</p>
+              <p>angular service for building
+                <a href="http://docs.marklogic.com/guide/search-dev/structured-query">structured queries</a></p>
+              <p>Designed for one-way compatibility with a subset of the official
+                <a href="http://developer.marklogic.com/features/node-client-api">node-client-api</a>
+                <a href="http://docs.marklogic.com/jsdoc/queryBuilder.html">query-builder</a>; queries written to <a href="MLQueryBuilder.html">MLQueryBuilder</a> (excluding deprecated methods) should work with the offical API, but not necessarily vice-versa.</p>
+              <p>Additionally includes extension methods (on <a href="MLQueryBuilder.html#.ext">MLQueryBuilder.ext</a>), supporting various constraint queries, operator state query components, and combined queries.</p>
             </div>
             <dl class="dl-compact">
             </dl>
@@ -70,10 +74,16 @@
                     <dt><a href="MLQueryBuilder.html#..ext.operatorState">.<wbr>ext.<wbr>operatorState(name, stateName)</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="MLQueryBuilder.html#..ext.rangeConstraint">.<wbr>ext.<wbr>rangeConstraint(name, values)</a></dt>
+                    <dt><a href="MLQueryBuilder.html#..ext.rangeConstraint">.<wbr>ext.<wbr>rangeConstraint(name[, operator], values[, options])</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="MLQueryBuilder.html#boost">boost()</a></dt>
+                    <dt><a href="MLQueryBuilder.html#..ext.valueConstraint">.<wbr>ext.<wbr>valueConstraint(name, values)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLQueryBuilder.html#..ext.wordConstraint">.<wbr>ext.<wbr>wordConstraint(name, values)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLQueryBuilder.html#boost">boost(matching, boosting)</a></dt>
                     <dd>
                     </dd>
                   </dl>
@@ -89,26 +99,35 @@
                     <dt><a href="MLQueryBuilder.html#custom">custom()</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="MLQueryBuilder.html#document">document()</a></dt>
+                    <dt><a href="MLQueryBuilder.html#directory">directory(uris[, infinite])</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="MLQueryBuilder.html#not">not()</a></dt>
+                    <dt><a href="MLQueryBuilder.html#document">document(.<wbr>.<wbr>.<wbr>uris)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLQueryBuilder.html#documentFragment">documentFragment(query)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLQueryBuilder.html#locksFragment">locksFragment(query)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLQueryBuilder.html#not">not(query)</a></dt>
                     <dd>
                     </dd>
                     <dt><a href="MLQueryBuilder.html#operator">operator()</a></dt>
-                    <dd>
-                    </dd>
-                    <dt><a href="MLQueryBuilder.html#or">or()</a></dt>
                     <dd>
                     </dd>
                   </dl>
                 </div>
                 <div class="summary-column">
                   <dl class="dl-summary-callout">
+                    <dt><a href="MLQueryBuilder.html#or">or(.<wbr>.<wbr>.<wbr>queries)</a></dt>
+                    <dd>
+                    </dd>
                     <dt><a href="MLQueryBuilder.html#properties">properties()</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="MLQueryBuilder.html#propertiesFragment">propertiesFragment()</a></dt>
+                    <dt><a href="MLQueryBuilder.html#propertiesFragment">propertiesFragment(query)</a></dt>
                     <dd>
                     </dd>
                     <dt><a href="MLQueryBuilder.html#query">query()</a></dt>
@@ -117,10 +136,13 @@
                     <dt><a href="MLQueryBuilder.html#range">range()</a></dt>
                     <dd>
                     </dd>
+                    <dt><a href="MLQueryBuilder.html#term">term(.<wbr>.<wbr>.<wbr>terms)</a></dt>
+                    <dd>
+                    </dd>
                     <dt><a href="MLQueryBuilder.html#text">text()</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="MLQueryBuilder.html#where">where()</a></dt>
+                    <dt><a href="MLQueryBuilder.html#where">where(.<wbr>.<wbr>.<wbr>queries)</a></dt>
                     <dd>
                     </dd>
                   </dl>
@@ -177,7 +199,7 @@
                         <p>values</p>
                       </td>
                       <td>
-                        <p>Array</p>
+                        <p>(String or Array of String)</p>
                       </td>
                       <td>
                         <p>&nbsp;</p>
@@ -257,7 +279,7 @@
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code>Object</code>&nbsp;combined query</p>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/rest-dev/search#id_69918">combined query</a></p>
                 </dd>
               </dl>
               <h3 id="..ext.constraint"><div class="symbol-detail-labels"><span class="label label-static">static</span></div><span class="symbol-name">.ext.constraint</span><span class="signature"><span class="signature-params">(type)</span>&nbsp;&rarr; <span class="signature-returns"> function()</span></span></h3>
@@ -285,7 +307,7 @@
                         <p>&nbsp;</p>
                       </td>
                       <td>
-                        <p>constraint type (<code>'collection' | 'custom' | '*'</code>)</p>
+                        <p>constraint type (<code>'value' || 'word' || collection' || 'custom' || '*'</code>)</p>
                       </td>
                     </tr>
                   </tbody>
@@ -297,6 +319,8 @@
                   <p><code>function()</code>&nbsp;a constraint query builder function, one of:</p>
                   <ul>
                     <li><a href="MLQueryBuilder.html#..ext.rangeConstraint">MLQueryBuilder.ext.rangeConstraint</a></li>
+                    <li><a href="MLQueryBuilder.html#..ext.valueConstraint">MLQueryBuilder.ext.valueConstraint</a></li>
+                    <li><a href="MLQueryBuilder.html#..ext.wordConstraint">MLQueryBuilder.ext.wordConstraint</a></li>
                     <li><a href="MLQueryBuilder.html#..ext.collectionConstraint">MLQueryBuilder.ext.collectionConstraint</a></li>
                     <li><a href="MLQueryBuilder.html#..ext.customConstraint">MLQueryBuilder.ext.customConstraint</a></li>
                   </ul>
@@ -335,7 +359,7 @@
                         <p>values</p>
                       </td>
                       <td>
-                        <p>Array</p>
+                        <p>(String or Array of String)</p>
                       </td>
                       <td>
                         <p>&nbsp;</p>
@@ -401,11 +425,90 @@
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_45570">operator-state component</a></p>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_45570">operator-state query component</a></p>
                 </dd>
               </dl>
-              <h3 id="..ext.rangeConstraint"><div class="symbol-detail-labels"><span class="label label-static">static</span></div><span class="symbol-name">.ext.rangeConstraint</span><span class="signature"><span class="signature-params">(name, values)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <h3 id="..ext.rangeConstraint"><div class="symbol-detail-labels"><span class="label label-static">static</span></div><span class="symbol-name">.ext.rangeConstraint</span><span class="signature"><span class="signature-params">(name[, operator], values[, options])</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
               <p>Builds a <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_38268"><code>range-constraint-query</code></a></p>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>name</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>constraint name</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>operator</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>operator for matching constraint to <code>values</code>; one of <code>LT</code>, <code>LE</code>, <code>GT</code>, <code>GE</code>, <code>EQ</code>, <code>NE</code> (defaults to <code>EQ</code>)</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>values</p>
+                      </td>
+                      <td>
+                        <p>(String or Array of String)</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>the values the constraint should equal (logical OR)</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>options</p>
+                      </td>
+                      <td>
+                        <p>(String or Array of String)</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>range options: <a href="http://docs.marklogic.com/guide/rest-dev/appendixa#id_84264">http://docs.marklogic.com/guide/rest-dev/appendixa#id_84264</a></p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_38268">range-constraint-query</a></p>
+                </dd>
+              </dl>
+              <h3 id="..ext.valueConstraint"><div class="symbol-detail-labels"><span class="label label-static">static</span></div><span class="symbol-name">.ext.valueConstraint</span><span class="signature"><span class="signature-params">(name, values)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Builds a <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_63420"><code>value-constraint-query</code></a></p>
               <section>
                 <h4>Parameters</h4>
                 <table class="jsdoc-details-table">
@@ -437,7 +540,7 @@
                         <p>values</p>
                       </td>
                       <td>
-                        <p>Array</p>
+                        <p>(String, Number, Array of String, Array of Number, or null)</p>
                       </td>
                       <td>
                         <p>&nbsp;</p>
@@ -452,13 +555,112 @@
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_38268">range-constraint-query</a></p>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_63420">value-constraint-query</a></p>
                 </dd>
               </dl>
-              <h3 id="boost"><span class="symbol-name">boost</span><span class="signature"><span class="signature-params">()</span></span></h3>
+              <h3 id="..ext.wordConstraint"><div class="symbol-detail-labels"><span class="label label-static">static</span></div><span class="symbol-name">.ext.wordConstraint</span><span class="signature"><span class="signature-params">(name, values)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Builds a <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_66833"><code>word-constraint-query</code></a></p>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>name</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>constraint name</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>values</p>
+                      </td>
+                      <td>
+                        <p>(String or Array of String)</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>the values the constraint should equal (logical OR)</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_66833">word-constraint-query</a></p>
+                </dd>
+              </dl>
+              <h3 id="boost"><span class="symbol-name">boost</span><span class="signature"><span class="signature-params">(matching, boosting)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Builds a <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_25949"><code>boost-query</code></a></p>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>matching</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>matching query</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>boosting</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>boosting query</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
               <dl class="dl-compact">
                 <dt>See also</dt>
                 <dd><a href="http://docs.marklogic.com/jsdoc/queryBuilder.html#boost">http://docs.marklogic.com/jsdoc/queryBuilder.html#boost</a></dd>
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_25949">boost-query</a></p>
+                </dd>
               </dl>
               <h3 id="collection"><span class="symbol-name">collection</span><span class="signature"><span class="signature-params">()</span></span></h3>
               <dl class="dl-compact">
@@ -481,15 +683,215 @@
                 <dt>See also</dt>
                 <dd><a href="MLQueryBuilder.html#..ext.customConstraint">MLQueryBuilder.ext.customConstraint</a></dd>
               </dl>
-              <h3 id="document"><span class="symbol-name">document</span><span class="signature"><span class="signature-params">()</span></span></h3>
+              <h3 id="directory"><span class="symbol-name">directory</span><span class="signature"><span class="signature-params">(uris[, infinite])</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Builds a <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_94821"><code>directory-query</code></a></p>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>uris</p>
+                      </td>
+                      <td>
+                        <p>(repeatable String or Array of String)</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>the directory URIs to query (logical OR)</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>infinite</p>
+                      </td>
+                      <td>
+                        <p>Boolean</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>whether to query into all sub-directories (defaults to <code>true</code>)</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>See also</dt>
+                <dd><a href="http://docs.marklogic.com/jsdoc/queryBuilder.html#directory">http://docs.marklogic.com/jsdoc/queryBuilder.html#directory</a></dd>
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_94821">directory-query</a></p>
+                </dd>
+              </dl>
+              <h3 id="document"><span class="symbol-name">document</span><span class="signature"><span class="signature-params">(...uris)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Builds a <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_27172"><code>document-query</code></a></p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>uris</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>document URIs to match</p>
+                        <p>Value can be repeated.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
               <dl class="dl-compact">
                 <dt>See also</dt>
                 <dd><a href="http://docs.marklogic.com/jsdoc/queryBuilder.html#document">http://docs.marklogic.com/jsdoc/queryBuilder.html#document</a></dd>
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_27172">document-query</a></p>
+                </dd>
               </dl>
-              <h3 id="not"><span class="symbol-name">not</span><span class="signature"><span class="signature-params">()</span></span></h3>
+              <h3 id="documentFragment"><span class="symbol-name">documentFragment</span><span class="signature"><span class="signature-params">(query)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Builds a <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_30556"><code>document-fragment-query</code></a></p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>query</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>sub query to be constrained to document fragments</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>See also</dt>
+                <dd><a href="http://docs.marklogic.com/jsdoc/queryBuilder.html#documentFragment">http://docs.marklogic.com/jsdoc/queryBuilder.html#documentFragment</a></dd>
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_30556">document-fragment-query</a></p>
+                </dd>
+              </dl>
+              <h3 id="locksFragment"><span class="symbol-name">locksFragment</span><span class="signature"><span class="signature-params">(query)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Builds a <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_53441"><code>locks-fragment-query</code></a></p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>query</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>sub query to be constrained to document locks</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>See also</dt>
+                <dd><a href="http://docs.marklogic.com/jsdoc/queryBuilder.html#locksFragment">http://docs.marklogic.com/jsdoc/queryBuilder.html#locksFragment</a></dd>
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_53441">locks-fragment-query</a></p>
+                </dd>
+              </dl>
+              <h3 id="not"><span class="symbol-name">not</span><span class="signature"><span class="signature-params">(query)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Builds a <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_39488"><code>not-query</code></a></p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>query</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>sub query to be negated</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
               <dl class="dl-compact">
                 <dt>See also</dt>
                 <dd><a href="http://docs.marklogic.com/jsdoc/queryBuilder.html#not">http://docs.marklogic.com/jsdoc/queryBuilder.html#not</a></dd>
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_39488">not-query</a></p>
+                </dd>
               </dl>
               <h3 id="operator"><span class="symbol-name">operator</span><span class="signature"><span class="signature-params">()</span></span></h3>
               <dl class="dl-compact">
@@ -498,20 +900,89 @@
                 <dt>See also</dt>
                 <dd>MLQueryBuilder.ext.operator</dd>
               </dl>
-              <h3 id="or"><span class="symbol-name">or</span><span class="signature"><span class="signature-params">()</span></span></h3>
+              <h3 id="or"><span class="symbol-name">or</span><span class="signature"><span class="signature-params">(...queries)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Builds an <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_64259"><code>or-query</code></a></p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>queries</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>sub queries</p>
+                        <p>Value can be repeated.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
               <dl class="dl-compact">
                 <dt>See also</dt>
                 <dd><a href="http://docs.marklogic.com/jsdoc/queryBuilder.html#or">http://docs.marklogic.com/jsdoc/queryBuilder.html#or</a></dd>
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_64259">or-query</a></p>
+                </dd>
               </dl>
               <h3 id="properties"><span class="symbol-name">properties</span><span class="signature"><span class="signature-params">()</span></span></h3>
               <dl class="dl-compact">
                 <dt>Deprecated</dt>
                 <dd></dd>
               </dl>
-              <h3 id="propertiesFragment"><span class="symbol-name">propertiesFragment</span><span class="signature"><span class="signature-params">()</span></span></h3>
+              <h3 id="propertiesFragment"><span class="symbol-name">propertiesFragment</span><span class="signature"><span class="signature-params">(query)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Builds a <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_67222"><code>properties-fragment-query</code></a></p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>query</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>sub query to be constrained to properties fragments</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
               <dl class="dl-compact">
                 <dt>See also</dt>
                 <dd><a href="http://docs.marklogic.com/jsdoc/queryBuilder.html#propertiesFragment">http://docs.marklogic.com/jsdoc/queryBuilder.html#propertiesFragment</a></dd>
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_67222">properties-fragment-query</a></p>
+                </dd>
               </dl>
               <h3 id="query"><span class="symbol-name">query</span><span class="signature"><span class="signature-params">()</span></span></h3>
               <dl class="dl-compact">
@@ -527,6 +998,46 @@
                 <dt>See also</dt>
                 <dd><a href="MLQueryBuilder.html#..ext.rangeConstraint">MLQueryBuilder.ext.rangeConstraint</a></dd>
               </dl>
+              <h3 id="term"><span class="symbol-name">term</span><span class="signature"><span class="signature-params">(...terms)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Builds a <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_56027"><code>term-query</code></a></p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>terms</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>terms to match (logical OR)</p>
+                        <p>Value can be repeated.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>See also</dt>
+                <dd><a href="http://docs.marklogic.com/jsdoc/queryBuilder.html#term">http://docs.marklogic.com/jsdoc/queryBuilder.html#term</a></dd>
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_56027">term-query</a></p>
+                </dd>
+              </dl>
               <h3 id="text"><span class="symbol-name">text</span><span class="signature"><span class="signature-params">()</span></span></h3>
               <dl class="dl-compact">
                 <dt>Deprecated</dt>
@@ -534,10 +1045,45 @@
                 <dt>See also</dt>
                 <dd><a href="MLQueryBuilder.html#..ext.combined">MLQueryBuilder.ext.combined</a></dd>
               </dl>
-              <h3 id="where"><span class="symbol-name">where</span><span class="signature"><span class="signature-params">()</span></span></h3>
+              <h3 id="where"><span class="symbol-name">where</span><span class="signature"><span class="signature-params">(...queries)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Creates a <a href="http://docs.marklogic.com/guide/search-dev/structured-query">structured query</a> from a set of sub-queries</p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>queries</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>sub queries</p>
+                        <p>Value can be repeated.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
               <dl class="dl-compact">
                 <dt>See also</dt>
                 <dd><a href="http://docs.marklogic.com/jsdoc/queryBuilder.html#where">http://docs.marklogic.com/jsdoc/queryBuilder.html#where</a></dd>
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query">structured query</a></p>
+                </dd>
               </dl>
             </section>
           </section>
@@ -549,7 +1095,7 @@
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.3.2 on September 15, 2015.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.3.2 on September 22, 2015.
       </p>
     </div>
   </footer>

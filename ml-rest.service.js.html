@@ -41,7 +41,7 @@
    * @class MLRest
    * @classdesc low-level angular service, encapsulates REST API builtins and normalizes the responses.
    *
-   * @param {Object} $http - angular [$http service](https://docs.angularjs.org/api/ng/service/$http)
+   * @param {Object} $http - angular {@link https://docs.angularjs.org/api/ng/service/$http $http service}
    */
   function MLRest($http) {
     var defaults = { apiVersion: &#x27;v1&#x27; };
@@ -52,6 +52,7 @@
       createDocument: createDocument,
       updateDocument: updateDocument,
       patchDocument: patchDocument,
+      deleteDocument: deleteDocument,
       sparql: sparql,
       suggest: suggest,
       values: values,
@@ -76,8 +77,8 @@
      * @method MLRest#request
      *
      * @param {String} endpoint - the request endpoint: can be version agnostic (&#x60;/search&#x60;) or specific (&#x60;/v1/search&#x60;)
-     * @param {Object} settings - angular &#x60;$http&#x60; service [settings](https://docs.angularjs.org/api/ng/service/$http#usage)
-     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @param {Object} settings - angular &#x60;$http&#x60; service {@link https://docs.angularjs.org/api/ng/service/$http#usage settings}
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function request(endpoint, settings) {
       var url;
@@ -112,8 +113,8 @@
      * @method MLRest#extension
      *
      * @param {String} name - resource extension name
-     * @param {Object} settings - angular &#x60;$http&#x60; service [settings](https://docs.angularjs.org/api/ng/service/$http#usage)
-     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @param {Object} settings - angular &#x60;$http&#x60; service {@link https://docs.angularjs.org/api/ng/service/$http#usage settings}
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function extension(name, settings) {
       if ( !/^\//.test(name) ) {
@@ -130,7 +131,7 @@
      *
      * @param {Object} [options] - URL params
      * @param {Object} [combined] - a combined search object (identified by a &#x60;search&#x60; property)
-     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function search(options, combined) {
       var settings = {};
@@ -163,7 +164,7 @@
      *
      * @param {String} uri - document URI
      * @param {Object} options - URL params
-     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function getDocument(uri, options) {
       options = options || {};
@@ -249,13 +250,32 @@
     }
 
     /**
+     * Deletes a document at the specified URI
+     * - {@link http://docs.marklogic.com/REST/DELETE/v1/documents}
+     * @method MLRest#deleteDocument
+     *
+     * @param {String} uri - document uri
+     * @param {Object} options - URL params
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
+     */
+    function deleteDocument(uri, options) {
+      options = options || {};
+      options.uri = uri;
+
+      return request(&#x27;/documents&#x27;, {
+        method: &#x27;DELETE&#x27;,
+        params: options
+      });
+    }
+
+    /**
      * Evaluates a SPARQL query
      * - {@link http://docs.marklogic.com/REST/GET/v1/graphs/sparql}
      * @method MLRest#sparql
      *
      * @param {String} query - a SPARQL query
      * @param {Object} [params] - URL params
-     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function sparql(query, params) {
       var accept = [
@@ -283,7 +303,7 @@
      *
      * @param {Object} [params] - URL params
      * @param {Object} [combined] - combined query
-     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function suggest(params, combined) {
       var settings = { params: params };
@@ -305,7 +325,7 @@
      * @param {String} name - values definition name (from stored or combined search options)
      * @param {Object} [params] - URL params
      * @param {Object} [combined] - combined query
-     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function values(name, params, combined) {
       var settings = { params: params };
@@ -326,7 +346,7 @@
      *
      * @param {String} name - stored search options name
      * @param {String} [section] - options section to retrieve
-     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service [response object](https://docs.angularjs.org/api/ng/service/$http#general-usage)
+     * @return {Promise} a promise resolved with an angular &#x60;$http&#x60; service {@link https://docs.angularjs.org/api/ng/service/$http#general-usage response object}
      */
     function queryConfig(name, section) {
       var url = &#x27;/config/query/&#x27; + name;
@@ -353,7 +373,7 @@
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.3.2 on September 15, 2015.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.3.2 on September 22, 2015.
       </p>
     </div>
   </footer>
