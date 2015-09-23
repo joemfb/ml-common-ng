@@ -1,5 +1,7 @@
 ### ml-common-ng
 
+[![Build Status](https://travis-ci.org/joemfb/ml-common-ng.svg?branch=master)](https://travis-ci.org/joemfb/ml-common-ng)
+
 An angular module for interacting with the MarkLogic REST API (and some basic utilities components). Based on components from ealier versions of [https://github.com/marklogic/slush-marklogic-node](https://github.com/marklogic/slush-marklogic-node).
 
 #### getting started
