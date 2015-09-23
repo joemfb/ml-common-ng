@@ -16,7 +16,8 @@ var gulp = require('gulp'),
     browserify = require('browserify'),
     buffer = require('vinyl-buffer'),
     eventStream = require('event-stream'),
-    source = require('vinyl-source-stream');
+    source = require('vinyl-source-stream'),
+    coveralls = require('gulp-coveralls');
 
 gulp.task('lint-style', function(done) {
   return gulp.src([
@@ -98,6 +99,11 @@ gulp.task('clean-docs', function(done) {
 gulp.task('publish-docs', ['docs'], function() {
   return gulp.src([ './docs/generated/**/*.*' ])
   .pipe(ghpages());
+});
+
+gulp.task('travis', ['default'], function() {
+  return gulp.src('coverage/**/lcov.info')
+  .pipe(coveralls());
 });
 
 gulp.task('default', ['lint', 'test', 'scripts']);
