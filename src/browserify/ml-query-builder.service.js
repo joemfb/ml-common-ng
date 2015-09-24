@@ -23,7 +23,6 @@
    * and combined queries.
    */
   function MLQueryBuilder() {
-
     function where() {
       var args = asArray.apply(null, arguments);
       return {
@@ -317,9 +316,6 @@
        * @type {Object}
        */
       ext: extensions
-
     };
-
   }
-
 }());

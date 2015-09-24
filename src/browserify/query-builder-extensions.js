@@ -279,7 +279,7 @@ module.exports = exports = {
    *   - {@link MLQueryBuilder.ext.customConstraint}
    */
   constraint: function constraint(type) {
-    switch(type) {
+    switch (type) {
       case 'value':
         return this.valueConstraint;
       case 'word':

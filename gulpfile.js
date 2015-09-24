@@ -1,4 +1,4 @@
-/*jshint node: true */
+/* jshint node: true */
 
 'use strict';
 
@@ -77,7 +77,8 @@ gulp.task('lint', function() {
 gulp.task('scripts', function() {
   return eventStream.merge(
       gulp.src([ './src/ml-common.js', './src/*.js' ]),
-      browserify({ entries: [ './src/browserify/ml-query-builder.service.js', ]})
+
+      browserify({ entries: [ './src/browserify/ml-query-builder.service.js' ]})
       .bundle()
       .pipe(source('ml-query-builder.js'))
       .pipe(buffer())

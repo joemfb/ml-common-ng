@@ -174,8 +174,8 @@
      * @param {Object} options - URL params
      * @return {Promise} a promise resolved with the new document URI
      */
-    //TODO: uri param?
-    //TODO: shouldn't resolve location?
+    // TODO: uri param?
+    // TODO: shouldn't resolve location?
     function updateDocument(doc, options) {
       return request('/documents', {
         method: 'PUT',
@@ -195,7 +195,7 @@
      * @param {Object} patch - a document patch definition
      * @return {Promise} a promise resolved with the new document URI
      */
-    //TODO: shouldn't resolve location?
+    // TODO: shouldn't resolve location?
     function patchDocument(uri, patch) {
       // TODO: support XML patches
 
@@ -255,7 +255,7 @@
 
       params = params || {};
 
-      //TODO: POST query?
+      // TODO: POST query?
       params.query = query;
 
       return request('/graphs/sparql', {
@@ -330,5 +330,4 @@
 
     return service;
   }
-
 }());
