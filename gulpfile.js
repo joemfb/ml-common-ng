@@ -5,8 +5,7 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
     concat = require('gulp-concat'),
-    jshint = require('gulp-jshint'),
-    jscs = require('gulp-jscs'),
+    eslint = require('gulp-eslint'),
     Server = require('karma').Server,
     path = require('path'),
     rename = require('gulp-rename'),
@@ -33,28 +32,42 @@ function handleError(level, error) {
   }
 }
 
-gulp.task('lint-style', function(done) {
-  return gulp.src([
-      './gulpfile.js',
-      './src/**/*.js'
-    ])
-    .pipe(jscs())
-    .pipe(jscs.reporter())
-    .pipe(jscs.reporter('fail'))
-    .on('error', function(err) {
-      handleError('warning', err);
-      this.emit('end');
-    });
-});
+// gulp.task('lint-style', function(done) {
+//   return gulp.src([
+//       './gulpfile.js',
+//       './src/**/*.js'
+//     ])
+//     .pipe(jscs())
+//     .pipe(jscs.reporter())
+//     .pipe(jscs.reporter('fail'))
+//     .on('error', function(err) {
+//       handleError('warning', err);
+//       this.emit('end');
+//     });
+// });
 
-gulp.task('lint', ['lint-style'], function() {
+// gulp.task('lint', ['lint-style'], function() {
+//   return gulp.src([
+//       './gulpfile.js',
+//       './src/**/*.js'
+//     ])
+//     .pipe(jshint())
+//     .pipe(jshint.reporter('default'))
+//     .pipe(jshint.reporter('fail'))
+//     .on('error', function(err) {
+//       handleError('warning', err);
+//       this.emit('end');
+//     });
+// });
+
+gulp.task('lint', function() {
   return gulp.src([
       './gulpfile.js',
       './src/**/*.js'
     ])
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'))
-    .pipe(jshint.reporter('fail'))
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
     .on('error', function(err) {
       handleError('warning', err);
       this.emit('end');
