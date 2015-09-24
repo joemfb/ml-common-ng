@@ -7,7 +7,7 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     jshint = require('gulp-jshint'),
     jscs = require('gulp-jscs'),
-    karma = require('karma').server,
+    Server = require('karma').Server,
     path = require('path'),
     rename = require('gulp-rename'),
     uglify = require('gulp-uglify'),
@@ -85,18 +85,20 @@ function karmaResult(cb, result) {
 }
 
 gulp.task('test', ['lint'], function(done) {
-  karma.start({
+  new Server({
     configFile: path.join(__dirname, './karma.conf.js'),
     singleRun: true,
     autoWatch: false
-  }, karmaResult.bind(null, done));
+  }, karmaResult.bind(null, done))
+  .start();
 });
 
 gulp.task('autotest', function(done) {
-  karma.start({
+  new Server({
     configFile: path.join(__dirname, './karma.conf.js'),
     autoWatch: true
-  }, karmaResult.bind(null, done));
+  }, karmaResult.bind(null, done))
+  .start();
 });
 
 gulp.task('docs', ['clean-docs'], function(done) {
