@@ -18,7 +18,7 @@
     "angularjs",
     "marklogic"
   ],
-  "license": "Apache v2",
+  "license": "Apache-2.0",
   "ignore": [
     "**/.*",
     "node_modules",
