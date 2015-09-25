@@ -131,6 +131,7 @@ describe('MLQueryBuilder', function () {
     expect(query['range-constraint-query']['constraint-name']).toEqual('test');
     expect(query['range-constraint-query'].value.length).toEqual(1);
     expect(query['range-constraint-query'].value[0]).toEqual('value');
+    expect(query['range-constraint-query']['range-option'].length).toBe(0);
   });
 
   it('builds a range-constraint-query with multiple values', function() {

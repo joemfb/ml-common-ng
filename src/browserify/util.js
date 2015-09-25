@@ -7,10 +7,13 @@ module.exports = exports = {
     if ( arguments.length === 1) {
       if (Array.isArray( arguments[0] )) {
         args = arguments[0];
+      } else if ( arguments[0] === null || arguments[0] === undefined ) {
+        args = [];
       } else {
         args = [ arguments[0] ];
       }
     } else {
+      // TODO: compact array?
       args = [].slice.call(arguments);
     }
 
