@@ -1,6 +1,6 @@
 {
   "name": "ml-common-ng",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "An angular module of common components for the MarkLogic REST API",
   "main": "dist/ml-common-ng.js",
   "dependencies": {
