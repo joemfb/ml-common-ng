@@ -371,7 +371,7 @@ describe('MLQueryBuilder', function () {
 
     expect(combined.search).toBeDefined();
     expect(combined.search.query).toEqual(query);
-    expect(combined.search.qtext).toBeNull();
+    expect(combined.search.qtext).toEqual('');
     expect(combined.search.options).toBeDefined();
     expect(combined.search.options['return-query']).toEqual(0);
   });
