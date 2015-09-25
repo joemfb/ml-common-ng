@@ -436,7 +436,7 @@
           return {
             search: {
               query: query && query.query || query,
-              qtext: qtext,
+              qtext: qtext || '',
               options: options && options.options || options
             }
           };
