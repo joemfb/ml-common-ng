@@ -205,11 +205,11 @@ module.exports = exports = {
   geospatialValues: function geospatialValues() {
     var shapes = asArray.apply(null, arguments);
 
-    var points = [],
-        boxes = [],
-        circles = [],
-        polygons = [],
-        shape;
+    var points = [];
+    var boxes = [];
+    var circles = [];
+    var polygons = [];
+    var shape;
 
     for (var i = 0; i < shapes.length; i++) {
       shape = shapes[i];

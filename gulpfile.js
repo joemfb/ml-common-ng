@@ -2,22 +2,22 @@
 
 'use strict';
 
-var gulp = require('gulp'),
-    gutil = require('gulp-util'),
-    concat = require('gulp-concat'),
-    eslint = require('gulp-eslint'),
-    Server = require('karma').Server,
-    path = require('path'),
-    rename = require('gulp-rename'),
-    uglify = require('gulp-uglify'),
-    del = require('del'),
-    ghpages = require('gulp-gh-pages'),
-    cp = require('child_process'),
-    browserify = require('browserify'),
-    buffer = require('vinyl-buffer'),
-    eventStream = require('event-stream'),
-    source = require('vinyl-source-stream'),
-    coveralls = require('gulp-coveralls');
+var gulp = require('gulp');
+var gutil = require('gulp-util');
+var concat = require('gulp-concat');
+var eslint = require('gulp-eslint');
+var Server = require('karma').Server;
+var path = require('path');
+var rename = require('gulp-rename');
+var uglify = require('gulp-uglify');
+var del = require('del');
+var ghpages = require('gulp-gh-pages');
+var cp = require('child_process');
+var browserify = require('browserify');
+var buffer = require('vinyl-buffer');
+var eventStream = require('event-stream');
+var source = require('vinyl-source-stream');
+var coveralls = require('gulp-coveralls');
 
 // Command line option:
 //  --fatal=[warning|error|off]
@@ -32,39 +32,8 @@ function handleError(level, error) {
   }
 }
 
-// gulp.task('lint-style', function(done) {
-//   return gulp.src([
-//       './gulpfile.js',
-//       './src/**/*.js'
-//     ])
-//     .pipe(jscs())
-//     .pipe(jscs.reporter())
-//     .pipe(jscs.reporter('fail'))
-//     .on('error', function(err) {
-//       handleError('warning', err);
-//       this.emit('end');
-//     });
-// });
-
-// gulp.task('lint', ['lint-style'], function() {
-//   return gulp.src([
-//       './gulpfile.js',
-//       './src/**/*.js'
-//     ])
-//     .pipe(jshint())
-//     .pipe(jshint.reporter('default'))
-//     .pipe(jshint.reporter('fail'))
-//     .on('error', function(err) {
-//       handleError('warning', err);
-//       this.emit('end');
-//     });
-// });
-
 gulp.task('lint', function() {
-  return gulp.src([
-      './gulpfile.js',
-      './src/**/*.js'
-    ])
+  return gulp.src([ './gulpfile.js', './src/**/*.js' ])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())
@@ -78,7 +47,7 @@ gulp.task('scripts', function() {
   return eventStream.merge(
       gulp.src([ './src/ml-common.js', './src/*.js' ]),
 
-      browserify({ entries: [ './src/browserify/ml-query-builder.service.js' ]})
+      browserify({ entries: [ './src/browserify/ml-query-builder.service.js' ] })
       .bundle()
       .pipe(source('ml-query-builder.js'))
       .pipe(buffer())
@@ -121,10 +90,7 @@ gulp.task('docs', ['clean-docs'], function(done) {
       return console.log(err);
     }
 
-    gulp.src([
-        './docs/generated/css/baseline.css',
-        './docs/custom-styles.css'
-      ])
+    gulp.src([ './docs/generated/css/baseline.css', './docs/custom-styles.css' ])
       .pipe(concat('baseline.css'))
       .pipe(gulp.dest('./docs/generated/css'))
       .on('end', function() {
