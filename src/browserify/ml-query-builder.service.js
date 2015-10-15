@@ -17,7 +17,7 @@
    * Designed for one-way compatibility with a subset of the official
    * {@link http://developer.marklogic.com/features/node-client-api node-client-api}
    * {@link http://docs.marklogic.com/jsdoc/queryBuilder.html query-builder};
-   * queries written to {@link MLQueryBuilder} (excluding deprecated methods)
+   * queries written to {@link MLQueryBuilder} (excluding extension methods)
    * should work with the offical API, but not necessarily vice-versa.
    *
    * Additionally includes extension methods (on {@link MLQueryBuilder.ext}),
