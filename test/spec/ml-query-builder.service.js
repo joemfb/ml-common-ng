@@ -14,22 +14,12 @@ describe('MLQueryBuilder', function () {
   it('builds a query', function() {
     var query = qb.where();
 
-    var oldQuery = qb.query();
-    expect(query).toEqual(oldQuery);
-
     expect(query.query).toBeDefined;
     expect(query.query.queries.length).toEqual(0);
 
     query = qb.where(qb.and())
-    oldQuery = qb.query(qb.and())
 
     expect(query.query.queries.length).toEqual(1);
-  });
-
-  it('builds a text query', function() {
-    var query = qb.text('blah');
-    expect(query.qtext).toBeDefined;
-    expect(query.qtext).toEqual('blah');
   });
 
   it('builds an and-query with one sub-query', function() {
@@ -37,35 +27,55 @@ describe('MLQueryBuilder', function () {
     expect(query['and-query']).toBeDefined;
     expect(query['and-query'].queries.length).toEqual(0);
 
-    query = qb.and( qb.text('blah'));
+    query = qb.and( qb.term('blah'));
     expect(query['and-query'].queries.length).toEqual(1);
   });
 
   it('builds an and-query with multiple sub-query', function() {
-    var query = query = qb.and( qb.text('blah'), qb.text('blue') );
+    var query = query = qb.and( qb.term('blah'), qb.term('blue') );
 
     expect(query['and-query'].queries.length).toEqual(2);
   });
 
   it('builds an or-query with one sub-query', function() {
-    var query = qb.or( qb.text('foo') );
+    var query = qb.or( qb.term('foo') );
 
     expect(query['or-query']).toBeDefined();
     expect(query['or-query'].queries.length).toEqual(1);
   });
 
   it('builds an or-query with multiple sub-queries', function() {
-    var query = qb.or( qb.text('foo'), qb.text('bar') );
+    var query = qb.or( qb.term('foo'), qb.term('bar') );
 
     expect(query['or-query']).toBeDefined();
     expect(query['or-query'].queries.length).toEqual(2);
   });
 
   it('builds a not-query', function() {
-    var query = qb.not( qb.text('blah') );
+    var query = qb.not( qb.term('blah') );
 
     expect(query['not-query']).toBeDefined();
-    expect(query['not-query'].qtext).toEqual('blah');
+    expect(query['not-query']['term-query']).toBeDefined();
+    expect(query['not-query']['term-query'].text[0]).toEqual('blah');
+  });
+
+  it('builds a collection query with one uri', function() {
+    var query = qb.collection('uri');
+
+    expect(query['collection-query']).toBeDefined();
+    expect(query['collection-query'].uri.length).toEqual(1);
+    expect(query['collection-query'].uri[0]).toEqual('uri');
+  });
+
+  it('builds a collection query with multiple uris', function() {
+    var query = qb.collection('uri1', 'uri2');
+
+    expect(query['collection-query']).toBeDefined();
+    expect(query['collection-query'].uri.length).toEqual(2);
+    expect(query['collection-query'].uri[0]).toEqual('uri1');
+    expect(query['collection-query'].uri[1]).toEqual('uri2');
+
+    expect(query).toEqual( qb.collection(['uri1', 'uri2']) );
   });
 
   it('builds a directory query with one uri', function() {
@@ -104,6 +114,196 @@ describe('MLQueryBuilder', function () {
     expect(query['document-query'].uri[1]).toEqual('uri2');
   });
 
+  it('builds a qname', function() {
+    var qname = qb.qname('foo');
+
+    expect(qname).toBeDefined();
+    expect(qname.ns).toBeNull();
+    expect(qname.name).toEqual('foo');
+
+    qname = qb.qname('foo', 'bar')
+
+    expect(qname).toBeDefined();
+    expect(qname.ns).toEqual('foo');
+    expect(qname.name).toEqual('bar');
+
+    qname = qb.qname(['foo', 'bar'])
+
+    expect(qname).toBeDefined();
+    expect(qname.ns).toEqual('foo');
+    expect(qname.name).toEqual('bar');
+  });
+
+  it('builds an element', function() {
+    var element = qb.element('foo');
+
+    expect(element).toBeDefined();
+    expect(element.element).toBeDefined();
+    expect(element.element.ns).toBeNull();
+    expect(element.element.name).toEqual('foo');
+
+    element = qb.element('foo', 'bar')
+
+    expect(element).toBeDefined();
+    expect(element.element).toBeDefined();
+    expect(element.element.ns).toEqual('foo');
+    expect(element.element.name).toEqual('bar');
+
+    element = qb.element(['foo', 'bar'])
+
+    expect(element).toBeDefined();
+    expect(element.element).toBeDefined();
+    expect(element.element.ns).toEqual('foo');
+    expect(element.element.name).toEqual('bar');
+
+    element = qb.element(qb.qname(['foo', 'bar']))
+
+    expect(element).toBeDefined();
+    expect(element.element).toBeDefined();
+    expect(element.element.ns).toEqual('foo');
+    expect(element.element.name).toEqual('bar');
+  });
+
+  it('builds a datatype', function() {
+    var datatype = qb.datatype('int')
+
+    expect(datatype).toBeDefined();
+    expect(datatype.datatype).toBeDefined();
+    expect(datatype.datatype).toEqual('xs:int');
+    expect(datatype.collation).not.toBeDefined();
+
+    datatype = qb.datatype('string', 'my-collation')
+
+    expect(datatype).toBeDefined();
+    expect(datatype.datatype).toBeDefined();
+    expect(datatype.datatype).toEqual('xs:string');
+    expect(datatype.collation).toEqual('my-collation');
+  });
+
+  it('throws an error when given invalid datatype', function() {
+    try {
+      qb.datatype('blah')
+    } catch (err) {
+      expect(err).toEqual(new Error('Unknown datatype: blah'))
+    }
+  });
+
+  it('builds a range query with one value', function() {
+    var query = qb.range('foo', 'bar');
+
+    expect(query['range-query']).toBeDefined();
+    expect(query['range-query']['json-property']).toBeDefined();
+    expect(query['range-query']['json-property']).toEqual('foo');
+    expect(query['range-query'].value.length).toEqual(1)
+    expect(query['range-query'].value[0]).toEqual('bar')
+    expect(query['range-query']['range-operator']).toBeDefined();
+    expect(query['range-query']['range-operator']).toEqual('EQ');
+
+    query = qb.range(qb.element('foo'), 'bar');
+
+    expect(query['range-query']).toBeDefined();
+    expect(query['range-query'].element).toBeDefined();
+    expect(query['range-query'].element.name).toBeDefined();
+    expect(query['range-query'].element.name).toEqual('foo');
+    expect(query['range-query'].value.length).toEqual(1)
+    expect(query['range-query'].value[0]).toEqual('bar')
+    expect(query['range-query']['range-operator']).toBeDefined();
+    expect(query['range-query']['range-operator']).toEqual('EQ');
+  });
+
+  it('builds a range query with multiple values', function() {
+    var query = qb.range('foo', 'bar', 'baz');
+
+    expect(query['range-query']).toBeDefined();
+    expect(query['range-query']['json-property']).toBeDefined();
+    expect(query['range-query']['json-property']).toEqual('foo');
+    expect(query['range-query'].value.length).toEqual(2)
+    expect(query['range-query'].value[0]).toEqual('bar')
+    expect(query['range-query'].value[1]).toEqual('baz')
+    expect(query['range-query']['range-operator']).toBeDefined();
+    expect(query['range-query']['range-operator']).toEqual('EQ');
+
+    query = qb.range(qb.element('foo'), ['bar', 'baz']);
+
+    expect(query['range-query']).toBeDefined();
+    expect(query['range-query'].element).toBeDefined();
+    expect(query['range-query'].element.name).toBeDefined();
+    expect(query['range-query'].element.name).toEqual('foo');
+    expect(query['range-query'].value.length).toEqual(2)
+    expect(query['range-query'].value[0]).toEqual('bar')
+    expect(query['range-query'].value[1]).toEqual('baz')
+    expect(query['range-query']['range-operator']).toBeDefined();
+    expect(query['range-query']['range-operator']).toEqual('EQ');
+  });
+
+  it('builds a range query with datatype, comparison and/or rangeOptions', function() {
+    var query = qb.range('foo', '!=', 'bar', 'baz');
+
+    expect(query['range-query']).toBeDefined();
+    expect(query['range-query']['json-property']).toBeDefined();
+    expect(query['range-query']['json-property']).toEqual('foo');
+    expect(query['range-query'].value.length).toEqual(2)
+    expect(query['range-query'].value[0]).toEqual('bar')
+    expect(query['range-query'].value[1]).toEqual('baz')
+    expect(query['range-query']['range-operator']).toBeDefined();
+    expect(query['range-query']['range-operator']).toEqual('NE');
+
+    query = qb.range(qb.element('foo'), qb.datatype('int'), [12, 15]);
+
+    expect(query['range-query']).toBeDefined();
+    expect(query['range-query'].element).toBeDefined();
+    expect(query['range-query'].element.name).toBeDefined();
+    expect(query['range-query'].element.name).toEqual('foo');
+    expect(query['range-query'].value.length).toEqual(2)
+    expect(query['range-query'].value[0]).toEqual(12)
+    expect(query['range-query'].value[1]).toEqual(15)
+    expect(query['range-query']['range-operator']).toBeDefined();
+    expect(query['range-query']['range-operator']).toEqual('EQ');
+    expect(query['range-query'].type).toEqual('xs:int');
+    expect(query['range-query'].collation).not.toBeDefined();
+
+    query = qb.range('foo', qb.datatype('string', 'my-collation'), '>=', 'bar', 'baz', qb.rangeOptions('limit=10'));
+
+    expect(query['range-query']).toBeDefined();
+    expect(query['range-query']['json-property']).toBeDefined();
+    expect(query['range-query']['json-property']).toEqual('foo');
+    expect(query['range-query'].value.length).toEqual(2)
+    expect(query['range-query'].value[0]).toEqual('bar')
+    expect(query['range-query'].value[1]).toEqual('baz')
+    expect(query['range-query']['range-operator']).toBeDefined();
+    expect(query['range-query']['range-operator']).toEqual('GE');
+    expect(query['range-query'].type).toEqual('xs:string');
+    expect(query['range-query'].collation).toEqual('my-collation');
+    expect(query['range-query']['range-option']).toBeDefined();
+    expect(query['range-query']['range-option'].length).toEqual(1)
+    expect(query['range-query']['range-option'][0]).toEqual('limit=10')
+  });
+
+  it('builds range options', function() {
+    var options = qb.rangeOptions('limit=10')
+
+    expect(options).toBeDefined();
+    expect(options['range-option']).toBeDefined();
+    expect(options['range-option'].length).toEqual(1)
+    expect(options['range-option'][0]).toEqual('limit=10')
+
+    options = qb.rangeOptions('limit=10', 'skip=3')
+
+    expect(options).toBeDefined();
+    expect(options['range-option']).toBeDefined();
+    expect(options['range-option'].length).toEqual(2)
+    expect(options['range-option'][0]).toEqual('limit=10')
+    expect(options['range-option'][1]).toEqual('skip=3')
+
+    options = qb.rangeOptions(['limit=10', 'skip=3'])
+
+    expect(options).toBeDefined();
+    expect(options['range-option']).toBeDefined();
+    expect(options['range-option'].length).toEqual(2)
+    expect(options['range-option'][0]).toEqual('limit=10')
+    expect(options['range-option'][1]).toEqual('skip=3')
+  });
+
   it('builds a term query with one value', function() {
     var query = qb.term('foo');
 
@@ -124,9 +324,6 @@ describe('MLQueryBuilder', function () {
   it('builds a range-constraint-query with one value', function() {
     var query = qb.ext.rangeConstraint('test', 'value');
 
-    var oldQuery = qb.range('test', 'value');
-    expect(query).toEqual(oldQuery);
-
     expect(query['range-constraint-query']).toBeDefined();
     expect(query['range-constraint-query']['constraint-name']).toEqual('test');
     expect(query['range-constraint-query'].value.length).toEqual(1);
@@ -136,9 +333,6 @@ describe('MLQueryBuilder', function () {
 
   it('builds a range-constraint-query with multiple values', function() {
     var query = qb.ext.rangeConstraint('test', ['value1', 'value2']);
-
-    var oldQuery = qb.range('test', ['value1', 'value2']);
-    expect(query).toEqual(oldQuery);
 
     expect(query['range-constraint-query']).toBeDefined();
     expect(query['range-constraint-query']['constraint-name']).toEqual('test');
@@ -168,9 +362,6 @@ describe('MLQueryBuilder', function () {
   it('builds a collection-query with one collection', function() {
     var query = qb.ext.collectionConstraint('name', 'uri');
 
-    var oldQuery = qb.collection('name', 'uri');
-    expect(query).toEqual(oldQuery);
-
     expect(query['collection-constraint-query']).toBeDefined();
     expect(query['collection-constraint-query']['constraint-name']).toEqual('name');
     expect(query['collection-constraint-query'].uri.length).toEqual(1);
@@ -179,9 +370,6 @@ describe('MLQueryBuilder', function () {
 
   it('builds a collection-query with multiple collections', function() {
     var query = qb.ext.collectionConstraint('name', ['uri1', 'uri2']);
-
-    var oldQuery = qb.collection('name', ['uri1', 'uri2']);
-    expect(query).toEqual(oldQuery);
 
     expect(query['collection-constraint-query']).toBeDefined();
     expect(query['collection-constraint-query']['constraint-name']).toEqual('name');
@@ -193,9 +381,6 @@ describe('MLQueryBuilder', function () {
   it('builds a custom-constraint-query with one value', function() {
     var query = qb.ext.customConstraint('test', 'value');
 
-    var oldQuery = qb.custom('test', 'value');
-    expect(query).toEqual(oldQuery);
-
     expect(query['custom-constraint-query']).toBeDefined();
     expect(query['custom-constraint-query']['constraint-name']).toEqual('test');
     expect(query['custom-constraint-query'].text.length).toEqual(1);
@@ -204,9 +389,6 @@ describe('MLQueryBuilder', function () {
 
   it('builds a custom-constraint-query with multiple values', function() {
     var query = qb.ext.customConstraint('test', ['value1', 'value2']);
-
-    var oldQuery = qb.custom('test', ['value1', 'value2']);
-    expect(query).toEqual(oldQuery);
 
     expect(query['custom-constraint-query']).toBeDefined();
     expect(query['custom-constraint-query']['constraint-name']).toEqual('test');
@@ -377,10 +559,6 @@ describe('MLQueryBuilder', function () {
     constraint = qb.ext.constraint(null);
     expect(constraint('name', 'value')).toEqual(qb.ext.rangeConstraint('name', 'value'));
 
-    var oldConstraint = qb.constraint(null);
-
-    expect(constraint('name', 'value')).toEqual(oldConstraint('name', 'value'));
-
     constraint = qb.ext.constraint('range')
     expect(constraint('name', 'value')).toEqual(qb.ext.rangeConstraint('name', 'value'))
 
@@ -398,13 +576,15 @@ describe('MLQueryBuilder', function () {
   });
 
   it('builds a boost query', function() {
-    var query = qb.boost( qb.and(), qb.text('blah') );
+    var query = qb.boost( qb.and(), qb.term('blah') );
 
     expect(query['boost-query']).toBeDefined();
     expect(query['boost-query']['matching-query']).toBeDefined();
     expect(query['boost-query']['matching-query']).toEqual( qb.and() );
 
-    expect(query['boost-query']['boosting-query'].qtext).toEqual('blah');
+    expect(query['boost-query']['boosting-query']).toBeDefined();
+    expect(query['boost-query']['boosting-query']['term-query']).toBeDefined();
+    expect(query['boost-query']['boosting-query']['term-query'].text[0]).toEqual('blah');
   });
 
   it('builds a document-fragment query', function() {
@@ -416,9 +596,6 @@ describe('MLQueryBuilder', function () {
 
   it('builds a properties-fragment query', function() {
     var query = qb.propertiesFragment( qb.and() );
-
-    var oldQuery = qb.properties( qb.and() );
-    expect(query).toEqual(oldQuery);
 
     expect(query['properties-fragment-query']).toBeDefined();
     expect(query['properties-fragment-query']).toEqual( qb.and() );
@@ -433,9 +610,6 @@ describe('MLQueryBuilder', function () {
 
   it('builds an operator query', function() {
     var query = qb.ext.operatorState('sort', 'date');
-
-    var oldQuery = qb.operator('sort', 'date');
-    expect(query).toEqual(oldQuery);
 
     expect(query['operator-state']).toBeDefined();
     expect(query['operator-state']['operator-name']).toEqual('sort');
