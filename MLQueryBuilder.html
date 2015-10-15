@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <meta name="generator" content="JSDoc 3.3.2">
+  <meta name="generator" content="JSDoc 3.3.3">
   <meta charset="utf-8">
   <title>Class: MLQueryBuilder</title>
   <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
@@ -25,7 +25,7 @@
         <div id="jsdoc-main" role="main">
           <header class="page-header">
             <h1><div class="symbol-detail-labels"><span class="label label-kind">class</span></div><small></small><span class="symbol-name">MLQueryBuilder</span></h1>
-            <p class="source-link">Source: <a href="ml-query-builder.service.js.html#source-line-7">ml-query-builder.<wbr>service.<wbr>js:7</a></p>
+            <p class="source-link">Source: <a href="browserify_ml-query-builder.service.js.html#source-line-10">browserify/<wbr>ml-query-builder.<wbr>service.<wbr>js:10</a></p>
             <div class="symbol-classdesc">
               <p>angular service for building
                 <a href="http://docs.marklogic.com/guide/search-dev/structured-query">structured queries</a></p>
@@ -71,6 +71,12 @@
                     <dt><a href="MLQueryBuilder.html#..ext.customConstraint">.<wbr>ext.<wbr>customConstraint(name, values)</a></dt>
                     <dd>
                     </dd>
+                    <dt><a href="MLQueryBuilder.html#..ext.geospatialConstraint">.<wbr>ext.<wbr>geospatialConstraint(name, .<wbr>.<wbr>.<wbr>values)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="MLQueryBuilder.html#..ext.geospatialValues">.<wbr>ext.<wbr>geospatialValues(.<wbr>.<wbr>.<wbr>values)</a></dt>
+                    <dd>
+                    </dd>
                     <dt><a href="MLQueryBuilder.html#..ext.operatorState">.<wbr>ext.<wbr>operatorState(name, stateName)</a></dt>
                     <dd>
                     </dd>
@@ -83,13 +89,13 @@
                     <dt><a href="MLQueryBuilder.html#..ext.wordConstraint">.<wbr>ext.<wbr>wordConstraint(name, values)</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="MLQueryBuilder.html#boost">boost(matching, boosting)</a></dt>
-                    <dd>
-                    </dd>
                   </dl>
                 </div>
                 <div class="summary-column">
                   <dl class="dl-summary-callout">
+                    <dt><a href="MLQueryBuilder.html#boost">boost(matching, boosting)</a></dt>
+                    <dd>
+                    </dd>
                     <dt><a href="MLQueryBuilder.html#collection">collection()</a></dt>
                     <dd>
                     </dd>
@@ -359,7 +365,7 @@
                         <p>values</p>
                       </td>
                       <td>
-                        <p>(String or Array of String)</p>
+                        <p>(repeatable String, Array of String, or Array of Object)</p>
                       </td>
                       <td>
                         <p>&nbsp;</p>
@@ -375,6 +381,106 @@
                 <dt>Returns</dt>
                 <dd>
                   <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_28778">custom-constraint-query</a></p>
+                </dd>
+              </dl>
+              <h3 id="..ext.geospatialConstraint"><div class="symbol-detail-labels"><span class="label label-static">static</span></div><span class="symbol-name">.ext.geospatialConstraint</span><span class="signature"><span class="signature-params">(name, ...values)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>builds a <a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_88775">geospatial-constraint-query</a></p>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>name</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>constraint name</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>values</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>the geospatial values to parse</p>
+                        <p>Value can be repeated.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;<a href="http://docs.marklogic.com/guide/search-dev/structured-query#id_88775">geospatial-constraint-query</a></p>
+                </dd>
+              </dl>
+              <h3 id="..ext.geospatialValues"><div class="symbol-detail-labels"><span class="label label-static">static</span></div><span class="symbol-name">.ext.geospatialValues</span><span class="signature"><span class="signature-params">(...values)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+              <p>Helper method: builds an object of <code>points</code>, <code>boxes</code>, <code>circles</code>, and <code>polygons</code>, used by <a href="MLQueryBuilder.html#..ext.geospatialConstraint">MLQueryBuilder.ext.geospatialConstraint</a>, for
+                use with
+                <a href="MLQueryBuilder.html#..ext.customConstraint">MLQueryBuilder.ext.customConstraint</a></p>
+              <p>examples:</p>
+              <pre class="prettyprint source"><code>  qb.ext.geospatialConstraint('name',
+    { latitude: 1, longitude: 2 },
+    { south: 1, west: 2, north: 3, east: 4 }
+  );</code></pre><pre class="prettyprint source"><code>  qb.ext.customConstraint('name', qb.ext.geospatialValues(
+    { latitude: 1, longitude: 2 },
+    { south: 1, west: 2, north: 3, east: 4 }
+  ));</code></pre>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>values</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>the geospatial values to parse</p>
+                        <p>Value can be repeated.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Object</code>&nbsp;parsed geospatial values</p>
                 </dd>
               </dl>
               <h3 id="..ext.operatorState"><div class="symbol-detail-labels"><span class="label label-static">static</span></div><span class="symbol-name">.ext.operatorState</span><span class="signature"><span class="signature-params">(name, stateName)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
@@ -1095,7 +1201,7 @@
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.3.2 on September 22, 2015.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.3.3 on October 15, 2015.
       </p>
     </div>
   </footer>
