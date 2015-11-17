@@ -1,6 +1,6 @@
 {
   "name": "ml-common-ng",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An angular module that encapsulates the MarkLogic REST API builtins and normalizes the responses.",
   "dependencies": {},
   "devDependencies": {

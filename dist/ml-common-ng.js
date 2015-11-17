@@ -72,7 +72,11 @@
 
   // Copied from https://docs.angularjs.org/api/ng/service/$compile
   angular.module('ml.common')
-  .directive('compile', function($compile) {
+  .directive('compile', compile);
+
+  compile.$inject = ['$compile'];
+
+  function compile($compile) {
     // directive factory creates a link function
     return function(scope, element, attrs) {
       scope.$watch(
@@ -93,7 +97,7 @@
         }
       );
     };
-  });
+  }
 })();
 
 (function() {
