@@ -103,8 +103,19 @@
 (function() {
   'use strict';
 
+  var prefix = null;
+  var defaultPrefix = '/v1';
+
   angular.module('ml.common')
     .provider('MLRest', function() {
+      this.setPrefix = function(p) {
+        if (!/^\//.test(p) || /\/$/.test(p)) {
+          throw new Error('bad MLRest prefix');
+        }
+
+        prefix = p;
+      };
+
       this.$get = ['$http', MLRest];
     });
 
@@ -115,8 +126,6 @@
    * @param {Object} $http - angular {@link https://docs.angularjs.org/api/ng/service/$http $http service}
    */
   function MLRest($http) {
-    var defaults = { apiVersion: 'v1' };
-
     var service = {
       search: search,
       getDocument: getDocument,
@@ -154,10 +163,11 @@
     function request(endpoint, settings) {
       var url;
 
-      if (/^\/v1\//.test(endpoint)) {
+      if ((prefix && endpoint.indexOf(prefix) === 0) ||
+          endpoint.indexOf(defaultPrefix) === 0) {
         url = endpoint;
       } else {
-        url = '/' + defaults.apiVersion + endpoint;
+        url = (prefix || defaultPrefix) + endpoint;
       }
 
       settings = settings || {};
