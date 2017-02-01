@@ -23,6 +23,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       // Required libraries
+      './node_modules/phantomjs-polyfill/bind-polyfill.js',
       'bower_components/angular/angular.js',
 
       // App under test
