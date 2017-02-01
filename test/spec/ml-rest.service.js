@@ -357,3 +357,61 @@ describe('MLRest', function () {
   });
 
 });
+
+describe('MLRest-config-error', function () {
+  'use strict';
+
+  var prov;
+
+  beforeEach(module('ml.common', ['MLRestProvider', function (provider) {
+    prov = provider;
+  }]));
+
+  beforeEach(inject(function ($injector) {
+    $injector.get('MLRest');
+  }));
+
+  it('should error on invalid prefix - 1', function () {
+    var f = function () {
+      prov.setPrefix('/foo/');
+    };
+
+    expect(f).toThrow(new Error('bad MLRest prefix'));
+  });
+
+  it('should error on invalid prefix - 2', function () {
+    var f = function () {
+      prov.setPrefix('foo/');
+    };
+
+    expect(f).toThrow(new Error('bad MLRest prefix'));
+  });
+});
+
+describe('MLRest-config', function () {
+  'use strict';
+
+  var mlRest, $httpBackend;
+
+  beforeEach(module('ml.common', ['MLRestProvider', function (provider) {
+    provider.setPrefix('/foo');
+  }]));
+
+  beforeEach(inject(function ($injector) {
+    $httpBackend = $injector.get('$httpBackend');
+    mlRest = $injector.get('MLRest');
+  }));
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+  });
+
+  it('should use custom prefix', function () {
+    $httpBackend
+      .expectGET('/foo/search?format=json')
+      .respond(null);
+
+    mlRest.search();
+    $httpBackend.flush();
+  });
+});
